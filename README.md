@@ -8,7 +8,7 @@ Ohjelma, joka pystyy määrittämään, voidaanko tietty merkkijono muodostaa en
 Linkit
 ------
 
-* [Määrittelydokumentti]("./documentation/määrittelydokumentti.md")
+* [Määrittelydokumentti]("documentation/määrittelydokumentti.md")
 * Toteutusdokumentti
 * Testausdokuentti
 * Käyttöohje
