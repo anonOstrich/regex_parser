@@ -1,4 +1,0 @@
-Määrittelydokumentti
-====================
-
-Tänne tulee määrittelyä

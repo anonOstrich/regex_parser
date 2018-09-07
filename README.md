@@ -1,14 +1,18 @@
-Säännöllisten lauseiden tulkki
-==============================
+Regular Expression Parser
+=========================
 
-Kuvaus
-------
-Ohjelma, joka pystyy määrittämään, voidaanko tietty merkkijono muodostaa ennetulla säännöllisellä lausekkeella. Toteutusohjeilmointikieli on Java
+Description
+-----------
+A program capable of deciding whether a string matches a given regular expression. Possibly also capable of generating strings based on a regular expression. Made for the data structures and algorithms project course at the University of Helsinki.
 
-Linkit
-------
+Links
+-----
 
-* [Määrittelydokumentti]("documentation/määrittelydokumentti.md")
-* Toteutusdokumentti
-* Testausdokuentti
-* Käyttöohje
+* [Design Document](documentation/design_document.md)
+* Implementation Document
+* Testing Document
+* User Guide
+
+### Weekly reports 
+
+* [Week 1](documentation/weekly_reports/week1.md)
