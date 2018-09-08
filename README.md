@@ -3,7 +3,7 @@ Regular Expression Parser
 
 Description
 -----------
-A program capable of deciding whether a string matches a given regular expression. Possibly also capable of generating strings based on a regular expression. Made for the data structures and algorithms project course at the University of Helsinki.
+A program capable of deciding whether a string matches a given regular expression. Made for the data structures and algorithms project course at the University of Helsinki.
 
 Supports the following symbols as the alphabet for the regular expression: 
 * Lowercase letters
@@ -18,6 +18,7 @@ Some symbols have special meanings in detailing the structure of the regular exp
 * `,` - used to separate arguments (see the previous example)
 * `+` - repeats at least once
 * `?` - repeats zero or one times
+* `-` - one of the alphabet symbols in between. E.g. 'A-F' matches any of the following: 'A', 'B', 'C', 'D', 'E', 'F'
 * `^` - complement/anything but  
 
 
