@@ -12,13 +12,19 @@ Done this week
 
 Advancement of the program
 --------------------------
+* Created the project 
+
 
 What have I learned
 -------------------
 
 Sources of difficulty/confusion
 -------------------------------
+* Is the scope of the project ok? There will be performance comparisons with the existing Java tools, but should there be more? As in forming the DFA and comparing the results? 
 
 To do next
 ----------
+* Create the classes for finite automata and states
+* Functional automata that can operate with input
+* Begin creating tests alongside the code
 
