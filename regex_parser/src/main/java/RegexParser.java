@@ -1,11 +1,14 @@
+
 import domain.NFA;
 
 public class RegexParser {
-    
+
     public static void main(String[] args) {
-        NFA nfa = new NFA(); 
-        String test = "101";
-        System.out.println("NFA accepts the string 101:\n" + nfa.accepts(test));
+        String pattern = "Y";
+        String test = "y";
+        NFA nfa = new NFA(pattern);
+        
+        System.out.println("NFA accepts the string " + test  +":\n" + nfa.accepts(test));
     }
-    
+
 }
