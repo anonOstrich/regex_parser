@@ -28,6 +28,9 @@ public class NFA {
     }
 
     public boolean accepts(String test) {
+        if (test.isEmpty()){
+            test = "#";
+        }
 
         // here we should simulate the functioning of the automaton, then... 
         Set<State> currentStates = new HashSet();
@@ -65,32 +68,29 @@ public class NFA {
         // while the implementation is lacking for pattern -> NFA construction, 
         // we'll build an easy example
         // support for: 
-        // 1) epsilon [NOT DONE]
-        // 2) A single symbol [NOT DONE]
+        // 1) epsilon [DONE]
+        // 2) A single symbol [DONE]
         // 3) concatenation [NOT DONE]
         // 4) union [NOT DONE]
         // 5) Keene star [NOT DONE]
         // 6) negation [NOT DONE]
         // 7) repetition arbitrary number of times (maybe) [NOT DONE]
         // 8) one symbol among many (maybe) [NOT DONE]
-        // handy in naming the states       
-        if (pattern.equals("#")) {
-            State s1 = new State(lowestAvailable);
-            State s2 = new State(lowestAvailable + 1);
-            lowestAvailable += 2;
-            transitions.addTransition(s1, '#', s2);
-            startingState = s1;
-            acceptingStates.add(s2);
-        }
-
-        // Restrict to the alphabet!
-        if (pattern.length() == 1 && Constants.alphabet().contains(pattern.charAt(0))) {
+        // handy in naming the states    
+        
+        if (pattern.length() == 1 && (pattern.charAt(0) == '#' || Constants.alphabet().contains(pattern.charAt(0)))){
             State s1 = new State(lowestAvailable);
             State s2 = new State(lowestAvailable + 1);
             lowestAvailable += 2;
             transitions.addTransition(s1, pattern.charAt(0), s2);
             startingState = s1;
             acceptingStates.add(s2);
+        }
+        
+
+        if (pattern.charAt(0) == '('){
+            int endingParIdx = pattern.indexOf(")");
+            
         }
 
         //constructPredefined();
@@ -124,9 +124,6 @@ public class NFA {
             result += s + "\n";
         }
 
-        for (State s : transitions.getStates()) {
-            result += s + "\n";
-        }
 
         return result;
     }
