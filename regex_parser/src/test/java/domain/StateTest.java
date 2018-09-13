@@ -1,9 +1,7 @@
 package domain;
 
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -142,6 +140,12 @@ public class StateTest {
         State s = new State(1, createTransitionExample());
         assertTrue(s.getNextStatesForSymbol('1').isEmpty());
     }
+    
+    @Test
+    public void getNextStatesReturnsEmptySetWhenNoSymbolAsKeyAtAll(){
+        State s = new State(1); 
+        assertEquals(new HashSet(), s.getNextStatesForSymbol('K'));
+    }
 
     @Test
     public void setNextStatesForSymbolModifiesTransitionsCorrectly() {
@@ -204,8 +208,37 @@ public class StateTest {
     @Test
     public void addNextStateForSymbolKeepsExistingStates() {
         State s = new State(1, createTransitionExample());
-        s.setNextStateForSymbol('0', new State(5));
+        s.addNextStateForSymbol('0', new State(5));
         assertTrue(s.getNextStatesForSymbol('0').contains(new State(2)));
     }
+    
+    @Test
+    public void hashCodeReturnsSameWhenSameId(){
+        State s1 = new State(1);
+        State s2 = new State(1, createTransitionExample());
+        
+        assertTrue(s1.hashCode() == s2.hashCode());
+    }
+    
+    @Test 
+    public void hashCodeReturnsDifferentWhenDifferentId(){
+        State s1 = new State(2);
+        State s2 = new State(5);
+        
+        assertTrue(s1.hashCode() != s2.hashCode());
+    }
+    
+    @Test
+    public void toStringReturnsExpectedResultWhenToTransitions(){
+        State s1 = new State(1);
+        assertEquals("Id: 1\n", s1.toString());
+    }
+    
+    @Test
+    public void toStringReturnsExpectedResultsWhenMultipleTransitions(){
+        State s = new State(1, createTransitionExample());
+        assertEquals("Id: 1\nSymbols and what states are reachable from them:\n0 --> [2]\n1 --> []\n# --> [3, 4]\n", s.toString());
+    }
+    
 
 }
