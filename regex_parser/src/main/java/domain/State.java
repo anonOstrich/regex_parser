@@ -146,13 +146,14 @@ public class State {
     /** 
      * 
      * @param symbol
-     * @return Set of states that are possible next states from this state with the symbol
+     * @return 
      */
     public Set<State> getNextStatesForSymbol(Character symbol) {
         Set<State> result = transitions.get(symbol);
         if (result == null) {
             return new HashSet();
         }
+        
         return result;
     }
 
