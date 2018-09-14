@@ -37,7 +37,8 @@ public class NFA {
      * Creates an empty NFA. Has no use in itself.
      */
     public NFA() {
-
+        startingState = new State(-1);
+        acceptingStates = new HashSet(); 
     }
 
     /**
