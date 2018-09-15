@@ -38,7 +38,7 @@ public class NFA {
      */
     public NFA() {
         startingState = new State(-1);
-        acceptingStates = new HashSet(); 
+        acceptingStates = new HashSet();
     }
 
     /**
@@ -111,14 +111,14 @@ public class NFA {
      * the test string is processed similarly until they end.
      * </p>
      * <p>
-     * After exhausting all the characters, the method adds to the set of current states
-     * all the states that are reachable from them with empty symbols - these are
-     * also possible states at the end of the processing.
+     * After exhausting all the characters, the method adds to the set of
+     * current states all the states that are reachable from them with empty
+     * symbols - these are also possible states at the end of the processing.
      * </p>
      * <p>
      * If at any point the set of current states is empty, it is certain that
      * the automaton cannot finish in an accepted state. Hence the method
-     * immediately results false. 
+     * immediately results false.
      * </p>
      *
      * @param test Input string whose operation on the NFA is of interest. If
@@ -135,28 +135,28 @@ public class NFA {
         Set<State> nextStates = new HashSet();
         //Used to momentarily store the pointer to the current set, so that current set and next set point to different sets
         //at the end of each cycle
-        Set<State> empty; 
+        Set<State> empty;
 
         test += "#";
 
         for (int i = 0; i < test.length(); i++) {
 
             char symbol = test.charAt(i);
-            
-            if (symbol == '#'){
-                break; 
+
+            if (symbol == '#') {
+                break;
             }
-            
+
             currentStates = addEpsilonTransitionsOfStates(currentStates);
 
             for (State currentState : currentStates) {
                 nextStates.addAll(currentState.getNextStatesForSymbol(symbol));
             }
-         
-            empty = currentStates; 
+
+            empty = currentStates;
             currentStates = nextStates;
-            nextStates = empty; 
-            nextStates.clear(); 
+            nextStates = empty;
+            nextStates.clear();
             if (currentStates.isEmpty()) {
                 return false;
             }
@@ -176,6 +176,11 @@ public class NFA {
 
     /**
      *
+     *
+     * UPDATE JAVADOC!! FOr seeking states that can be accessed by two or more consequtive 
+     * epsilon transitions
+     *
+     *
      * The method expands the set of possible states by seeing which states can
      * be accessed from the set of states by using the empty/epsilon/# symbol.
      *
@@ -184,9 +189,21 @@ public class NFA {
      * epsilon-symbols are also included.
      */
     private Set<State> addEpsilonTransitionsOfStates(Set<State> states) {
+        return addEpsilonTransitionsOfStates(states, states.size());
+    }
+
+    private Set<State> addEpsilonTransitionsOfStates(Set<State> states, int n) {
+
+        Set<State> newStates = new HashSet(); 
         for (State s : states) {
-            states.addAll(s.getNextStatesForSymbol('#'));
+            newStates.addAll(s.getNextStatesForSymbol('#'));
         }
+        states.addAll(newStates);
+
+        if (states.size() > n) {
+            states = addEpsilonTransitionsOfStates(states, states.size());
+        }
+        
         return states;
     }
 

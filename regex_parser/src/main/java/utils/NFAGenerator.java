@@ -23,7 +23,8 @@ public class NFAGenerator {
     private Set<Character> alphabet;
     private Set<Character> operations;
     private int lowestAvailableId;
-
+   
+    
     public NFAGenerator(Set<Character> alphabet) {
         this(alphabet, true);
     }
@@ -50,23 +51,30 @@ public class NFAGenerator {
         Deque<NFA> NFAStack = new LinkedList();
 
         //magic stuff at the hear of the problem shall follow...
-        
-        for(int i = 0; i < pattern.length(); i++){
+        for (int i = 0; i < pattern.length(); i++) {
             char currentSymbol = pattern.charAt(i);
-            
-            if (alphabet.contains(currentSymbol)){
+
+            if (alphabet.contains(currentSymbol)) {
                 NFAStack.push(generateNFAFromOneSymbol(currentSymbol));
             }
-           
-            if(currentSymbol == '*'){
+
+            if (operations.contains(currentSymbol)) {
+
+                while (operationStack.peek() != null && hasPrecedence(operationStack.peek(), currentSymbol)) {
+                    evaluate(operationStack, NFAStack);
+                }
+
                 operationStack.push(currentSymbol);
-                evaluate(operationStack, NFAStack); 
+
             }
-            
+
         }
-        
-        
-        
+
+        //evaluate remaining operations
+        while (operationStack.peek() != null) {
+            evaluate(operationStack, NFAStack);
+        }
+
         // returning result
         NFA result = NFAStack.pop();
         if (cacheEnabled) {
@@ -74,62 +82,96 @@ public class NFAGenerator {
         }
         return result;
     }
-    
-    
+
     /**
-     * 
+     *
      * Processes the topmost operation of the stack
-     * 
+     *
      * <p>
-     * Depending on the operation one or more operands are popped of the stack. From them a new NFA is created according to the rules of the popped operation symbol. 
-     * The created NFA is then pushed onto the NFA stack. 
+     * Depending on the operation one or more operands are popped of the stack.
+     * From them a new NFA is created according to the rules of the popped
+     * operation symbol. The created NFA is then pushed onto the NFA stack.
      * </p>
-     * 
+     *
      * @param operationStack stack of operations
-     * @param automataStack stack of operands for the operations
-     * @return true if the operation symbol is valid and there are enough operands to be popped. False if a failure is encountered. 
+     * @param automatonStack stack of operands for the operations
+     * @return true if the operation symbol is valid and there are enough
+     * operands to be popped. False if a failure is encountered.
      */
-    public boolean evaluate(Deque<Character> operationStack, Deque<NFA> automataStack){
-        if(operationStack.peek() == null){
-            return false; 
+    public boolean evaluate(Deque<Character> operationStack, Deque<NFA> automatonStack) {
+        if (operationStack.peek() == null) {
+            return false;
         }
-        
-        char operation = operationStack.pop(); 
+
+        char operation = operationStack.pop();
         // OR: I could just modify an operand NFA and avoid creating a new object. 
         // Should save resources, implement once functionality is in place. 
-        NFA result = new NFA(); 
-        
-        if(operation == '&'){
-            
+        NFA result = new NFA();
+
+        if (operation == '&') {
+            // first pop -> was added second to the stack!
+            NFA second = automatonStack.pop();
+            NFA first = automatonStack.pop();
+
+            State start = first.getStartingState();
+            Set<State> accepting = second.getAcceptingStates();
+
+            for (State s : first.getAcceptingStates()) {
+                s.addNextStateForSymbol('#', second.getStartingState());
+            }
+            result.setStartingState(start);
+            result.setAcceptingStates(accepting);
+
         }
-        
-        if(operation == '|'){
-        
+
+        if (operation == '|') {
+            NFA second = automatonStack.pop();
+            NFA first = automatonStack.pop();
+
+            State start = new State(lowestAvailableId);
+            lowestAvailableId++;
+            State finish = new State(lowestAvailableId);
+            lowestAvailableId++;
+
+            start.addNextStateForSymbol('#', first.getStartingState());
+            start.addNextStateForSymbol('#', second.getStartingState());
+
+            for (State s : first.getAcceptingStates()) {
+                s.addNextStateForSymbol('#', finish);
+            }
+
+            for (State s : second.getAcceptingStates()) {
+                s.addNextStateForSymbol('#', finish);
+            }
+
+            Set<State> acceptingStates = new HashSet();
+            acceptingStates.add(finish);
+            result.setStartingState(start);
+            result.setAcceptingStates(acceptingStates);
         }
-        
-        if (operation == '*'){
-            result = automataStack.pop(); 
+
+        if (operation == '*') {
+            result = automatonStack.pop();
             State newStart = new State(lowestAvailableId);
-            lowestAvailableId++; 
+            lowestAvailableId++;
             State newFinish = new State(lowestAvailableId);
             lowestAvailableId++;
-            Set<State> newAcceptingStates = new HashSet(); 
+            Set<State> newAcceptingStates = new HashSet();
             newAcceptingStates.add(newFinish);
             newStart.addNextStateForSymbol('#', result.getStartingState());
             newStart.addNextStateForSymbol('#', newFinish);
-            
-            for(State fState: result.getAcceptingStates()){
+
+            for (State fState : result.getAcceptingStates()) {
                 fState.addNextStateForSymbol('#', result.getStartingState());
                 fState.addNextStateForSymbol('#', newFinish);
             }
-            
+
             result.setStartingState(newStart);
             result.setAcceptingStates(newAcceptingStates);
         }
-        
-        
-        automataStack.push(result);
-        return true; 
+
+        automatonStack.push(result);
+        return true;
     }
 
     public String insertConcatenationSymbols(String pattern) {
