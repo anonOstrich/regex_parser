@@ -3,6 +3,8 @@ package utils;
 import domain.NFA;
 import domain.State;
 import java.util.Arrays;
+import java.util.Deque;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Set;
@@ -36,24 +38,103 @@ public class NFAGenerator {
     }
 
     public NFA generateNFA(String pattern) {
-        if (cache.containsKey(pattern)) {
+        //add explicit concatenation symbols and see if the pattern has been encountered before
+        pattern = insertConcatenationSymbols(pattern);
+        if (cache.containsKey(pattern) && cacheEnabled) {
             return cache.get(pattern);
         }
 
+        //initialization of tools
         lowestAvailableId = 0;
-        pattern = insertConcatenationSymbols(pattern);
+        Deque<Character> operationStack = new LinkedList();
+        Deque<NFA> NFAStack = new LinkedList();
 
-        NFA result = new NFA();
-        
         //magic stuff at the hear of the problem shall follow...
         
+        for(int i = 0; i < pattern.length(); i++){
+            char currentSymbol = pattern.charAt(i);
+            
+            if (alphabet.contains(currentSymbol)){
+                NFAStack.push(generateNFAFromOneSymbol(currentSymbol));
+            }
+           
+            if(currentSymbol == '*'){
+                operationStack.push(currentSymbol);
+                evaluate(operationStack, NFAStack); 
+            }
+            
+        }
         
+        
+        
+        // returning result
+        NFA result = NFAStack.pop();
+        if (cacheEnabled) {
+            cache.put(pattern, result);
+        }
         return result;
+    }
+    
+    
+    /**
+     * 
+     * Processes the topmost operation of the stack
+     * 
+     * <p>
+     * Depending on the operation one or more operands are popped of the stack. From them a new NFA is created according to the rules of the popped operation symbol. 
+     * The created NFA is then pushed onto the NFA stack. 
+     * </p>
+     * 
+     * @param operationStack stack of operations
+     * @param automataStack stack of operands for the operations
+     * @return true if the operation symbol is valid and there are enough operands to be popped. False if a failure is encountered. 
+     */
+    public boolean evaluate(Deque<Character> operationStack, Deque<NFA> automataStack){
+        if(operationStack.peek() == null){
+            return false; 
+        }
+        
+        char operation = operationStack.pop(); 
+        // OR: I could just modify an operand NFA and avoid creating a new object. 
+        // Should save resources, implement once functionality is in place. 
+        NFA result = new NFA(); 
+        
+        if(operation == '&'){
+            
+        }
+        
+        if(operation == '|'){
+        
+        }
+        
+        if (operation == '*'){
+            result = automataStack.pop(); 
+            State newStart = new State(lowestAvailableId);
+            lowestAvailableId++; 
+            State newFinish = new State(lowestAvailableId);
+            lowestAvailableId++;
+            Set<State> newAcceptingStates = new HashSet(); 
+            newAcceptingStates.add(newFinish);
+            newStart.addNextStateForSymbol('#', result.getStartingState());
+            newStart.addNextStateForSymbol('#', newFinish);
+            
+            for(State fState: result.getAcceptingStates()){
+                fState.addNextStateForSymbol('#', result.getStartingState());
+                fState.addNextStateForSymbol('#', newFinish);
+            }
+            
+            result.setStartingState(newStart);
+            result.setAcceptingStates(newAcceptingStates);
+        }
+        
+        
+        automataStack.push(result);
+        return true; 
     }
 
     public String insertConcatenationSymbols(String pattern) {
 
-        StringBuilder sb = new StringBuilder(pattern); 
+        StringBuilder sb = new StringBuilder(pattern);
         char c1;
         char c2;
 
@@ -71,10 +152,48 @@ public class NFAGenerator {
                 sb.insert(i + 1, '&');
             }
 
-            
         }
-        pattern = sb.toString(); 
+        pattern = sb.toString();
         return pattern;
+    }
+
+    /**
+     *
+     * Helper method for evaluating the operations in generateNFA in the proper
+     * order.
+     *
+     * @param operation1 symbol for operation
+     * @param operation2 symbol for compared operation
+     * @return true if operation1 has precedence over operation2. Otherwise
+     * false.
+     */
+    public boolean hasPrecedence(char operation1, char operation2) {
+
+        if (operation1 == '*' && operation2 != '*') {
+            return true;
+        }
+
+        if (operation1 == '&' && operation2 == '|') {
+            return true;
+        }
+
+        return false;
+    }
+
+    public NFA generateNFAFromOneSymbol(char symbol) {
+        State s0 = new State(lowestAvailableId);
+        lowestAvailableId++;
+        State s1 = new State(lowestAvailableId);
+        lowestAvailableId++;
+        Set<State> finishingStates = new HashSet();
+        finishingStates.add(s1);
+        s0.addNextStateForSymbol(symbol, s1);
+        NFA result = new NFA(s0, finishingStates);
+        return result;
+    }
+
+    public NFA generateNFAFromEmptyString() {
+        return generateNFAFromOneSymbol('#');
     }
 
     public Set<Character> getAlphabet() {
