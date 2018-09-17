@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.HashSet;
+import utils.PatternProcessor;
 
 /**
  *
@@ -23,8 +24,8 @@ public class NFAGenerator {
     private Set<Character> alphabet;
     private Set<Character> operations;
     private int lowestAvailableId;
-   
-    
+    private PatternProcessor patternProcessor;
+
     public NFAGenerator(Set<Character> alphabet) {
         this(alphabet, true);
     }
@@ -33,9 +34,13 @@ public class NFAGenerator {
         this.cache = new HashMap();
         this.alphabet = alphabet;
         this.cacheEnabled = cache_enabled;
-        Character[] supported_operations = {'*', '|', '(', ')', '&'};
+        Character[] supported_operations = {'*', '|', '&', '(', ')'};
         this.operations = new HashSet();
         this.operations.addAll(Arrays.asList(supported_operations));
+        Character[] supported_shorthands = {'+', '?', '['};
+        Set<Character> shorthands = new HashSet();
+        shorthands.addAll(Arrays.asList(supported_shorthands));
+        this.patternProcessor = new PatternProcessor(alphabet, operations, shorthands);
     }
 
     public NFA generateNFA(String pattern) {
@@ -50,7 +55,6 @@ public class NFAGenerator {
         Deque<Character> operationStack = new LinkedList();
         Deque<NFA> NFAStack = new LinkedList();
 
-        //magic stuff at the hear of the problem shall follow...
         for (int i = 0; i < pattern.length(); i++) {
             char currentSymbol = pattern.charAt(i);
 
@@ -170,6 +174,18 @@ public class NFAGenerator {
             result.setAcceptingStates(newAcceptingStates);
         }
 
+        if (operation == ')') {
+            while (operationStack.peek() != '(') {
+                evaluate(operationStack, automatonStack);
+            }
+            operationStack.pop();
+
+            //no need to push new NFA: evaluation of everything between the parentheses will have resulted 
+            // in the correct NFA being on top
+            return true;
+
+        }
+
         automatonStack.push(result);
         return true;
     }
@@ -219,6 +235,13 @@ public class NFAGenerator {
             return true;
         }
 
+        if (operation2 == '(') {
+            return false;
+        }
+        if (operation1 == ')') {
+            return true;
+        }
+
         return false;
     }
 
@@ -252,5 +275,12 @@ public class NFAGenerator {
 
     public boolean getCacheEnabled() {
         return cacheEnabled;
+    }
+
+    public void diagnosticMethod() {
+        System.out.println(patternProcessor.elongateRegularExpression("(aa)+b*"));
+        System.out.println(patternProcessor.elongateRegularExpression("a(c|aa)?"));
+        System.out.println(patternProcessor.elongateRegularExpression("a[11,16]"));
+
     }
 }

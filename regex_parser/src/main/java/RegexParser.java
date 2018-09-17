@@ -17,16 +17,17 @@ public class RegexParser {
      * @param args
      */
     public static void main(String[] args) {
+        String pattern = "a+"; 
+        String test = "aaaaaaaaaaaaaaaaa"; 
         NFAGenerator generator = new NFAGenerator(default_alphabet());
-        NFA testNFA = generator.generateNFA("aa|b|ca");
-        System.out.println(generator.insertConcatenationSymbols("aa|b|ca"));
+        NFA nfa = generator.generateNFA(pattern);
+        boolean accepts = nfa.accepts(test);
+        System.out.println("Regular expression " + pattern + " matches string " + test + ": " + accepts);
+        
+        generator.diagnosticMethod();
         
         
-        System.out.println(testNFA.accepts("aa"));
-        System.out.println(testNFA.accepts("b"));
-        System.out.println(testNFA.accepts("a"));
-        System.out.println(testNFA.accepts("bb"));
-        System.out.println(testNFA.accepts("ca"));
+
     }
 
     public static Set<Character> default_alphabet() {
