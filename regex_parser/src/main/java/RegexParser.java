@@ -17,15 +17,13 @@ public class RegexParser {
      * @param args
      */
     public static void main(String[] args) {
-        String pattern = "a+"; 
-        String test = "aaaaaaaaaaaaaaaaa"; 
+        String pattern = "a[1,3]"; 
+        String test = "aa"; 
         NFAGenerator generator = new NFAGenerator(default_alphabet());
         NFA nfa = generator.generateNFA(pattern);
-        boolean accepts = nfa.accepts(test);
-        System.out.println("Regular expression " + pattern + " matches string " + test + ": " + accepts);
+        System.out.println(nfa.accepts(test));
         
         generator.diagnosticMethod();
-        
         
 
     }

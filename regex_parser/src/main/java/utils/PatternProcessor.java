@@ -28,8 +28,16 @@ public class PatternProcessor {
         this.operations = operations;
         this.shorthandSymbols = shorthandSymbols;
     }
+    
+   
 
-    public String elongateRegularExpression(String pattern) {
+    public String elongateRegularExpression(String pattern){
+        pattern = replaceShorthands(pattern);
+        pattern = addConcatenationSymbols(pattern);
+        return pattern;
+    }
+    
+    public String replaceShorthands(String pattern) {
         StringBuilder sb = new StringBuilder(pattern);
 
         for (int i = 0; i < sb.length(); i++) {
@@ -39,7 +47,9 @@ public class PatternProcessor {
 
                 if (currentSymbol == '+') {
                     sb.deleteCharAt(i);
-                    sb.insert(i, affectedPart + "*");
+                    sb.insert(i-affectedPart.length(), "("); 
+                    i++;
+                    sb.insert(i, affectedPart + "*)");
                 }
 
                 if (currentSymbol == '?') {
@@ -50,15 +60,27 @@ public class PatternProcessor {
                 }
 
                 // remember to add brackets if they don't exist!
+                // first we only allow one character on either side of the shorthand (numbers of more than one digit: not yet supported)
                 if (currentSymbol == '-') {
-
+                    char first = sb.charAt(i - 1);
+                    char last = sb.charAt(i + 1);
+                    
+                    sb.delete(i-1, i + 2);
+                    i--; 
+                    
+                    //this could be done by setting all these to be transition symbold in a single NFA... 
+                    sb.insert(i, "()");
+                    i++; 
+                    
+                    for(int j = (int) first; j <= (int) last; j++){
+                        sb.insert(i, "|" + (char) j);
+                    }
+                    sb.deleteCharAt(i);
                 }
 
  
                 if (currentSymbol == '[') {
 
-                    //what if there are multiple digits in a number, though...? 
-                    // does NOT work
                     int closing_idx = sb.indexOf("]", i);
                     String[] valueStrings = sb.substring(i + 1, closing_idx).split(",", -1);
                     int[] values = new int[2];
@@ -85,14 +107,16 @@ public class PatternProcessor {
                     i -= affectedPart.length();
 
                     if (max == -1) {
-
-                        sb.insert(i, "()*");
-                        i++;
-                        String repetitive = "";
-                        for (int j = 0; j < min; j++) {
-                            repetitive += affectedPart;
+                        sb.insert(i, "()");
+                        i++; 
+                        sb.insert(i, "*");
+                       
+                        sb.insert(i, affectedPart);
+                       
+                        for(int j = 0; j < min; j++){
+                            sb.insert(i, affectedPart);
                         }
-                        sb.insert(i, repetitive);
+                        
                         continue;
                     }
 
@@ -100,6 +124,10 @@ public class PatternProcessor {
                     i++;
 
                     for (int len = min; len <= max; len++) {
+                        if(len == 0){
+                            sb.insert(i, "|#");
+                            continue;
+                        }
 
                         String option = "";
                         for (int j = 0; j < len; j++) {
@@ -117,12 +145,11 @@ public class PatternProcessor {
         }
 
         pattern = sb.toString();
-        // WHILE TESTING OUT THE OTHER PARTS!
-        //   pattern = addConcatenationSymbols(pattern);
+
         return pattern;
     }
 
-    private static String determineAffectedPart(String pattern, int idx) {
+    public  String determineAffectedPart(String pattern, int idx) {
         if (pattern.charAt(idx) != ')') {
             return "" + pattern.charAt(idx);
         }
@@ -146,7 +173,7 @@ public class PatternProcessor {
         return result;
     }
 
-    private String addConcatenationSymbols(String pattern) {
+    public String addConcatenationSymbols(String pattern) {
         StringBuilder sb = new StringBuilder(pattern);
         char c1;
         char c2;
@@ -160,7 +187,10 @@ public class PatternProcessor {
                     || c1 == '*' && alphabet.contains(c2)
                     || c1 == '*' && c2 == '('
                     || c1 == ')' && c2 == '('
-                    || c1 == ')' && alphabet.contains(c2)) {
+                    || c1 == ')' && alphabet.contains(c2)
+                    || c1 == ')' && c2 == '!'
+                    || c1 == '*' && c2 == '!'
+                    || alphabet.contains(c1) && c2 == '!') {
 
                 sb.insert(i + 1, '&');
             }
@@ -171,4 +201,17 @@ public class PatternProcessor {
 
     }
 
+    public Set<Character> getAlphabet() {
+        return alphabet;
+    }
+
+    public Set<Character> getOperations() {
+        return operations;
+    }
+
+    public Set<Character> getShorthandSymbols() {
+        return shorthandSymbols;
+    }
+
+    
 }

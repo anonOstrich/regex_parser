@@ -37,7 +37,7 @@ public class NFAGenerator {
         Character[] supported_operations = {'*', '|', '&', '(', ')'};
         this.operations = new HashSet();
         this.operations.addAll(Arrays.asList(supported_operations));
-        Character[] supported_shorthands = {'+', '?', '['};
+        Character[] supported_shorthands = {'+', '?', '[', '-'};
         Set<Character> shorthands = new HashSet();
         shorthands.addAll(Arrays.asList(supported_shorthands));
         this.patternProcessor = new PatternProcessor(alphabet, operations, shorthands);
@@ -45,7 +45,7 @@ public class NFAGenerator {
 
     public NFA generateNFA(String pattern) {
         //add explicit concatenation symbols and see if the pattern has been encountered before
-        pattern = insertConcatenationSymbols(pattern);
+        pattern = patternProcessor.elongateRegularExpression(pattern);
         if (cache.containsKey(pattern) && cacheEnabled) {
             return cache.get(pattern);
         }
@@ -241,6 +241,10 @@ public class NFAGenerator {
         if (operation1 == ')') {
             return true;
         }
+        
+        if(operation1 == '!'){
+            return true; 
+        }
 
         return false;
     }
@@ -278,9 +282,9 @@ public class NFAGenerator {
     }
 
     public void diagnosticMethod() {
-        System.out.println(patternProcessor.elongateRegularExpression("(aa)+b*"));
-        System.out.println(patternProcessor.elongateRegularExpression("a(c|aa)?"));
-        System.out.println(patternProcessor.elongateRegularExpression("a[11,16]"));
-
+        String affected = patternProcessor.determineAffectedPart("aa(cid(soul)|(l(in)))bb", 20);
+        System.out.println(affected);
+        
+        
     }
 }
