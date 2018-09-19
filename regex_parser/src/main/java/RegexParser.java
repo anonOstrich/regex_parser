@@ -18,14 +18,13 @@ public class RegexParser {
      * @param args
      */
     public static void main(String[] args) {
-        String pattern = "a"; 
+        String pattern = "(a|cd*)!(a*)"; 
         String test = ""; 
         NFAGenerator generator = new NFAGenerator(default_alphabet());
         NFA nfa = generator.generateNFA(pattern);
-        DFAGenerator dGenerator = new DFAGenerator(-1); 
-        NFA dfa = dGenerator.generateComplementDFA(nfa, default_alphabet());
+ 
         
-        boolean happens = dfa.accepts(test);
+        boolean happens = !nfa.accepts("aa") && nfa.accepts("aba") && nfa.accepts("cruntti");
         System.out.println("Pattern: " + pattern + ";  test: " + test + "; Result: " + happens);
        // generator.diagnosticMethod();
         

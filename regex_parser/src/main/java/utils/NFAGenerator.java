@@ -25,6 +25,7 @@ public class NFAGenerator {
     private Set<Character> operations;
     private int lowestAvailableId;
     private PatternProcessor patternProcessor;
+    private DFAGenerator dfaGenerator; 
 
     public NFAGenerator(Set<Character> alphabet) {
         this(alphabet, true);
@@ -34,13 +35,14 @@ public class NFAGenerator {
         this.cache = new HashMap();
         this.alphabet = alphabet;
         this.cacheEnabled = cache_enabled;
-        Character[] supported_operations = {'*', '|', '&', '(', ')'};
+        Character[] supported_operations = {'*', '|', '&', '(', ')', '!'};
         this.operations = new HashSet();
         this.operations.addAll(Arrays.asList(supported_operations));
         Character[] supported_shorthands = {'+', '?', '[', '-'};
         Set<Character> shorthands = new HashSet();
         shorthands.addAll(Arrays.asList(supported_shorthands));
         this.patternProcessor = new PatternProcessor(alphabet, operations, shorthands);
+        dfaGenerator = new DFAGenerator(-1);
     }
 
     public NFA generateNFA(String pattern) {
@@ -185,6 +187,10 @@ public class NFAGenerator {
             return true;
 
         }
+        
+        if(operation == '!'){
+            result = dfaGenerator.generateComplementDFA(automatonStack.pop(), alphabet);
+        }
 
         automatonStack.push(result);
         return true;
@@ -212,6 +218,7 @@ public class NFAGenerator {
             return true;
         }
 
+        
         if (operation2 == '(') {
             return false;
         }

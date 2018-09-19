@@ -18,7 +18,6 @@ public class NFAGeneratorTest {
     NFAGenerator g;
     Set<Character> alphabet;
 
-
     public NFAGeneratorTest() {
         alphabet = simpleAlphabet();
     }
@@ -29,9 +28,16 @@ public class NFAGeneratorTest {
     }
 
     private Set<Character> simpleAlphabet() {
-        Set<Character> alphabet = new HashSet();
-        Collections.addAll(alphabet, 'a', 'b', 'c');
-        return alphabet;
+        Set<Character> result = new HashSet();
+        for (int i = (int) 'A'; i <= (int) 'z'; i++) {
+            result.add((char) i);
+        }
+
+        for (int i = (int) '0'; i <= (int) '9'; i++) {
+            result.add((char) i);
+        }
+
+        return result;
     }
 
     private NFA complexNFA() {
@@ -41,7 +47,7 @@ public class NFAGeneratorTest {
 
     @Test
     public void constructorSetsAlphabetCorrectly() {
-        assertEquals(3, g.getAlphabet().size());
+        assertEquals(alphabet.size(), g.getAlphabet().size());
     }
 
     @Test
@@ -70,11 +76,9 @@ public class NFAGeneratorTest {
     public void cacheIsEmptyAfterGenerationWithCacheDisabled() {
         NFAGenerator withoutCache = new NFAGenerator(simpleAlphabet(), false);
         withoutCache.generateNFA("a");
-        
+
         assertEquals(0, withoutCache.getCache().size());
     }
-
-   
 
     @Test
     public void generateNFAFromEmptyStringAcceptsEmptyString() {
@@ -202,83 +206,224 @@ public class NFAGeneratorTest {
         NFA nfa = complexNFA();
         assertTrue(nfa.accepts("acabbacc"));
     }
-    
+
     @Test
-    public void generateNFAFromCharacterAndQuestionmarkAcceptsEpsilon(){}
-    
+    public void generateNFAFromCharacterAndQuestionmarkAcceptsEpsilon() {
+        NFA nfa = g.generateNFA("a?");
+        assertTrue(nfa.accepts(""));
+    }
+
     @Test
-    public void generateNFAFromCharacterAndQuestionmarkAcceptsSameCharacter(){}
-    
+    public void generateNFAFromCharacterAndQuestionmarkAcceptsSameCharacter() {
+        NFA nfa = g.generateNFA("a?");
+        assertTrue(nfa.accepts("a"));
+    }
+
     @Test
-    public void generateNFAFromCharacterAndQuestionmarkDoesNotAcceptTwoRepetitions(){}
-    
+    public void generateNFAFromCharacterAndQuestionmarkDoesNotAcceptTwoRepetitions() {
+        NFA nfa = g.generateNFA("a?");
+        assertTrue(!nfa.accepts("aa"));
+    }
+
     @Test
-    public void generateNFAFromCharacterAndQuesitonmarkDoesNotAcceptDifferentCharacter(){}
-    
-    @Test
-    public void generateNFAFromCharacterAndPlusDoesNotAcceptEpsilon(){}
-    
-    @Test
-    public void generateNFAFromCharacterAndPlusAcceptsSameCharacter(){}
-    
-    @Test
-    public void generateNFAFromCharacterAndPlusAcceptsTwoCharacters(){}
-    
-    @Test
-    public void generateNFAFromCharacterAndPlusDoesNotAccceptDifferentCharacter(){}
-    
-    @Test
-    public void generateNFAFromCharacterAndRepetitionsWithBothLimitsPresentAcceptsAnyOfTheOptions(){
-    
+    public void generateNFAFromCharacterAndQuestionmarkDoesNotAcceptDifferentCharacter() {
+        NFA nfa = g.generateNFA("a?");
+        assertTrue(!nfa.accepts("b"));
     }
     
     @Test
-    public void generateNFAFromCharacterAndRepetitionsWithBothLimitsPresentDoesnotAcceptTooFewRepetitions(){}
-    
-    @Test
-    public void generateNFAFromCharacterAndRepetitionsWithBothLimitsPresentDoesNotAcceptToomanyRepetitions(){}
-    
-    
-    
-    
-    
-    @Test
-    public void generateNFAFromNegationProducesNFAThatAcceptsNegation(){
-        NFA nfa = g.generateNFA("^a");
-        assertTrue(nfa.accepts("c") && nfa.accepts("ilmava") && nfa.accepts(""));
+    public void generateNFAFromParenthesesAndQuestionmarkAcceptsParenthesizedPart(){
+        NFA nfa = g.generateNFA("(abba)?");
+        assertTrue(nfa.accepts("abba"));
     }
     
     @Test
-    public void generateNFAFromNegationProducesNFAThatDoesNotAcceptOriginal(){
-        NFA nfa = g.generateNFA("^a");
-        assertTrue(!nfa.accepts("a"));
+    public void generateNFAFromParenthesesAndQuestionmarkAcceptsEmptyString(){
+        NFA nfa = g.generateNFA("(abba)?");
+        assertTrue(nfa.accepts(""));
     }
     
     @Test
-    public void generateNFAWorksWithNegationOfParentheses(){
-        NFA nfa = g.generateNFA("^(ab)");
-        assertTrue(!nfa.accepts("ab") && nfa.accepts("aa") && nfa.accepts("a") && nfa.accepts("carne"));        
+    public void generateNFAFromParenthesesAndQuestionmarkDoesNotAcceptMultipleRepetitions(){
+        NFA nfa = g.generateNFA("(abba)?");
+        assertTrue(!nfa.accepts("abbaabba"));
+    }
+
+    @Test
+    public void generateNFAFromCharacterAndPlusDoesNotAcceptEpsilon() {
+        NFA nfa = g.generateNFA("a+");
+        assertTrue(!nfa.accepts(""));
+    }
+
+    @Test
+    public void generateNFAFromCharacterAndPlusAcceptsSameCharacter() {
+        NFA nfa = g.generateNFA("a+");
+        assertTrue(nfa.accepts("a"));
     }
     
-    
     @Test
-    public void generateNFAWorksWithNegationOfUnion(){
-        NFA nfa = g.generateNFA("^(a|b)");
-        assertTrue(!nfa.accepts("a") && !nfa.accepts("b") && nfa.accepts("ilves")); 
+    public void generateNFAFromParenthesesAndPlusAcceptsSameParenthesizedPart(){
+        NFA nfa = g.generateNFA("(abba)+");
+        assertTrue(nfa.accepts("abba"));
     }
     
     @Test
-    public void generateNFAWorksWithComplexCase1(){
-        NFA nfa = g.generateNFA("(a|cd*)^(a*)");
-        assertTrue(!nfa.accepts("aa") && nfa.accepts("aba") && nfa.accepts("runtti"));
+    public void generateNFAFromParenthesesAndPlusDoesNotAcceptEmptyString(){
+        NFA nfa = g.generateNFA("(abba)+");
+        assertTrue(!nfa.accepts(""));
     }
     
     @Test
-    public void generateNFAWorksWithComplexCase2(){
-        NFA nfa = g.generateNFA("^(u|(a^f))"); 
-        assertTrue(!nfa.accepts("ac") && !nfa.accepts("u") && nfa.accepts("af") && nfa.accepts("remps")); 
+    public void generateNFAFromParenthesesAndPlusAcceptsMultipleRepetitions(){
+        NFA nfa = g.generateNFA("(abba)+");
+        assertTrue(nfa.accepts("abbaabbaabba"));
+    }
+
+    @Test
+    public void generateNFAFromCharacterAndPlusAcceptsTwoCharacters() {
+        NFA nfa = g.generateNFA("a+");
+        assertTrue(nfa.accepts("aa"));
+    }
+
+    @Test
+    public void generateNFAFromCharacterAndPlusDoesNotAccceptDifferentCharacter() {
+        NFA nfa = g.generateNFA("a+");
+        assertTrue(!nfa.accepts("b"));
+    }
+
+    @Test
+    public void generateNFAFromCharacterAndRepetitionsWithBothLimitsPresentAcceptsAnyOfTheOptions() {
+        NFA nfa = g.generateNFA("a[3,5]");
+        assertTrue(nfa.accepts("aaa") && nfa.accepts("aaaa") && nfa.accepts("aaaaa"));
+    }
+
+    @Test
+    public void generateNFAFromCharacterAndRepetitionsWithBothLimitsPresentDoesnotAcceptTooFewRepetitions() {
+        NFA nfa = g.generateNFA("a[3,5]");
+        assertTrue(!nfa.accepts("aa"));
+    }
+
+    @Test
+    public void generateNFAFromCharacterAndRepetitionsWithBothLimitsPresentDoesNotAcceptToomanyRepetitions() {
+        NFA nfa = g.generateNFA("a[3,5]");
+        assertTrue(!nfa.accepts("aaaaaaa"));
+    }
+    
+    @Test
+    public void generateNFAFromParenthesesAndRepetitionsWithBothLimitsAcceptsSuitableNumberOfRepetitions(){
+        NFA nfa = g.generateNFA("(ac)[3,5]");
+        assertTrue(nfa.accepts("acacac") && nfa.accepts("acacacac") && nfa.accepts("acacacacac")); 
+    }
+    
+    @Test
+    public void generateNFAFromCharacterAndRepetitionWithoutMinimunAcceptsEmptyString(){
+        NFA nfa = g.generateNFA("a[,4]");
+        assertTrue(nfa.accepts("")); 
+    }
+    
+    @Test
+    public void generateNFAFromCharacterAndRepetitionWithoutMinimumDoesNotAcceptTooManyRepetitions(){
+        NFA nfa = g.generateNFA("a[,4]");
+        assertTrue(!nfa.accepts("aaaaaaa")); 
+    }
+    
+    @Test
+    public void generateNFAFromCharacterAndRepetitionsWithoutMaximumDoesNotAcceptTooFewRepetitions(){
+        NFA nfa = g.generateNFA("a[3,]");
+        assertTrue(!nfa.accepts("aa"));
+    }
+    
+    @Test
+    public void generateNFAFromCharacterAndRepetitionsWithoutMaximumAcceptsMinimumRepetitions(){
+        NFA nfa = g.generateNFA("a[3,]");
+        assertTrue(nfa.accepts("aaa"));
     }
     
 
+    
+    @Test
+    public void generateNFAFromCharacterAndRepetitionsWithoutMaximumAcceptsVeryManyRepetitions(){
+        NFA nfa = g.generateNFA("a[3,]"); 
+        assertTrue(nfa.accepts("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"));
+    }
+    
+    @Test
+    public void generateNFAFromCharacterAndRepetitionsWithoutLimitsAcceptsEmptyString(){
+        NFA nfa = g.generateNFA("a[,]");
+        assertTrue(nfa.accepts(""));
+    }
+    
+    @Test
+    public void generateNFAFromCharacterAndRepetitionsWithoutLimitationsAcceptsTwoRepetitions(){
+        NFA nfa = g.generateNFA("a[,]"); 
+        assertTrue(nfa.accepts("aa"));
+    }
+    
+    @Test
+    public void generateNFAFromCharacterAndRepetitionsWithoutLimitationsAcceptsVeryManyRepetitions(){
+        NFA nfa = g.generateNFA("a[,]");
+        assertTrue(nfa.accepts("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")); 
+    }
+    
+    
+    @Test
+    public void generateNFAFromMultipleChoiceAcceptsEveryChoice(){
+        NFA nfa = g.generateNFA("a-d"); 
+        assertTrue(nfa.accepts("a") && nfa.accepts("b") && nfa.accepts("c") && nfa.accepts("d")); 
+    }
+    
+    @Test
+    public void generateNFAFromMultipleChoiceDoesNotAcceptEmptyString(){
+        NFA nfa = g.generateNFA("a-d"); 
+        assertTrue(!nfa.accepts(""));
+    }
+    
+    @Test
+    public void generateNFAFromMultipleChoiceDoesNotAcceptNonchoiceCharacter(){
+        NFA nfa = g.generateNFA("a-d"); 
+        assertTrue(!nfa.accepts("k"));
+    }
+    
+    @Test
+    public void generateNFAFromMultipleChoiceWorksWithOneDigitNumbers(){
+        NFA nfa = g.generateNFA("4-7");
+        assertTrue(nfa.accepts("4") && nfa.accepts("5") && nfa.accepts("6") && nfa.accepts("7")); 
+    }
+
+    @Test
+    public void generateNFAFromNegationProducesNFAThatAcceptsNegation() {
+        NFA nfa = g.generateNFA("!a");
+        assertTrue(nfa.accepts("c") && nfa.accepts("ilmava") && nfa.accepts(""));
+    }
+
+    @Test
+    public void generateNFAFromNegationProducesNFAThatDoesNotAcceptOriginal() {
+        NFA nfa = g.generateNFA("!a");
+        assertTrue(!nfa.accepts("a"));
+    }
+
+    @Test
+    public void generateNFAWorksWithNegationOfParentheses() {
+        NFA nfa = g.generateNFA("!(ab)");
+        assertTrue(!nfa.accepts("ab") && nfa.accepts("aa") && nfa.accepts("a") && nfa.accepts("carne"));
+    }
+
+    @Test
+    public void generateNFAWorksWithNegationOfUnion() {
+        NFA nfa = g.generateNFA("!(a|b)");
+        assertTrue(!nfa.accepts("a") && !nfa.accepts("b") && nfa.accepts("ilves"));
+    }
+
+    @Test
+    public void generateNFAWorksWithComplexCase1() {
+        NFA nfa = g.generateNFA("(a|cd*)!(a*)");
+        assertTrue(!nfa.accepts("aa") && nfa.accepts("aba") && nfa.accepts("cruntti"));
+    }
+
+    @Test
+    public void generateNFAWorksWithComplexCase2() {
+        NFA nfa = g.generateNFA("!(u|(a!f))");
+        assertTrue(!nfa.accepts("ac") && !nfa.accepts("u") && nfa.accepts("af") && nfa.accepts("remps"));
+    }
 
 }
