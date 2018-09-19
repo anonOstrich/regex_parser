@@ -74,35 +74,7 @@ public class NFAGeneratorTest {
         assertEquals(0, withoutCache.getCache().size());
     }
 
-    @Test
-    public void insertConcatenationSymbolsDoesNotModifyEmptyString() {
-        String empty = g.insertConcatenationSymbols("");
-        assertEquals("", empty);
-    }
-
-    @Test
-    public void insertConcatenationSymbolsDoesNotModifyStringOfOneCharacter() {
-        String single = g.insertConcatenationSymbols("a");
-        assertEquals("a", single);
-    }
-
-    @Test
-    public void insertConcatenationSymbolsAddsSymbolBetweenTwoCharacters() {
-        String modified = g.insertConcatenationSymbols("ab");
-        assertEquals("a&b", modified);
-    }
-
-    @Test
-    public void insertConcatenationSymbolsDoesNotModifyLongStringThatDoesNotContainConcatenation() {
-        String modified = g.insertConcatenationSymbols("(a|b*|c*)*");
-        assertEquals("(a|b*|c*)*", modified);
-    }
-
-    @Test
-    public void insertConcatenationSymbolsAddsConcatenationToCorrectPlacesToALongString() {
-        String modified = g.insertConcatenationSymbols("a|cb|aa|bb*bcc*");
-        assertEquals("a|c&b|a&a|b&b*&b&c&c*", modified);
-    }
+   
 
     @Test
     public void generateNFAFromEmptyStringAcceptsEmptyString() {

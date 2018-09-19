@@ -160,10 +160,10 @@ public class PatternProcessorTest {
     public void determineAffectedPartReturnsOuterParenthesisAndContentWhenNestedParenthesisAndCharacterIsClosingParenthisis() {
         assertEquals("(cid(soul)|(l(in)))", processor.determineAffectedPart("aa(cid(soul)|(l(in)))bb", 20));
     }
-
+    
     @Test
-    public void elongateRegularExpressionDoesNotModifyEmptyString() {
-        assertEquals("", processor.replaceShorthands(""));
+    public void elongateRegularExpressionTurnsEmptyStringToEmptyCharacter(){
+        assertEquals("#", processor.elongateRegularExpression(""));
     }
 
     @Test

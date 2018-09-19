@@ -58,7 +58,7 @@ public class NFAGenerator {
         for (int i = 0; i < pattern.length(); i++) {
             char currentSymbol = pattern.charAt(i);
 
-            if (alphabet.contains(currentSymbol)) {
+            if (alphabet.contains(currentSymbol) || currentSymbol == '#') {
                 NFAStack.push(generateNFAFromOneSymbol(currentSymbol));
             }
 
@@ -190,30 +190,7 @@ public class NFAGenerator {
         return true;
     }
 
-    public String insertConcatenationSymbols(String pattern) {
-
-        StringBuilder sb = new StringBuilder(pattern);
-        char c1;
-        char c2;
-
-        for (int i = 0; i < sb.length() - 1; i++) {
-            c1 = sb.charAt(i);
-            c2 = sb.charAt(i + 1);
-
-            if (alphabet.contains(c1) && alphabet.contains(c2)
-                    || alphabet.contains(c1) && c2 == '('
-                    || c1 == '*' && alphabet.contains(c2)
-                    || c1 == '*' && c2 == '('
-                    || c1 == ')' && c2 == '('
-                    || c1 == ')' && alphabet.contains(c2)) {
-
-                sb.insert(i + 1, '&');
-            }
-
-        }
-        pattern = sb.toString();
-        return pattern;
-    }
+    
 
     /**
      *

@@ -32,8 +32,12 @@ public class PatternProcessor {
    
 
     public String elongateRegularExpression(String pattern){
+        if(pattern.isEmpty()){
+            pattern = "#";
+            return pattern; 
+        }
         pattern = replaceShorthands(pattern);
-        pattern = addConcatenationSymbols(pattern);
+        pattern = addConcatenationSymbols(pattern);       
         return pattern;
     }
     
