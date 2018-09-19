@@ -4,6 +4,7 @@ import java.util.Set;
 import java.util.HashSet;
 import domain.State;
 import utils.NFAGenerator;
+import utils.DFAGenerator; 
 
 /**
  * Main class
@@ -17,13 +18,16 @@ public class RegexParser {
      * @param args
      */
     public static void main(String[] args) {
-        String pattern = "a[1,3]"; 
-        String test = "aa"; 
+        String pattern = "a"; 
+        String test = ""; 
         NFAGenerator generator = new NFAGenerator(default_alphabet());
         NFA nfa = generator.generateNFA(pattern);
-        System.out.println(nfa.accepts(test));
+        DFAGenerator dGenerator = new DFAGenerator(-1); 
+        NFA dfa = dGenerator.generateComplementDFA(nfa, default_alphabet());
         
-        generator.diagnosticMethod();
+        boolean happens = dfa.accepts(test);
+        System.out.println("Pattern: " + pattern + ";  test: " + test + "; Result: " + happens);
+       // generator.diagnosticMethod();
         
 
     }

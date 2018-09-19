@@ -33,12 +33,13 @@ public class NFA {
      */
     private Set<State> acceptingStates;
 
+    private boolean isDFA;
+
     /**
      * Creates an empty NFA. Has no use in itself.
      */
     public NFA() {
-        startingState = new State(-1);
-        acceptingStates = new HashSet();
+        this(new State(-1), new HashSet());
     }
 
     /**
@@ -47,8 +48,13 @@ public class NFA {
      * @param acceptingStates These states result in acceptance
      */
     public NFA(State startingState, Set<State> acceptingStates) {
+        this(startingState, acceptingStates, false);
+    }
+
+    public NFA(State startingState, Set<State> acceptingStates, boolean isDFA) {
         this.startingState = startingState;
         this.acceptingStates = acceptingStates;
+        this.isDFA = isDFA;
     }
 
     /**
@@ -177,8 +183,8 @@ public class NFA {
     /**
      *
      *
-     * UPDATE JAVADOC!! FOr seeking states that can be accessed by two or more consequtive 
-     * epsilon transitions
+     * UPDATE JAVADOC!! FOr seeking states that can be accessed by two or more
+     * consequtive epsilon transitions
      *
      *
      * The method expands the set of possible states by seeing which states can
@@ -188,13 +194,13 @@ public class NFA {
      * @return Same set, but the states reachable from its member by
      * epsilon-symbols are also included.
      */
-    private Set<State> addEpsilonTransitionsOfStates(Set<State> states) {
+    public Set<State> addEpsilonTransitionsOfStates(Set<State> states) {
         return addEpsilonTransitionsOfStates(states, states.size());
     }
 
     private Set<State> addEpsilonTransitionsOfStates(Set<State> states, int n) {
 
-        Set<State> newStates = new HashSet(); 
+        Set<State> newStates = new HashSet();
         for (State s : states) {
             newStates.addAll(s.getNextStatesForSymbol('#'));
         }
@@ -203,8 +209,16 @@ public class NFA {
         if (states.size() > n) {
             states = addEpsilonTransitionsOfStates(states, states.size());
         }
-        
+
         return states;
     }
 
+    public void setIsDFA(boolean isDFA) {
+        this.isDFA = isDFA;
+    }
+
+    
+    public boolean getIsDFA(){
+        return isDFA; 
+    }
 }
