@@ -4,30 +4,64 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.HashSet;
-import java.util.List;
-import java.util.ArrayList;
 import domain.NFA;
 import domain.State;
 
 /**
  *
- * Tools for converting an NFA into A DFA with the power set method Use should
+ * Tools for converting an NFA into A DFA with the power set method. Use should
  * be avoided in all but necessary cases - exponential time complexity! Only
- * required when negating an expression for the first time
+ * required when negating an expression for the first time. 
  *
- * @author jesper
  */
 public class DFAGenerator {
 
+    /**
+     * Stores negations based on the NFA key. 
+     * 
+     */
     private Map<NFA, NFA> cache;
+    /**
+     * Highest available negative integer for creating unique states. 
+     */
     private int highestAvailable;
 
+    /**
+     * 
+     * @param highestAvailable Highest (negative) integer that is used in ids of new states. 
+     */
     public DFAGenerator(int highestAvailable) {
         cache = new HashMap();
         this.highestAvailable = highestAvailable;
     }
 
-    // if nfa is already dfa, it would be simply a matter of swappings states - for which there is no method available
+    /**
+     * 
+     * Generates a DFA that recognizes the complement language of the input NFA. 
+     * 
+     * <p>
+     * If the answer is already in the cache, it is returned from there. Otherwise the
+     * method begins constructing a new DFA. The states of this DFA each represent one subset of the states of the 
+     * parameter NFA; these states are referred to as subset states in the method. There are two maps to help with 
+     * conversions from a subset state to the corresponding set of NFA states and vice versa. 
+     * </p>
+     * <p>
+     * The NFA is simulated and new subset states are created only when needed. These results of reachable states are stored also in 
+     * subset states in the DFA under construction. Once all possible sets of NFA states have been considered with every letter of the alphabet, 
+     * the DFA has been created. 
+     * </p>
+     * <p>
+     * Once all the reachable NFA states have been determined from one subset, the method checks if any of them is 
+     * included in the NFA's accepting states. If that is the case, the creted subset state is NOT added to the set
+     * of accepting subset states of the DFA; and if any states is not an acceptin state, the subset state is added to the accepting states of the DFA.
+     * In this way the DFA will accept exactly those input strings that will not end the operation of the input NFA in an accepting state. 
+     * </p>
+     * 
+     * @param nfa Automaton that is to be negated.
+     * @param alphabet Allowed symbols in state transitions (excluding #).
+     * @return Deterministic (also non-deterministic) finite automaton that recognizes the complement language of the
+     *  parameter nfa.
+     */
     public NFA generateComplementDFA(NFA nfa, Set<Character> alphabet) {
         if (cache.containsKey(nfa)) {
             return cache.get(nfa);
@@ -99,21 +133,16 @@ public class DFAGenerator {
                         break;
                     }
                 }
-
                 if (acceptingState) {
                     dfa.getAcceptingStates().add(nextSubsetState);
                 }
-
                 if (!investigatedSubsetStates.contains(nextSubsetState)) {
                     subsetStatesToBeInvestigated.add(nextSubsetState);
                 }
-
             }
-
         }
 
         cache.put(nfa, dfa);
-
         return dfa;
     }
 

@@ -7,10 +7,15 @@ import java.util.HashSet;
  * A representation of a nondeterministic finite automaton.
  *
  * <p>
- * Used to simulate the processing of an NFA that is recognizes the same
- * language that a specified regular expression generates. The information about
- * all the states is not easily accessible, but it should not be needed in the
- * process of parsing regular expressions.
+ * Used to simulate the processing of an NFA that recognizes the same language
+ * that a specified regular expression generates. The information about all the
+ * states is not easily accessible, but it should not be needed in the process
+ * of parsing regular expressions.
+ * </p>
+ * <p>
+ * Since all deterministic finite automata can be thought of as restricted NFA,
+ * the class also represents DFA. Whether it is also a DFA is indicated in the
+ * isDFA attribute
  * </p>
  *
  * @author jesper
@@ -27,22 +32,29 @@ public class NFA {
     /**
      *
      * The set of states that is used to determine whether the automaton accepts
-     * or rejects an input string. Any of these being a possible final state
-     * results in acceptance.
+     * or rejects an input string. If any of the possible states at the end of
+     * processing belongs to acceptingStates, the NFA accepts the input.
      *
      */
     private Set<State> acceptingStates;
 
+    /**
+     * Indicates whether the NFA meets the stricter criteria of DFA. The NFA can
+     * theoretically be DFA even with this value being false; the important part
+     * is that true means it absolutely certainly is.
+     */
     private boolean isDFA;
 
     /**
-     * Creates an empty NFA. Has no use in itself.
+     * Creates an empty NFA.
      */
     public NFA() {
-        this(new State(-1), new HashSet());
+        this(new State(0), new HashSet());
     }
 
     /**
+     *
+     * Creates the NFA specified by the state information in parameters.
      *
      * @param startingState The initial state of the NFA
      * @param acceptingStates These states result in acceptance
@@ -51,6 +63,14 @@ public class NFA {
         this(startingState, acceptingStates, false);
     }
 
+    /**
+     *
+     *
+     * @param startingState The initial state
+     * @param acceptingStates All states that lead to acceptance
+     * @param isDFA If created object is certain to be DFA, this should be true.
+     * False by default.
+     */
     public NFA(State startingState, Set<State> acceptingStates, boolean isDFA) {
         this.startingState = startingState;
         this.acceptingStates = acceptingStates;
@@ -59,9 +79,9 @@ public class NFA {
 
     /**
      *
-     * Changes the starting state of the automaton to the given state.
+     * Changes the starting state the given state.
      *
-     * @param state
+     * @param state New starting state
      */
     public void setStartingState(State state) {
         this.startingState = state;
@@ -78,9 +98,9 @@ public class NFA {
 
     /**
      *
-     * Changes the accepting states of the automaton to the parameter.
+     * Changes the accepting states to the given set.
      *
-     * @param states
+     * @param states Set of new accepting states.
      */
     public void setAcceptingStates(Set<State> states) {
         this.acceptingStates = states;
@@ -88,7 +108,7 @@ public class NFA {
 
     /**
      *
-     * @return
+     * @return The set of accepting states.
      */
     public Set<State> getAcceptingStates() {
         return this.acceptingStates;
@@ -102,14 +122,13 @@ public class NFA {
      * <p>
      * Simulates the operation of the NFA step by step when given the test
      * string as input. The method keeps track of all the possible states that
-     * the NFA could be in at any given step. The input is processed by
-     * concatenating the empty symbol, '#', to its end. This way we will in the
-     * end consider also the states that can be accessed without symbols.
+     * the NFA could be in at any given step. At first the method initializes
+     * the set of currents states to include only the starting state of the NFA.
      * </p>
      * <p>
      * For every character, the method first adds to the current states all the
      * states that can be reached with empty symbol from current states. Then
-     * the method queries each current states for the set of states that can be
+     * the method queries each current state for the set of states that can be
      * accessed with the input symbol. These sets of states from each current
      * state are combined to form the set of all the states that the automaton
      * can be in after it has processed the next symbol character. Then the
@@ -124,18 +143,17 @@ public class NFA {
      * <p>
      * If at any point the set of current states is empty, it is certain that
      * the automaton cannot finish in an accepted state. Hence the method
-     * immediately results false.
+     * immediately returns false.
      * </p>
      *
-     * @param test Input string whose operation on the NFA is of interest. If
-     * the string is empty, it is replaced with character '#', which represents
-     * epsilon (empty symbol).
+     * @param test Input string which is to be processed. If the string is
+     * empty, it is replaced with character '#', which represents epsilon (empty
+     * symbol).
      *
-     * @return True if the final state of the NFA may be in the set of accepting
+     * @return True if any of the final states is in the set of accepting
      * states. Otherwise false.
      */
     public boolean accepts(String test) {
-
         Set<State> currentStates = new HashSet();
         currentStates.add(startingState);
         Set<State> nextStates = new HashSet();
@@ -143,17 +161,9 @@ public class NFA {
         //at the end of each cycle
         Set<State> empty;
 
-        test += "#";
-
         for (int i = 0; i < test.length(); i++) {
-
             char symbol = test.charAt(i);
-
-            if (symbol == '#') {
-                break;
-            }
-
-            currentStates = addEpsilonTransitionsOfStates(currentStates);
+            addEpsilonTransitionsOfStates(currentStates);
 
             for (State currentState : currentStates) {
                 nextStates.addAll(currentState.getNextStatesForSymbol(symbol));
@@ -163,62 +173,83 @@ public class NFA {
             currentStates = nextStates;
             nextStates = empty;
             nextStates.clear();
+            
             if (currentStates.isEmpty()) {
                 return false;
             }
-
         }
-
-        currentStates = addEpsilonTransitionsOfStates(currentStates);
-
+        addEpsilonTransitionsOfStates(currentStates);
         for (State s : acceptingStates) {
             if (currentStates.contains(s)) {
                 return true;
             }
         }
-
         return false;
     }
 
     /**
      *
+     * Expands the parameter set with all states that can be reached from its
+     * states without reading any input.
      *
-     * UPDATE JAVADOC!! FOr seeking states that can be accessed by two or more
-     * consequtive epsilon transitions
+     * <p>
+     * If a state can be reached by a number of epsilon/# transitions from any
+     * of the states of the set, is is added to the same set. Uses a helper method to 
+     * discover transitions of different lengths. 
+     * </p>
+
      *
-     *
-     * The method expands the set of possible states by seeing which states can
-     * be accessed from the set of states by using the empty/epsilon/# symbol.
-     *
-     * @param states
-     * @return Same set, but the states reachable from its member by
-     * epsilon-symbols are also included.
+     * @param states Set of states to be possible expanded
      */
-    public Set<State> addEpsilonTransitionsOfStates(Set<State> states) {
-        return addEpsilonTransitionsOfStates(states, states.size());
+    public void addEpsilonTransitionsOfStates(Set<State> states) {
+        addEpsilonTransitionsOfStates(states, new HashSet());
     }
+    
 
-    private Set<State> addEpsilonTransitionsOfStates(Set<State> states, int n) {
-
+    /**
+     * Adds to the given states the unvisited states that are reachable with one epsilon transition
+     * 
+     * <p>
+     * Forms a new empty set. By going through the given states, the method then 
+     * adds to this set of new states all the states that are reachable with one epsilon transition
+     * and that are not in the visitedStates set. This decreases some extra work and prevents infitinte loops in cases
+     * where two states have an epsilon transition from and to each other. 
+     * </p>
+     * <p>
+     * If new states are found, the method calls itself recursively with the set of new states and the same set of visited states. 
+     * This continues for as long as new states are discovered. Each call tries to discover longer sequences of empty transitions. 
+     * </p>
+     * 
+     * @param states Set of states that caller wants to expand. 
+     * @param visitedStates States that have already been considered.
+     */
+    public void addEpsilonTransitionsOfStates(Set<State> states, Set<State> visitedStates) {
         Set<State> newStates = new HashSet();
         for (State s : states) {
-            newStates.addAll(s.getNextStatesForSymbol('#'));
+            if (!visitedStates.contains(s)) {
+                newStates.addAll(s.getNextStatesForSymbol('#'));
+                visitedStates.add(s);
+            }
+        }
+        if (newStates.size() > 0) {
+            addEpsilonTransitionsOfStates(newStates, visitedStates);
         }
         states.addAll(newStates);
-
-        if (states.size() > n) {
-            states = addEpsilonTransitionsOfStates(states, states.size());
-        }
-
-        return states;
     }
 
+    /**
+     * 
+     * @param isDFA Change the indicator of whether the NFA is also DFA
+     */
     public void setIsDFA(boolean isDFA) {
         this.isDFA = isDFA;
     }
 
-    
-    public boolean getIsDFA(){
-        return isDFA; 
+    /**
+     * 
+     * @return Whether the NFA is certain to be DFA
+     */
+    public boolean getIsDFA() {
+        return isDFA;
     }
 }

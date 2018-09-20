@@ -26,12 +26,7 @@ public class PatternProcessorTest {
         return alphabet;
     }
 
-    public Set<Character> simpleOperations() {
-        Set<Character> operations = new HashSet();
-        Character[] supportedOperations = {'&', '|', '*', '(', ')'};
-        operations.addAll(Arrays.asList(supportedOperations));
-        return operations;
-    }
+
 
     public Set<Character> simpleShorthands() {
         Set<Character> shorthands = new HashSet();
@@ -41,7 +36,7 @@ public class PatternProcessorTest {
     }
 
     public PatternProcessorTest() {
-        processor = new PatternProcessor(simpleAlphabet(), simpleOperations(), simpleShorthands());
+        processor = new PatternProcessor(simpleAlphabet(), simpleShorthands());
 
     }
 
@@ -50,10 +45,6 @@ public class PatternProcessorTest {
         assertEquals(simpleAlphabet(), processor.getAlphabet());
     }
 
-    @Test
-    public void constructorSetsOperationsCorrectly() {
-        assertEquals(simpleOperations(), processor.getOperations());
-    }
 
     @Test
     public void constructorSetsShorthandsCorrectly() {

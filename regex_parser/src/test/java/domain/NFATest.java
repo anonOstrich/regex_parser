@@ -86,6 +86,9 @@ public class NFATest {
         NFA unionNFA = new NFA(s0, accepting);
         assertTrue(unionNFA.accepts("0") && unionNFA.accepts("1"));
     }
+    
+    @Test
+    public void acceptReturnsTrueWithUnionWithEmptyStringWhenThatIsOneOption(){}
 
     @Test
     public void acceptReturnsFalseWithUnionWithNonmatchingString() {
@@ -142,5 +145,22 @@ public class NFATest {
         NFA keene_nfa = new NFA(s0, accepting);
         assertTrue(!keene_nfa.accepts("b"));
     }
+    
+    @Test
+    public void acceptReturnsTrueWithConcatenationAndMatchingString(){}
+    
+    @Test
+    public void acceptReturnsFalseWithConcatenationAndEmptyString(){}
+    
+    @Test
+    public void acceptReturnsFalseWithConcatenationAndNonMatchingString(){}
+    
+    @Test
+    public void NFAIsNotDFAByDefault(){}
+    
+    @Test
+    public void NFACanBeSetToIdentifyAsDFA(){}
+    
+    
 
 }

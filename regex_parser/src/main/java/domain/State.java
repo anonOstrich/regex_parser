@@ -7,17 +7,15 @@ import java.util.Set;
 import java.util.HashSet;
 
 /**
+ * 
  * Represents a node and its forward connections in a nondeterministic finite
- * automaton
+ * automaton.
  *
- *
- *
- * @author Jesper Kuutti
  */
 public class State {
 
     /**
-     * Integer that is used to differentiate different states from one another.
+     * Integer that is used to differentiate states from one another.
      */
     private int id;
 
@@ -25,11 +23,11 @@ public class State {
      * All the information about what states are accessible from this one.
      *
      * <p>
-     * Key is some symbol of an alphabet. The value of the key is the set of
-     * states that are possible with the key symbol in some nondeterministic
+     * Key is some symbol of an alphabet or #. The value of the key is the set of
+     * states that are reachable with the key symbol transition in some nondeterministic
      * finite automaton. In total, the map contains information about all
      * symbols that may lead to next states in an NFA, and also the specific
-     * states that a given symbol can lead to.ö
+     * states that a given symbol can lead to.
      * </p>
      */
     private Map<Character, Set<State>> transitions;
@@ -37,7 +35,7 @@ public class State {
     /**
      * Creates an instance of the class with predetermined transitions.
      *
-     * @param id Id to differentiate this state from others.
+     * @param id 
      * @param transitions Predetermined information about transitions to other
      * states.
      */
@@ -71,8 +69,7 @@ public class State {
      *
      * Replace all the existing transitions with new ones.
      *
-     * @param transitions A map of transitions for the symbols that might lead
-     * to next states
+     * @param transitions New transitions.
      */
     public void setTransitions(Map<Character, Set<State>> transitions) {
         this.transitions = transitions;
@@ -83,7 +80,7 @@ public class State {
      * Add new transition symbols and the corresponding reachable states to the
      * already existing transition information.
      *
-     * @param transitions
+     * @param transitions New information to be added. 
      */
     public void addTransitions(Map<Character, Set<State>> transitions) {
         this.transitions.putAll(transitions);
@@ -91,10 +88,10 @@ public class State {
 
     /**
      * Replace the existing possible states for the given symbol with a set that
-     * contains only the given state.
+     * contains only the given single state.
      *
-     * @param symbol
-     * @param next
+     * @param symbol Which symbol's set of states is replaced
+     * @param next The only state reachable with the symbol
      */
     public void setNextStateForSymbol(Character symbol, State next) {
         transitions.put(symbol, new HashSet());
@@ -120,8 +117,8 @@ public class State {
      * Replace the existing possible states for the given symbol with a new set
      * of states.
      *
-     * @param symbol
-     * @param next_states
+     * @param symbol Symbol whose states are replaced
+     * @param next_states Replacing states
      */
     public void setNextStatesForSymbol(Character symbol, Set<State> next_states) {
         transitions.put(symbol, next_states);
@@ -146,7 +143,7 @@ public class State {
     /** 
      * 
      * @param symbol
-     * @return 
+     * @return Set of states that are reachable from this state with the symbol
      */
     public Set<State> getNextStatesForSymbol(Character symbol) {
         Set<State> result = transitions.get(symbol);
@@ -179,7 +176,7 @@ public class State {
      *
      * States are equal if their ids are the same; the transition information is not considered
      * 
-     * @param o
+     * @param o Compared object
      * @return True if the states share the id, false otherwise
      */
     @Override
@@ -193,7 +190,7 @@ public class State {
 
     /**
      *
-     * @return
+     * @return Hash code generated from the id. 
      */
     @Override
     public int hashCode() {
