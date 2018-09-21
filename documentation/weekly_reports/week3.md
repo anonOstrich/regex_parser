@@ -3,18 +3,19 @@ Weekly report 3
 
 Accomplished this week
 ----------------------
-Hit a major milestone: the necessary functions for parsing regular expressions is in place. Also everything has something as JavaDoc, even if the descriptions could be clarified and expanded on.
+Hit a major milestone: the necessary functions for parsing regular expressions is in place. JavaDoc covers everything but the UI class. Program works at a basic level. 
 
 
 
 Advancement of the program
 --------------------------
-NFAGenerator class is good enough for a functioning regex parser. I wrote tests alongside coding, and they should cover most of the written code. Updated JavaDoc to better reflect the current state of the program. The code could use some refactoring and especially improved error handling, since I have not prepared for encountering syntactically incorrect expressions. The UI has no functionality relating to regular expressions yet. 
+NFAGenerator class is good enough for a functioning regex parser. I wrote tests alongside coding, and they should cover most of the written code. Updated JavaDoc to better reflect the current state of the program. The code could use some refactoring and especially improved error handling, since I have not prepared for encountering syntactically incorrect expressions. The UI has basic funtionality for quering a regular expression and a test string, and informing the user whether they match. 
 
 
-What have I learned
--------------------
-It is very pleasant to do changes when the tests are already in place - you can quickly tell if the change breaks things.
+What I learned
+--------------
+It is very pleasant to do changes when the tests are already in place - you can quickly tell if the change breaks things. 
+Learned more concretely about converting any NFA to an equivalent DFA after implementing such a method by myself. The trick is storing enough states to keep track of any combination of states that the NFA can be in at one time. 
 
 
 
@@ -28,7 +29,7 @@ New introduced shorthand symbols enable more ambiguous patterns than earlier; th
 
 Questions / confusion
 ---------------------
-- 
+
 
 
 To do next
@@ -44,10 +45,14 @@ Text UI for entering regexes by hand or for giving the path of a file.
 Time spent on the project
 -------------------------
 18.9.2018: 5h 
+
 19.9.2018: 7h, rewrote some parts of DFAGenerator class multiple times
+
 20.9.2018: 5h
 
-Total: 17h
+21.9.2018 1h
+
+Total: 18h
 
 
 Time spent during the second week (also in the 2nd week report)

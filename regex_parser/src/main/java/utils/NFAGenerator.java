@@ -12,70 +12,92 @@ import java.util.HashSet;
 
 /**
  *
- * Offers the tools to create nondeterministic finite automata from regular expressions.
+ * Offers the tools to create nondeterministic finite automata from regular
+ * expressions.
  *
  */
 public class NFAGenerator {
 
     /**
-     * 
-     * Store for already constructed automata. If the same regular expression is used more than once, 
-     * the resulting NFA is quickly accessible.
-     * 
+     *
+     * Store for already constructed automata. If the same regular expression is
+     * used more than once, the resulting NFA is quickly accessible.
+     *
      */
     private Map<String, NFA> cache;
-    
+
     /**
-     * Tells whether cache is used to potentially speed up generation. 
-     * 
+     * Tells whether cache is used to potentially speed up generation.
+     *
      */
     private boolean cacheEnabled;
-    
-    /** 
-     * 
-     * The allowed symbols in the input that are not control characters. 
-     * 
+
+    /**
+     *
+     * The allowed symbols in the input that are not control characters.
+     *
      */
     private Set<Character> alphabet;
-    
+
     /**
      * Set containing supported operations symbols.
      */
     private Set<Character> operations;
     /**
-     * Lowest positive integer that is not the id of any created state. 
+     * Lowest positive integer that is not the id of any created state.
      */
     private int lowestAvailableId;
     /**
-     * Utility class for preprocessing input patterns to such a form that
-     * they only contain operations, alphabet symbols, and #. 
+     * Utility class for preprocessing input patterns to such a form that they
+     * only contain operations, alphabet symbols, and #.
      */
     private PatternProcessor patternProcessor;
-    
-    /**
-     * A generator that offers tools for creating automata for the complement languages of other automata. 
-     */
-    private DFAGenerator dfaGenerator; 
 
     /**
-     * Sets cache on by as the default. 
-     * 
+     * A generator that offers tools for creating automata for the complement
+     * languages of other automata.
+     */
+    private DFAGenerator dfaGenerator;
+
+    /**
+     * Sets cache on by as the default.
+     *
      * @param alphabet Set of supported nonoperational symbols.
      */
     public NFAGenerator(Set<Character> alphabet) {
         this(alphabet, true);
     }
 
-    
- /**
-  * 
-  * Initializes all the necessary constructs. Supported operations and shorthands
-  * are hardcoded, since there is no need to change them in the scope of this project. 
-  * 
-  * @param alphabet Set of supported nonoperational symbols. 
-  * @param cache_enabled Whether cache should be used or not.
-  */
+    public NFAGenerator() {
+        this(null);
+    }
+
+    /**
+     *
+     * Initializes all the necessary constructs. Supported operations and
+     * shorthands are hardcoded, since there is no need to change them in the
+     * scope of this project.
+     *
+     * @param alphabet Set of supported nonoperational symbols.
+     * @param cache_enabled Whether cache should be used or not.
+     */
     public NFAGenerator(Set<Character> alphabet, boolean cache_enabled) {
+        if (alphabet == null) {
+            alphabet = new HashSet();
+            for (int i = (int) 'A'; i <= (int) 'Z'; i++) {
+                alphabet.add((char) i);
+            }
+
+            for (int i = (int) 'a'; i <= (int) 'z'; i++) {
+                alphabet.add((char) i);
+            }
+
+            for (int i = (int) '0'; i <= (int) '9'; i++) {
+                alphabet.add((char) i);
+            }
+
+        }
+
         this.cache = new HashMap();
         this.alphabet = alphabet;
         this.cacheEnabled = cache_enabled;
@@ -90,9 +112,9 @@ public class NFAGenerator {
     }
 
     /**
-     * 
+     *
      * @param pattern
-     * @return 
+     * @return
      */
     public NFA generateNFA(String pattern) {
         //add explicit concatenation symbols and see if the pattern has been encountered before
@@ -172,21 +194,21 @@ public class NFAGenerator {
         if (operation == ')') {
             evaluateParentheses(operationStack, automatonStack);
             return true;
-        }      
-        if(operation == '!'){
+        }
+        if (operation == '!') {
             result = dfaGenerator.generateComplementDFA(automatonStack.pop(), alphabet);
         }
         automatonStack.push(result);
         return true;
     }
 
-    
     /**
-     * Evaluates everything in the operationstack before opening parenthesis. The NFA created
-     * from the last operation will be on top of the automaton stack at the end. 
-     * 
+     * Evaluates everything in the operationstack before opening parenthesis.
+     * The NFA created from the last operation will be on top of the automaton
+     * stack at the end.
+     *
      * @param operationStack
-     * @param automatonStack 
+     * @param automatonStack
      */
     private void evaluateParentheses(Deque<Character> operationStack, Deque<NFA> automatonStack) {
         while (operationStack.peek() != '(') {
@@ -195,13 +217,12 @@ public class NFAGenerator {
         operationStack.pop();
     }
 
-    
     /**
-     * Evaluates Kleene star and returns the resulting NFA. 
-     * 
+     * Evaluates Kleene star and returns the resulting NFA.
+     *
      * @param result
      * @param automatonStack
-     * @return 
+     * @return
      */
     private NFA evaluateKleeneStar(NFA result, Deque<NFA> automatonStack) {
         result = automatonStack.pop();
@@ -223,52 +244,53 @@ public class NFAGenerator {
     }
 
     /**
-     * Evaluates the union operation by popping the two automata on top of the automaton stack. 
-     * 
+     * Evaluates the union operation by popping the two automata on top of the
+     * automaton stack.
+     *
      * @param automatonStack
-     * @param result 
+     * @param result
      */
     private void evaluateUnion(Deque<NFA> automatonStack, NFA result) {
         NFA second = automatonStack.pop();
         NFA first = automatonStack.pop();
-        
+
         State start = new State(lowestAvailableId);
         lowestAvailableId++;
         State finish = new State(lowestAvailableId);
         lowestAvailableId++;
-        
+
         start.addNextStateForSymbol('#', first.getStartingState());
         start.addNextStateForSymbol('#', second.getStartingState());
-        
+
         for (State s : first.getAcceptingStates()) {
             s.addNextStateForSymbol('#', finish);
         }
-        
+
         for (State s : second.getAcceptingStates()) {
             s.addNextStateForSymbol('#', finish);
         }
-        
+
         Set<State> acceptingStates = new HashSet();
         acceptingStates.add(finish);
         result.setStartingState(start);
         result.setAcceptingStates(acceptingStates);
     }
 
-    
     /**
-     * Evaluates concatenation operation. Since stacks are LIFO, the second operand is the topmost. 
-     * 
+     * Evaluates concatenation operation. Since stacks are LIFO, the second
+     * operand is the topmost.
+     *
      * @param automatonStack
-     * @param result 
+     * @param result
      */
     private void evaluateConcatenation(Deque<NFA> automatonStack, NFA result) {
         // first pop -> was added second to the stack!
         NFA second = automatonStack.pop();
         NFA first = automatonStack.pop();
-        
+
         State start = first.getStartingState();
         Set<State> accepting = second.getAcceptingStates();
-        
+
         for (State s : first.getAcceptingStates()) {
             s.addNextStateForSymbol('#', second.getStartingState());
         }
@@ -276,13 +298,10 @@ public class NFAGenerator {
         result.setAcceptingStates(accepting);
     }
 
-    
-
     /**
      *
-     * Helper method for evaluating the operations in the proper
-     * order. 
-     * 
+     * Helper method for evaluating the operations in the proper order.
+     *
      * @param operation1 symbol for operation
      * @param operation2 symbol for compared operation
      * @return true if operation1 has precedence over operation2. Otherwise
@@ -298,16 +317,15 @@ public class NFAGenerator {
             return true;
         }
 
-        
         if (operation2 == '(') {
             return false;
         }
         if (operation1 == ')') {
             return true;
         }
-        
-        if(operation1 == '!'){
-            return true; 
+
+        if (operation1 == '!') {
+            return true;
         }
 
         return false;
@@ -315,9 +333,10 @@ public class NFAGenerator {
 
     /**
      * Creates a simple NFA that recognizes only the input symbol.
-     * 
+     *
      * @param symbol Character that the NFA must accept
-     * @return NFA that has two states: starting state, and accepting state, which can be reached only by the input symbol. 
+     * @return NFA that has two states: starting state, and accepting state,
+     * which can be reached only by the input symbol.
      */
     public NFA generateNFAFromOneSymbol(char symbol) {
         State s0 = new State(lowestAvailableId);
@@ -331,32 +350,35 @@ public class NFAGenerator {
         return result;
     }
 
-  
-
     /**
-     * Creates the simplest NFA that accepts only empty string. 
-     * 
-     * @return NFA that has its accepting state as starting state. There is only one state in total. 
+     * Creates the simplest NFA that accepts only empty string.
+     *
+     * @return NFA that has its accepting state as starting state. There is only
+     * one state in total.
      */
     public NFA generateNFAFromEmptyString() {
         State s = new State(lowestAvailableId);
-        lowestAvailableId++; 
-        Set<State> acceptingStates = new HashSet(); 
+        lowestAvailableId++;
+        Set<State> acceptingStates = new HashSet();
         acceptingStates.add(s);
         NFA result = new NFA(s, acceptingStates);
-        return result; 
+        return result;
     }
 
     /**
-     * 
+     *
      * @return Set containing allowed nonoperational symbols.
      */
     public Set<Character> getAlphabet() {
         return alphabet;
     }
 
+    public void setAlphabet(Set<Character> alphabet) {
+        this.alphabet = alphabet;
+    }
+
     /**
-     * 
+     *
      * @return Set containing supported operation symbols.
      */
     public Set<Character> getOperations() {
@@ -364,16 +386,17 @@ public class NFAGenerator {
     }
 
     /**
-     * 
-     * @return Cache - all the automata that the generator has produced, if cacheEnabled has been true. 
+     *
+     * @return Cache - all the automata that the generator has produced, if
+     * cacheEnabled has been true.
      */
     public Map<String, NFA> getCache() {
         return cache;
     }
 
     /**
-     * 
-     * @return True if the generator uses cache, false otherwise. 
+     *
+     * @return True if the generator uses cache, false otherwise.
      */
     public boolean getCacheEnabled() {
         return cacheEnabled;
