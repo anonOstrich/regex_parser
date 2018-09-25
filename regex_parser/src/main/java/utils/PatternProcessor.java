@@ -55,6 +55,7 @@ public class PatternProcessor {
             return pattern;
         }
         pattern = replaceShorthands(pattern);
+      //  pattern = removeUnnecessaryNegations(pattern);
         pattern = addConcatenationSymbols(pattern);
         return pattern;
     }
@@ -327,6 +328,37 @@ public class PatternProcessor {
         pattern = sb.toString();
         return pattern;
 
+    }
+    
+    /**
+     * 
+     * Processes pattern string for multiple consequent negation symbols. Since negation of negation is 
+     * the same as no negation at all, two following ! symbols are replaced with empty string. 
+     * 
+     * @param pattern
+     * @return same pattern, with every following two ! symbols removed
+     */
+    public String removeUnnecessaryNegations(String pattern){
+        String result = ""; 
+        
+        char c1, c2; 
+        for(int i = 0; i < pattern.length(); i++){
+            c1 = pattern.charAt(i);
+            if(i + 1 == pattern.length()){
+                result += "" + c1; 
+                break; 
+            }
+            c2 = pattern.charAt(i+1); 
+            if(c1 == '!' && c2 == '!'){
+                i++; 
+                continue; 
+            }
+            result += "" + c1; 
+        }
+        
+
+        pattern = result; 
+        return pattern; 
     }
 
     /**

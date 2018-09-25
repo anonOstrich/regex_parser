@@ -26,8 +26,6 @@ public class PatternProcessorTest {
         return alphabet;
     }
 
-
-
     public Set<Character> simpleShorthands() {
         Set<Character> shorthands = new HashSet();
         Character[] supportedShorthands = {'?', '+', '[', '-'};
@@ -44,7 +42,6 @@ public class PatternProcessorTest {
     public void constructorSetsAlphabetCorrectly() {
         assertEquals(simpleAlphabet(), processor.getAlphabet());
     }
-
 
     @Test
     public void constructorSetsShorthandsCorrectly() {
@@ -151,9 +148,9 @@ public class PatternProcessorTest {
     public void determineAffectedPartReturnsOuterParenthesisAndContentWhenNestedParenthesisAndCharacterIsClosingParenthisis() {
         assertEquals("(cid(soul)|(l(in)))", processor.determineAffectedPart("aa(cid(soul)|(l(in)))bb", 20));
     }
-    
+
     @Test
-    public void elongateRegularExpressionTurnsEmptyStringToEmptyCharacter(){
+    public void elongateRegularExpressionTurnsEmptyStringToEmptyCharacter() {
         assertEquals("#", processor.elongateRegularExpression(""));
     }
 
@@ -222,5 +219,52 @@ public class PatternProcessorTest {
 
         assertEquals("(F|E|D|C|B)", processor.replaceShorthands("B-F"));
     }
+
+    @Test
+    public void removeUnnecessaryNegationsDoesNotModifyEmptyString() {
+        assertEquals("", processor.removeUnnecessaryNegations(""));
+    }
+
+    @Test
+    public void removeUnnecessaryNegationsDoesNotModifySingleAlphabetCharacter() {
+        assertEquals("a", processor.removeUnnecessaryNegations("a")); 
+    }
+
+    @Test
+    public void removeUnnecessaryNegationsDoesNotModifySingleNegation() {
+        assertEquals("!", processor.removeUnnecessaryNegations("!"));
+    }
+
+    @Test
+    public void removeUnnecessaryNegationsDoesNotModifyNegationsSeparatedByParentheses() {
+        assertEquals("!(!(!(!(!a))))", processor.removeUnnecessaryNegations("!(!(!(!(!a))))")); 
+    }
+
+    @Test
+    public void removeUnnecessaryNegationsReturnsEmptyStringFromTwoNegations() {
+        assertEquals("", processor.removeUnnecessaryNegations("!!"));
+    }
+
+    @Test
+    public void removeUnnecessaryNegationsRemovesEverythingFromEvenNumberOfNegations() {
+        assertEquals("", processor.removeUnnecessaryNegations("!!!!!!!!!!!!!!!!"));
+    }
+
+    @Test
+    public void removeUnnecessaryNegationsLeavesOneNegationFromOddNumberOfNegations() {
+        assertEquals("!", processor.removeUnnecessaryNegations("!!!")); 
+    }
+
+    @Test
+    public void removeUnnecessaryNegationsRemovesCorrectly1() {
+        assertEquals("a(b|c)f+!(abba)", processor.removeUnnecessaryNegations("a!!(b|c)f+!(abba)")); 
+    }
+
+    @Test
+    public void removeUnnecessaryNegationsRemovesCorrectly2() {
+        assertEquals("(kuikka!(b[2,3]))",processor.removeUnnecessaryNegations("!!!!(kuikka!!!(b[2,3]))")); 
+    }
+
+
 
 }
