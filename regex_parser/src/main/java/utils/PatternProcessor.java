@@ -6,8 +6,7 @@
 package utils;
 
 import java.util.Set;
-import java.util.Deque;
-import java.util.LinkedList;
+import domain.OwnStack; 
 
 /**
  * Class containing methods for preprocessing patterns for regular expressions.
@@ -272,7 +271,7 @@ public class PatternProcessor {
         }
 
         String result = ")";
-        Deque<Character> parStack = new LinkedList();
+        OwnStack<Character> parStack = new OwnStack();
         parStack.push(')');
         idx--;
 

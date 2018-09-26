@@ -2,9 +2,8 @@ package utils;
 
 import domain.NFA;
 import domain.State;
+import domain.OwnStack; 
 import java.util.Arrays;
-import java.util.Deque;
-import java.util.LinkedList;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Set;
@@ -62,7 +61,7 @@ public class NFAGenerator {
     /**
      * Sets cache on by as the default.
      *
-     * @param alphabet Set of supported nonoperational symbols.
+     * @param alphabet Set of supported non-operational symbols.
      */
     public NFAGenerator(Set<Character> alphabet) {
         this(alphabet, true);
@@ -78,7 +77,7 @@ public class NFAGenerator {
      * shorthands are hardcoded, since there is no need to change them in the
      * scope of this project.
      *
-     * @param alphabet Set of supported nonoperational symbols.
+     * @param alphabet Set of supported non-operational symbols.
      * @param cache_enabled Whether cache should be used or not.
      */
     public NFAGenerator(Set<Character> alphabet, boolean cache_enabled) {
@@ -125,8 +124,8 @@ public class NFAGenerator {
 
         //initialization of tools
         lowestAvailableId = 0;
-        Deque<Character> operationStack = new LinkedList();
-        Deque<NFA> NFAStack = new LinkedList();
+        OwnStack<Character> operationStack = new OwnStack();
+        OwnStack<NFA> NFAStack = new OwnStack();
 
         for (int i = 0; i < pattern.length(); i++) {
             char currentSymbol = pattern.charAt(i);
@@ -148,7 +147,7 @@ public class NFAGenerator {
         }
 
         //evaluate remaining operations
-        while (operationStack.peek() != null) {
+        while (!operationStack.isEmpty()) {
             evaluate(operationStack, NFAStack);
         }
 
@@ -175,7 +174,7 @@ public class NFAGenerator {
      * @return true if the operation symbol is valid and there are enough
      * operands to be popped. False if a failure is encountered.
      */
-    public boolean evaluate(Deque<Character> operationStack, Deque<NFA> automatonStack) {
+    public boolean evaluate(OwnStack<Character> operationStack, OwnStack<NFA> automatonStack) {
         if (operationStack.peek() == null) {
             return false;
         }
@@ -210,7 +209,7 @@ public class NFAGenerator {
      * @param operationStack
      * @param automatonStack
      */
-    private void evaluateParentheses(Deque<Character> operationStack, Deque<NFA> automatonStack) {
+    private void evaluateParentheses(OwnStack<Character> operationStack, OwnStack<NFA> automatonStack) {
         while (operationStack.peek() != '(') {
             evaluate(operationStack, automatonStack);
         }
@@ -224,7 +223,7 @@ public class NFAGenerator {
      * @param automatonStack
      * @return
      */
-    private NFA evaluateKleeneStar(NFA result, Deque<NFA> automatonStack) {
+    private NFA evaluateKleeneStar(NFA result, OwnStack<NFA> automatonStack) {
         result = automatonStack.pop();
         State newStart = new State(lowestAvailableId);
         lowestAvailableId++;
@@ -250,7 +249,7 @@ public class NFAGenerator {
      * @param automatonStack
      * @param result
      */
-    private void evaluateUnion(Deque<NFA> automatonStack, NFA result) {
+    private void evaluateUnion(OwnStack<NFA> automatonStack, NFA result) {
         NFA second = automatonStack.pop();
         NFA first = automatonStack.pop();
 
@@ -283,7 +282,7 @@ public class NFAGenerator {
      * @param automatonStack
      * @param result
      */
-    private void evaluateConcatenation(Deque<NFA> automatonStack, NFA result) {
+    private void evaluateConcatenation(OwnStack<NFA> automatonStack, NFA result) {
         // first pop -> was added second to the stack!
         NFA second = automatonStack.pop();
         NFA first = automatonStack.pop();
@@ -367,7 +366,7 @@ public class NFAGenerator {
 
     /**
      *
-     * @return Set containing allowed nonoperational symbols.
+     * @return Set containing allowed non-operational symbols.
      */
     public Set<Character> getAlphabet() {
         return alphabet;
