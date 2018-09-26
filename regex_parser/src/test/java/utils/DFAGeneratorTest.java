@@ -92,5 +92,13 @@ public class DFAGeneratorTest {
         nfa = dGenerator.generateComplementDFA(nfa, alphabet);
         assertTrue(nfa.accepts("alpaqa"));
     }
+    
+    @Test
+    public void generateComplementDFAFromComplementDFAWorksCorrectly(){
+        NFA nfa = nGenerator.generateNFA("(antti)|(rutto)");
+        NFA nfa2 = dGenerator.generateComplementDFA(nfa, alphabet);
+        nfa = dGenerator.generateComplementDFA(nfa2, alphabet);
+        assertTrue(nfa.isInverted() && nfa.accepts("antti") && nfa.accepts("rutto"));
+    }
 
 }

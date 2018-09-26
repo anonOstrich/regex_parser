@@ -37,6 +37,12 @@ public class NFA {
      *
      */
     private Set<State> acceptingStates;
+    
+    /**
+     * Special attribute that is false by default and only needed with some regexes that contain negation. 
+     * If true, accepting states actually indicates all the states that are NOT accepting: every other state is accepting, in such a case. 
+     */
+    private boolean inverted; 
 
     /**
      * Indicates whether the NFA meets the stricter criteria of DFA. The NFA can
@@ -75,6 +81,7 @@ public class NFA {
         this.startingState = startingState;
         this.acceptingStates = acceptingStates;
         this.isDFA = isDFA;
+        inverted = false; 
     }
 
     /**
@@ -179,12 +186,7 @@ public class NFA {
             }
         }
         addEpsilonTransitionsOfStates(currentStates);
-        for (State s : acceptingStates) {
-            if (currentStates.contains(s)) {
-                return true;
-            }
-        }
-        return false;
+        return containsAcceptingState(currentStates);
     }
 
     /**
@@ -249,7 +251,38 @@ public class NFA {
      * 
      * @return Whether the NFA is certain to be DFA
      */
-    public boolean getIsDFA() {
+    public boolean isDFA() {
         return isDFA;
+    }
+    
+    /**
+     * The accepting states changes in the following manner, depending on whether inverted is true or false: 
+     * accepting -> non-accepting (false)
+     * non-accepting -> accepting (true)
+     */
+    public void invert(){
+        this.inverted = !this.inverted; 
+    }
+    
+    public boolean isInverted(){
+        return this.inverted; 
+    }
+    
+    
+    /**
+     * Depending on the inverted bit, correctly returns whether the given set of states contains an accepting state. 
+     * By default inverted is false, so accepting states indicates actual accepting states; method returns true only if 
+     * that set contains any state of the input state. Vice versa when inverted is true. 
+     * 
+     * @param states
+     * @return 
+     */
+    private boolean containsAcceptingState(Set<State> states){
+           for(State s: states){
+               if (inverted != acceptingStates.contains(s)){
+                   return true;
+               }
+            }      
+        return false; 
     }
 }
