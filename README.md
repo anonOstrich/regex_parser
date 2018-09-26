@@ -28,8 +28,8 @@ Links
 -----
 
 * [Design Document](documentation/design_document.md)
-* Implementation Document
-* Testing Document
+* [Implementation Document](documentation/implementation_document)
+* [Testing Document](documentation/testing_document.md)
 * User Guide
 
 ### Weekly reports 
@@ -37,4 +37,4 @@ Links
 * [Week 1](documentation/weekly_reports/week1.md)
 * [Week 2](documentation/weekly_reports/week2.md)
 * [Week 3](documentation/weekly_reports/week3.md)
-* Week 4
+* [Week 4](documentation/weekly_reports/week4.md)
