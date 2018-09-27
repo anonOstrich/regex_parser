@@ -70,6 +70,8 @@ public class DFAGenerator {
      * recognizes the complement language of the parameter nfa.
      */
     public NFA generateComplementDFA(NFA nfa, Set<Character> alphabet) {
+        //messy and overly long, to be cleaned up at some point... 
+        
         if (cache.containsKey(nfa)) {
             return cache.get(nfa);
         }
