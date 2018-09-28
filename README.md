@@ -28,7 +28,7 @@ Links
 -----
 
 * [Design Document](documentation/design_document.md)
-* [Implementation Document](documentation/implementation_document)
+* [Implementation Document](documentation/implementation_document.md)
 * [Testing Document](documentation/testing_document.md)
 * User Guide
 * [JavaDoc](regex_parser/apidocs/overview-summary.html) (to be fixed, at the moment not very pleasant by default)
