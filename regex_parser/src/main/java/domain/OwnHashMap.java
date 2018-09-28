@@ -116,8 +116,13 @@ public class OwnHashMap<K, V> {
     }
     
     public boolean containsKey(K key){
-        //TODO
-        return false; 
+        int hashCode = scaledHashCode(key);
+        OwnLinkedList<K,V> list = table[hashCode];
+        if (list == null){
+            return false; 
+        }
+        
+        return list.search(key) != null; 
     }
 
 }

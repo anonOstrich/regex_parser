@@ -213,7 +213,6 @@ public class PatternProcessor {
                 option += affectedPart;
             }
             sb.insert(i, "|" + option);
-            System.out.println(sb);
         }
 
         sb.deleteCharAt(i);

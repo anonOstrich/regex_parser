@@ -116,6 +116,31 @@ public class OwnHashMapTest {
         assertTrue(used);
     }
     
+    @Test 
+    public void containsKeyReturnsFalseWhenMapIsEmpty(){
+        assertFalse(map.containsKey("naksu"));
+    }
+    
+    @Test
+    public void containsKeyReturnsFalseWhenSaidKeyHasNotBeenPut(){
+        map.put("moneky", 8);
+        assertFalse(map.containsKey("deer"));
+    }
+    
+    @Test
+    public void containsKeyReturnsTrueWhenSaidKeyHasBeenPut(){
+        map.put("deer", 100);
+        assertTrue(map.containsKey("deer"));
+        
+    }
+    
+    @Test
+    public void containsKeyReturnsFalseWhenSaidKeyHasBeenPutAndThenRemoved(){
+        map.put("deer", 100);
+        map.remove("deer");
+        assertFalse(map.containsKey("deer"));
+    }
+    
     private void addHundredElements(){
         for(int i = 0; i < 100; i++){
             map.put("key" + i, i);

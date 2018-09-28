@@ -6,48 +6,105 @@
 package domain;
 
 /**
- * Doubly linked, for use with HashMap
+ * Doubly linked, to be used as collision list in hash map.
  *
  */
 public class OwnLinkedList<K, V> {
-    private boolean preventMultipleKeys; 
 
+    /**
+     * Whether multiple keys are prevented. The program should not attempt
+     * adding the same key twice, so in theory this is unnecessary. If this is
+     * false, insertion takes O(1) instead of O(n).
+     */
+    private boolean preventMultipleKeys;
+
+    /**
+     * Reference to the first element of the list.
+     */
     private PairNode<K, V> first;
 
+    /**
+     * Initializes the empty list, by default not demanding guarding against key
+     * repetition.
+     */
     public OwnLinkedList() {
         first = null;
-        preventMultipleKeys = false; 
-    }
-    
-    public OwnLinkedList(boolean enforceSingleKey){
-        first = null; 
-        preventMultipleKeys = enforceSingleKey; 
+        preventMultipleKeys = false;
     }
 
-    public PairNode<K,V> insert(K key, V value) {
+    /**
+     * Initializes empty list and assigns the given value to the boolean
+     * controlling multiple key check.
+     *
+     * @param enforceSingleKey
+     */
+    public OwnLinkedList(boolean enforceSingleKey) {
+        first = null;
+        preventMultipleKeys = enforceSingleKey;
+    }
+
+    /**
+     * Useful for other methods to call without need to form a pair node.
+     * Creates a pair node out of the given key and value, and inserts it into
+     * this list.
+     *
+     * @param key
+     * @param value
+     * @return Reference to the added pair node.
+     */
+    public PairNode<K, V> insert(K key, V value) {
         PairNode<K, V> node = new PairNode(key, value);
         return insert(node);
     }
 
-    public PairNode<K,V> insert(PairNode<K, V> node) {
-        
-        if(preventMultipleKeys){
-            PairNode<K,V> existing = search(node.getKey());
-            if(existing != null){
+    /**
+     *
+     * Adds the parameter node to the beginning of this list.
+     *
+     * <p>
+     * If multiple keys are explicitly prohibited, first the list is searched
+     * for the parameter key. If a node containing the key is found, the value
+     * attribute of that node is changed to the value attribute of the parameter
+     * node. So in this case no new pair node is created. </p>
+     * <p>
+     * Otherwise the first node of the list is set to be the next node of the
+     * parameter node and the parameter node is set as the previous node for the
+     * first node of this list. Finally the first attribute of this list is
+     * updated to reference the node given as a parameter</p>
+     * <p>
+     * O(n) if preventMultipleKeys is true, O(1) otherwise
+     * </p>
+     *
+     * @param node
+     * @return
+     */
+    public PairNode<K, V> insert(PairNode<K, V> node) {
+
+        if (preventMultipleKeys) {
+            PairNode<K, V> existing = search(node.getKey());
+            if (existing != null) {
                 existing.setValue(node.getValue());
-                return existing; 
+                return existing;
             }
         }
-        
+
         node.setNext(first);
         if (first != null) {
             first.setPrev(node);
         }
         first = node;
-        return node; 
+        return node;
     }
 
-    //returns the value that was last added to the key, if singularity of keys is not enforced. 
+    /**
+     *
+     * Searches one by one for a node that has the parameter as its key value. If there are for some reason 
+     * many such nodes, the search returns the node that it encounters first; that is, the node that was added most recently. 
+     * O(n). 
+     * 
+     * @param key
+     * @return
+     */
     public PairNode<K, V> search(K key) {
         PairNode<K, V> current = first;
         while (current != null && !current.getKey().equals(key)) {
@@ -56,18 +113,24 @@ public class OwnLinkedList<K, V> {
         return current;
     }
 
-    //not faster than singly linked list
+    /** 
+     * Removes the node with the corresponding key from the list by removing all references to it. O(n). 
+     * @param key
+     * @return 
+     */
     public boolean delete(K key) {
         PairNode<K, V> node = search(key);
         if (node != null) {
             delete(node);
-            return true; 
+            return true;
         }
-        return false; 
+        return false;
     }
 
-    //faster than singly linked list
-    // I guess we can assume parameter is not null?
+    /**
+     * Deletes the given node from the list  by removing all references to it. O(1). 
+     * @param node Node to be deleted. 
+     */
     public void delete(PairNode<K, V> node) {
         PairNode<K, V> previous = node.getPrev();
         PairNode<K, V> next = node.getNext();
@@ -81,15 +144,27 @@ public class OwnLinkedList<K, V> {
         }
     }
 
+    /**
+     * 
+     * @return True if the list contains no nodes, false otherwise. 
+     */
     public boolean isEmpty() {
         return null == first;
     }
-    
-    public void setPreventMultipleKeys(boolean allow){
-        this.preventMultipleKeys = allow; 
+
+    /** 
+     * 
+     * @param allow 
+     */
+    public void setPreventMultipleKeys(boolean allow) {
+        this.preventMultipleKeys = allow;
     }
-    
-    public PairNode<K,V> getFirstNode(){
-        return first; 
+ 
+    /**
+     * 
+     * @return Reference to the first node of the list. 
+     */
+    public PairNode<K, V> getFirstNode() {
+        return first;
     }
 }
