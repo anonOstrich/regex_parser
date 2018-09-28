@@ -31,7 +31,7 @@ Links
 * [Implementation Document](documentation/implementation_document)
 * [Testing Document](documentation/testing_document.md)
 * User Guide
-* [JavaDoc](regex_parser/apidocs/overview_summary.html)
+* [JavaDoc](regex_parser/apidocs/overview-summary.html) (to be fixed, at the moment not very pleasant by default)
 
 ### Weekly reports 
 

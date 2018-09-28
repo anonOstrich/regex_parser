@@ -4,7 +4,7 @@ Testing document
 Unit tests
 ----------
 * JUnit tests for all classes except UI and the main class
-* [Coverage and mutation tests with PIT](regex_parser/pitreport/index.html)
+* Coverage and mutation tests with PIT
 
 
 Performance tests
