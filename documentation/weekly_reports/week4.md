@@ -35,4 +35,5 @@ Time spent of the project
 25.9. 1h
 26.9. 1,5h
 27.9. 6h (some time spent on reading about caching implicit DFA, although the implementation of that has not began at all)
-Total: 8.5h
+28.9. 1,5h
+Total: 10h
