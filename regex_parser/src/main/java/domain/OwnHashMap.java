@@ -5,9 +5,11 @@ public class OwnHashMap<K, V> {
     private OwnLinkedList<K, V>[] table;
     private int capacity;
     private int numOfElements;
+    // for easy to implement addAll method. Will take at least O(n) regardless of data structure so list will do 
+    private OwnLinkedList<K, V> elementList; 
 
     public OwnHashMap() {
-        this(100);
+        this(100); 
     }
 
     public OwnHashMap(int initialCapacity) {
@@ -55,7 +57,7 @@ public class OwnHashMap<K, V> {
             if (list.delete(key)) {
                 numOfElements--;
             }
-        }
+        }       
     }
 
     public void rehash() {
@@ -111,8 +113,33 @@ public class OwnHashMap<K, V> {
     }
     
     
+
+    /**
+     * Goes through all table cells looking for stored elements. 
+     * Sure, it needlessly checks even empty cells, but since load factor hovers between .35 and .7 (unless very few
+     * elements have been put to the map), the number of indexes is directly proportional to the number of elements in the
+     * map (O(1)).
+     * 
+     * If a list had been used to store elements of map to fastly go through in putAll, the performance of 
+     * delete would have decresed O(1) -> O(n), at least with my list implementation. 
+     * 
+     * @param mapToBeJoined 
+     */
     public void putAll(OwnHashMap<K,V> mapToBeJoined){
-        //TODO
+
+        for(int i = 0; i < mapToBeJoined.getCapacity(); i++){
+            OwnLinkedList<K, V> collisionList = mapToBeJoined.getTable()[i];
+            if(collisionList == null){
+                continue; 
+            }
+            PairNode<K,V> node = collisionList.getFirstNode(); 
+            while(node != null){
+                PairNode<K, V> nextNode = node.getNext();
+                put(node);                       
+                node = nextNode; 
+            }
+            
+        }
     }
     
     public boolean containsKey(K key){

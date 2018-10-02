@@ -5,10 +5,9 @@
  */
 package domain;
 
-/**
- *
- * @author jesper
- */
-public class OwnSet {
+
+
+public class OwnSet<T> extends OwnHashMap<Integer, T>{
+    
     
 }
