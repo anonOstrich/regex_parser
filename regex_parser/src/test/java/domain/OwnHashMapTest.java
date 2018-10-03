@@ -76,6 +76,12 @@ public class OwnHashMapTest {
         map.remove("dromedaari");
         assertEquals(0, map.getNumOfElements());
     }
+    
+    @Test
+    public void getElementsShowsCorrectNumberOfElementsAfter100Puts(){
+        addHundredElements(); 
+        assertTrue(100 == map.getNumOfElements()); 
+    }
         
     @Test
     public void rehashingEmptyMapDoublesCapacity(){
@@ -140,6 +146,43 @@ public class OwnHashMapTest {
         map.remove("deer");
         assertFalse(map.containsKey("deer"));
     }
+    
+    @Test
+    public void addAllChangesNothingIfAddedMapIsEmpty(){
+        addHundredElements(); 
+        map.putAll(new OwnHashMap());
+        assertTrue(map.getNumOfElements() == 100); 
+        assertTrue(map.containsKey("key3") && map.containsKey("key99"));
+    }
+    
+    @Test
+    public void addAllAddsOnePairWhenAddedMapContainsOnePair(){
+        map.put("monkey", 200);
+        OwnHashMap<String, Integer> map2 = new OwnHashMap(); 
+        map2.put("nauris", -100);
+        map2.put("vorna", 10);
+        map.putAll(map2);
+        assertTrue(map.containsKey("monkey") && map.containsKey("nauris") && map.containsKey("vorna")); 
+    }
+    
+    @Test
+    public void addAllAddsEveryPairFromBigMap(){
+        OwnHashMap<String, Integer> map2 = new OwnHashMap(); 
+        map2.put("monkey", 1);
+        addHundredElements(); 
+        map2.putAll(map);
+        boolean allIsFine = true; 
+        for(int i = 0; i < 100; i++){
+            if(!map2.containsKey("key" + i)){
+                allIsFine = false; 
+                break; 
+            }
+        }
+        
+        assertTrue(map2.containsKey("monkey") && allIsFine); 
+    }
+    
+    
     
     private void addHundredElements(){
         for(int i = 0; i < 100; i++){

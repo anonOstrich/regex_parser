@@ -1,8 +1,7 @@
 package utils;
 
 import java.util.Arrays;
-import java.util.Set;
-import java.util.HashSet;
+import domain.OwnSet; 
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -15,8 +14,8 @@ public class PatternProcessorTest {
 
     private PatternProcessor processor;
 
-    public Set<Character> simpleAlphabet() {
-        Set<Character> alphabet = new HashSet();
+    public OwnSet<Character> simpleAlphabet() {
+        OwnSet<Character> alphabet = new OwnSet();
         for (int i = (int) 'A'; i <= (int) 'z'; i++) {
             alphabet.add((char) i);
         }
@@ -26,10 +25,13 @@ public class PatternProcessorTest {
         return alphabet;
     }
 
-    public Set<Character> simpleShorthands() {
-        Set<Character> shorthands = new HashSet();
+    public OwnSet<Character> simpleShorthands() {
+        OwnSet<Character> shorthands = new OwnSet();
         Character[] supportedShorthands = {'?', '+', '[', '-'};
-        shorthands.addAll(Arrays.asList(supportedShorthands));
+        for(int i = 0; i < supportedShorthands.length; i++){
+            shorthands.add(supportedShorthands[i]);
+        }
+        //shorthands.addAll(Arrays.asList(supportedShorthands));
         return shorthands;
     }
 

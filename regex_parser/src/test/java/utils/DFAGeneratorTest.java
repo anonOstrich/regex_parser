@@ -6,8 +6,7 @@
 package utils;
 
 import domain.NFA;
-import java.util.Set;
-import java.util.HashSet;
+import domain.OwnSet; 
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -17,7 +16,7 @@ import static org.junit.Assert.*;
  */
 public class DFAGeneratorTest {
 
-    Set<Character> alphabet;
+    OwnSet<Character> alphabet;
     NFAGenerator nGenerator;
     DFAGenerator dGenerator;
 
@@ -27,8 +26,8 @@ public class DFAGeneratorTest {
         dGenerator = new DFAGenerator(-1);
     }
 
-    private Set<Character> simpleAlphabet() {
-        Set<Character> result = new HashSet();
+    private OwnSet<Character> simpleAlphabet() {
+        OwnSet<Character> result = new OwnSet();
 
         for (int i = (int) 'A'; i < (int) 'z'; i++) {
             result.add((char) i);

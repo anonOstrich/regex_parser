@@ -1,8 +1,5 @@
 package domain;
 
-import java.util.Set;
-import java.util.HashSet;
-
 /**
  * A representation of a nondeterministic finite automaton.
  *
@@ -36,7 +33,7 @@ public class NFA {
      * processing belongs to acceptingStates, the NFA accepts the input.
      *
      */
-    private Set<State> acceptingStates;
+    private OwnSet<State> acceptingStates;
     
     /**
      * Special attribute that is false by default and only needed with some regexes that contain negation. 
@@ -55,7 +52,7 @@ public class NFA {
      * Creates an empty NFA.
      */
     public NFA() {
-        this(new State(0), new HashSet());
+        this(new State(0), new OwnSet());
     }
 
     /**
@@ -65,7 +62,7 @@ public class NFA {
      * @param startingState The initial state of the NFA
      * @param acceptingStates These states result in acceptance
      */
-    public NFA(State startingState, Set<State> acceptingStates) {
+    public NFA(State startingState, OwnSet<State> acceptingStates) {
         this(startingState, acceptingStates, false);
     }
 
@@ -77,7 +74,7 @@ public class NFA {
      * @param isDFA If created object is certain to be DFA, this should be true.
      * False by default.
      */
-    public NFA(State startingState, Set<State> acceptingStates, boolean isDFA) {
+    public NFA(State startingState, OwnSet<State> acceptingStates, boolean isDFA) {
         this.startingState = startingState;
         this.acceptingStates = acceptingStates;
         this.isDFA = isDFA;
@@ -109,7 +106,7 @@ public class NFA {
      *
      * @param states Set of new accepting states.
      */
-    public void setAcceptingStates(Set<State> states) {
+    public void setAcceptingStates(OwnSet<State> states) {
         this.acceptingStates = states;
     }
 
@@ -117,7 +114,7 @@ public class NFA {
      *
      * @return The set of accepting states.
      */
-    public Set<State> getAcceptingStates() {
+    public OwnSet<State> getAcceptingStates() {
         return this.acceptingStates;
     }
 
@@ -161,12 +158,12 @@ public class NFA {
      * states. Otherwise false.
      */
     public boolean accepts(String test) {
-        Set<State> currentStates = new HashSet();
+        OwnSet<State> currentStates = new OwnSet();
         currentStates.add(startingState);
-        Set<State> nextStates = new HashSet();
+        OwnSet<State> nextStates = new OwnSet();
         //Used to momentarily store the pointer to the current set, so that current set and next set point to different sets
         //at the end of each cycle
-        Set<State> empty;
+        OwnSet<State> empty;
 
         for (int i = 0; i < test.length(); i++) {
             char symbol = test.charAt(i);
@@ -203,8 +200,8 @@ public class NFA {
      *
      * @param states Set of states to be possible expanded
      */
-    public void addEpsilonTransitionsOfStates(Set<State> states) {
-        addEpsilonTransitionsOfStates(states, new HashSet());
+    public void addEpsilonTransitionsOfStates(OwnSet<State> states) {
+        addEpsilonTransitionsOfStates(states, new OwnSet());
     }
     
 
@@ -225,8 +222,8 @@ public class NFA {
      * @param states Set of states that caller wants to expand. 
      * @param visitedStates States that have already been considered.
      */
-    public void addEpsilonTransitionsOfStates(Set<State> states, Set<State> visitedStates) {
-        Set<State> newStates = new HashSet();
+    public void addEpsilonTransitionsOfStates(OwnSet<State> states, OwnSet<State> visitedStates) {
+        OwnSet<State> newStates = new OwnSet();
         for (State s : states) {
             if (!visitedStates.contains(s)) {
                 newStates.addAll(s.getNextStatesForSymbol('#'));
@@ -277,12 +274,50 @@ public class NFA {
      * @param states
      * @return 
      */
-    private boolean containsAcceptingState(Set<State> states){
+    private boolean containsAcceptingState(OwnSet<State> states){
            for(State s: states){
                if (inverted != acceptingStates.contains(s)){
                    return true;
                }
             }      
         return false; 
+    }
+    
+    @Override
+    public boolean equals(Object o){
+        if(o == null || this.getClass() != o.getClass()){
+            return false; 
+        }
+        
+        NFA comp = (NFA) o;
+        
+        
+        if (inverted != comp.isInverted()){
+            return false; 
+        }
+        if(isDFA != comp.isDFA()){
+            return false; 
+        }
+        
+        if(!startingState.equals(comp.getStartingState())){
+            return false; 
+        }
+        
+        if(!acceptingStates.equals(comp.getAcceptingStates())){
+            return false; 
+        }
+        
+        
+        return true; 
+    }
+    
+    @Override
+    public int hashCode(){
+        int code = 7; 
+        code = 31 * code + startingState.hashCode(); 
+        code = 31 * code + acceptingStates.hashCode(); 
+        code = 31 * code + 7 * (isDFA ? 1: 0);
+        code = 31 * code + 7 * (inverted ? 1: 0);
+        return code; 
     }
 }

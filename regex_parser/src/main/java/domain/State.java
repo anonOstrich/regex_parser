@@ -1,10 +1,7 @@
 package domain;
 
 import java.util.Arrays;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Set;
-import java.util.HashSet;
+
 
 /**
  * 
@@ -30,7 +27,7 @@ public class State {
      * states that a given symbol can lead to.
      * </p>
      */
-    private Map<Character, Set<State>> transitions;
+    private OwnHashMap<Character, OwnSet<State>> transitions;
 
     /**
      * Creates an instance of the class with predetermined transitions.
@@ -39,7 +36,7 @@ public class State {
      * @param transitions Predetermined information about transitions to other
      * states.
      */
-    public State(int id, Map<Character, Set<State>> transitions) {
+    public State(int id, OwnHashMap<Character, OwnSet<State>> transitions) {
         this.id = id;
         this.transitions = transitions;
     }
@@ -52,7 +49,7 @@ public class State {
      *
      */
     public State(int id) {
-        this(id, new HashMap());
+        this(id, new OwnHashMap());
     }
 
     /**
@@ -61,7 +58,7 @@ public class State {
      * @return Transition info for all the symbols that might lead to next
      * states
      */
-    public Map<Character, Set<State>> getAllTransitions() {
+    public OwnHashMap<Character, OwnSet<State>> getAllTransitions() {
         return this.transitions;
     }
 
@@ -71,7 +68,7 @@ public class State {
      *
      * @param transitions New transitions.
      */
-    public void setTransitions(Map<Character, Set<State>> transitions) {
+    public void setTransitions(OwnHashMap<Character, OwnSet<State>> transitions) {
         this.transitions = transitions;
     }
 
@@ -82,7 +79,7 @@ public class State {
      *
      * @param transitions New information to be added. 
      */
-    public void addTransitions(Map<Character, Set<State>> transitions) {
+    public void addTransitions(OwnHashMap<Character, OwnSet<State>> transitions) {
         this.transitions.putAll(transitions);
     }
 
@@ -94,7 +91,7 @@ public class State {
      * @param next The only state reachable with the symbol
      */
     public void setNextStateForSymbol(Character symbol, State next) {
-        transitions.put(symbol, new HashSet());
+        transitions.put(symbol, new OwnSet());
         transitions.get(symbol).add(next);
     }
 
@@ -107,7 +104,7 @@ public class State {
      */
     public void addNextStateForSymbol(Character symbol, State next) {
         if (!transitions.containsKey(symbol)) {
-            transitions.put(symbol, new HashSet());
+            transitions.put(symbol, new OwnSet());
         }
         transitions.get(symbol).add(next);
     }
@@ -120,7 +117,7 @@ public class State {
      * @param symbol Symbol whose states are replaced
      * @param next_states Replacing states
      */
-    public void setNextStatesForSymbol(Character symbol, Set<State> next_states) {
+    public void setNextStatesForSymbol(Character symbol, OwnSet<State> next_states) {
         transitions.put(symbol, next_states);
     }
 
@@ -131,9 +128,9 @@ public class State {
      * @param symbol
      * @param next_states
      */
-    public void addNextStatesForSymbol(Character symbol, Set<State> next_states) {
+    public void addNextStatesForSymbol(Character symbol, OwnSet<State> next_states) {
         if (!transitions.containsKey(symbol)) {
-            transitions.put(symbol, new HashSet());
+            transitions.put(symbol, new OwnSet());
         }
 
         transitions.get(symbol).addAll(next_states);
@@ -145,10 +142,10 @@ public class State {
      * @param symbol
      * @return Set of states that are reachable from this state with the symbol
      */
-    public Set<State> getNextStatesForSymbol(Character symbol) {
-        Set<State> result = transitions.get(symbol);
+    public OwnSet<State> getNextStatesForSymbol(Character symbol) {
+        OwnSet<State> result = transitions.get(symbol);
         if (result == null) {
-            return new HashSet();
+            return new OwnSet();
         }
         
         return result;
@@ -211,9 +208,15 @@ public class State {
         result += "Symbols and what states are reachable from them:\n";
 
         for (Character symbol : transitions.keySet()) {
-
-            Set<State> reachable_states = transitions.get(symbol);
-            int[] reachable_ids = reachable_states.stream().mapToInt(st -> st.getId()).toArray();
+                
+            OwnSet<State> reachable_states = transitions.get(symbol);
+            
+            int[] reachable_ids = new int[reachable_states.size()] ;
+            int i = 0; 
+            for(State s: reachable_states){
+                reachable_ids[i] = s.getId();
+                i++; 
+            }
 
             result += symbol + " --> " + Arrays.toString(reachable_ids) + "\n";
         }

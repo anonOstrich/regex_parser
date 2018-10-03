@@ -5,7 +5,7 @@
  */
 package utils;
 
-import java.util.Set;
+import domain.OwnSet; 
 import domain.OwnStack; 
 
 /**
@@ -22,11 +22,11 @@ public class PatternProcessor {
      * or #.
      *
      */
-    private Set<Character> alphabet;
+    private OwnSet<Character> alphabet;
 
-    private Set<Character> shorthandSymbols;
+    private OwnSet<Character> shorthandSymbols;
 
-    public PatternProcessor(Set<Character> alphabet, Set<Character> shorthandSymbols) {
+    public PatternProcessor(OwnSet<Character> alphabet, OwnSet<Character> shorthandSymbols) {
         this.alphabet = alphabet;
         this.shorthandSymbols = shorthandSymbols;
     }
@@ -364,7 +364,7 @@ public class PatternProcessor {
      *
      * @return Alphabet in use
      */
-    public Set<Character> getAlphabet() {
+    public OwnSet<Character> getAlphabet() {
         return alphabet;
     }
 
@@ -372,7 +372,7 @@ public class PatternProcessor {
      *
      * @return Shorthand symbols in use
      */
-    public Set<Character> getShorthandSymbols() {
+    public OwnSet<Character> getShorthandSymbols() {
         return shorthandSymbols;
     }
 

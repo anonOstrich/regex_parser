@@ -6,8 +6,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import java.util.Set;
-import java.util.HashSet;
+
 
 public class NFATest {
 
@@ -17,13 +16,13 @@ public class NFATest {
     @Test
     public void constructorSetsStartingStateCorrectly() {
         State s = new State(1);
-        NFA nfa = new NFA(s, new HashSet());
+        NFA nfa = new NFA(s, new OwnSet());
         assertEquals(s, nfa.getStartingState());
     }
 
     @Test
     public void constructorSetsAcceptingStatesCorrecty() {
-        Set<State> states = new HashSet();
+        OwnSet<State> states = new OwnSet();
         states.add(new State(1));
         states.add(new State(2));
         NFA nfa = new NFA(new State(0), states);
@@ -32,7 +31,7 @@ public class NFATest {
 
     @Test
     public void acceptsReturnsTrueWhenThereIsOnlyOneStateAndInputIsEmpty() {
-        Set<State> accepting = new HashSet();
+        OwnSet<State> accepting = new OwnSet();
         accepting.add(new State(0));
         NFA nfa = new NFA(new State(0), accepting);
         assertTrue(nfa.accepts(""));
@@ -40,7 +39,7 @@ public class NFATest {
 
     @Test
     public void acceptsReturnsFalseWhenThereIsOnlyOneStateAndInputIsNotEmpty() {
-        Set<State> accepting = new HashSet();
+        OwnSet<State> accepting = new OwnSet();
         accepting.add(new State(0));
         NFA nfa = new NFA(new State(0), accepting);
         assertTrue(!nfa.accepts("1"));
@@ -50,7 +49,7 @@ public class NFATest {
     public void acceptReturnsTrueWithASimpleNFAAndMatchingInputString() {
         State s = new State(0);
         s.setNextStateForSymbol('0', new State(1));
-        Set<State> accepting = new HashSet();
+        OwnSet<State> accepting = new OwnSet();
         accepting.add(new State(1));
         NFA nfa = new NFA(s, accepting);
         assertTrue(nfa.accepts("0"));
@@ -60,7 +59,7 @@ public class NFATest {
     public void acceptReturnsFalseWithASimpleNFAAndNonmatchingInputString() {
         State s = new State(0);
         s.setNextStateForSymbol('1', new State(1));
-        Set<State> accepting = new HashSet();
+        OwnSet<State> accepting = new OwnSet();
         accepting.add(new State(1));
         NFA nfa = new NFA(s, accepting);
         assertTrue(!nfa.accepts("0"));
@@ -80,7 +79,7 @@ public class NFATest {
         s2.addNextStateForSymbol('1', s4);
         s3.addNextStateForSymbol('#', s5);
         s4.addNextStateForSymbol('#', s5);
-        Set<State> accepting = new HashSet();
+        OwnSet<State> accepting = new OwnSet();
         accepting.add(s5);
 
         NFA unionNFA = new NFA(s0, accepting);
@@ -104,7 +103,7 @@ public class NFATest {
         s2.addNextStateForSymbol('1', s4);
         s3.addNextStateForSymbol('#', s5);
         s4.addNextStateForSymbol('#', s5);
-        Set<State> accepting = new HashSet();
+        OwnSet<State> accepting = new OwnSet();
         accepting.add(s5);
 
         NFA unionNFA = new NFA(s0, accepting);
@@ -123,7 +122,7 @@ public class NFATest {
         s1.addNextStateForSymbol('a', s2);
         s2.addNextStateForSymbol('#', s1);
         s2.addNextStateForSymbol('#', s3);
-        Set<State> accepting = new HashSet(); 
+        OwnSet<State> accepting = new OwnSet(); 
         accepting.add(s3);
         NFA keene_nfa = new NFA(s0, accepting);
         assertTrue(keene_nfa.accepts("") && keene_nfa.accepts("a") && keene_nfa.accepts("aaaaaaaaaaaaaaaaaaa"));
@@ -140,7 +139,7 @@ public class NFATest {
         s1.addNextStateForSymbol('a', s2);
         s2.addNextStateForSymbol('#', s1);
         s2.addNextStateForSymbol('#', s3);
-        Set<State> accepting = new HashSet(); 
+        OwnSet<State> accepting = new OwnSet(); 
         accepting.add(s3);
         NFA keene_nfa = new NFA(s0, accepting);
         assertTrue(!keene_nfa.accepts("b"));

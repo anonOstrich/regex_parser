@@ -167,4 +167,43 @@ public class OwnLinkedList<K, V> {
     public PairNode<K, V> getFirstNode() {
         return first;
     }
+    
+    @Override
+    public boolean equals(Object o){
+        if(o == null || o.getClass() != this.getClass()){
+            return false; 
+        }
+        
+        OwnLinkedList<K, V> comp = (OwnLinkedList<K,V>) o; 
+        
+        PairNode<K, V> thisNode = this.getFirstNode(); 
+        PairNode<K, V> compNode = comp.getFirstNode(); 
+        
+        while(thisNode != null && compNode != null){          
+            if(!thisNode.equals(compNode)){
+                return false; 
+            }
+            thisNode = thisNode.getNext(); 
+            compNode = compNode.getNext(); 
+        }
+        
+        if(thisNode != null || compNode != null){
+            return false; 
+        }
+        return true; 
+    }
+    
+    @Override
+    public int hashCode(){
+        int code = 7; 
+        
+        PairNode<K, V> current = first; 
+        
+        while(current != null){
+            code = 31 * code + current.hashCode(); 
+            current = current.getNext(); 
+        }
+        
+        return code; 
+    }
 }

@@ -1,11 +1,9 @@
 package utils;
 
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Set;
-import java.util.HashSet;
 import domain.NFA;
 import domain.State;
+import domain.OwnHashMap; 
+import domain.OwnSet; 
 
 /**
  *
@@ -20,7 +18,7 @@ public class DFAGenerator {
      * Stores negations based on the NFA key.
      *
      */
-    private Map<NFA, NFA> cache;
+    private OwnHashMap<NFA, NFA> cache;
     /**
      * Highest available negative integer for creating unique states.
      */
@@ -32,7 +30,7 @@ public class DFAGenerator {
      * new states.
      */
     public DFAGenerator(int highestAvailable) {
-        cache = new HashMap();
+        cache = new OwnHashMap();
         this.highestAvailable = highestAvailable;
     }
 
@@ -69,7 +67,7 @@ public class DFAGenerator {
      * @return Deterministic (also non-deterministic) finite automaton that
      * recognizes the complement language of the parameter nfa.
      */
-    public NFA generateComplementDFA(NFA nfa, Set<Character> alphabet) {
+    public NFA generateComplementDFA(NFA nfa, OwnSet<Character> alphabet) {
         //messy and overly long, to be cleaned up at some point... 
         
         if (cache.containsKey(nfa)) {
@@ -83,14 +81,14 @@ public class DFAGenerator {
 
         NFA dfa = new NFA();
 
-        Map<Set<State>, State> subsetStatesBySetsOfStates = new HashMap();
-        Map<State, Set<State>> setsOfStatesBySubsetStates = new HashMap();
+        OwnHashMap<OwnSet<State>, State> subsetStatesBySetsOfStates = new OwnHashMap();
+        OwnHashMap<State, OwnSet<State>> setsOfStatesBySubsetStates = new OwnHashMap();
 
         State startingSubsetState = new State(highestAvailable);
         highestAvailable--;
         dfa.setStartingState(startingSubsetState);
 
-        Set<State> NFAStartingStates = new HashSet();
+        OwnSet<State> NFAStartingStates = new OwnSet();
         NFAStartingStates.add(nfa.getStartingState());
         nfa.addEpsilonTransitionsOfStates(NFAStartingStates);
         subsetStatesBySetsOfStates.put(NFAStartingStates, startingSubsetState);
@@ -108,26 +106,29 @@ public class DFAGenerator {
             dfa.getAcceptingStates().add(startingSubsetState);
         }
 
-        Set<State> subsetStatesToBeInvestigated = new HashSet();
+        OwnSet<State> subsetStatesToBeInvestigated = new OwnSet();
         subsetStatesToBeInvestigated.add(startingSubsetState);
-        Set<State> investigatedSubsetStates = new HashSet();
+        OwnSet<State> investigatedSubsetStates = new OwnSet();
 
         while (!subsetStatesToBeInvestigated.isEmpty()) {
+            // could replace with random/first/etc method in OwnSet
             State currentSubsetState = subsetStatesToBeInvestigated.iterator().next();
             investigatedSubsetStates.add(currentSubsetState);
             subsetStatesToBeInvestigated.remove(currentSubsetState);
-            Set<State> NFAStates = setsOfStatesBySubsetStates.get(currentSubsetState);
-
-            for (char symbol : alphabet) {
-                Set<State> reachableFromAny = new HashSet();
+            OwnSet<State> NFAStates = setsOfStatesBySubsetStates.get(currentSubsetState);
+            
+            for (Character symbol : alphabet) {
+                OwnSet<State> reachableFromAny = new OwnSet();
                 for (State NFAState : NFAStates) {
-                    Set<State> reachableFromState = NFAState.getNextStatesForSymbol(symbol);
+                    OwnSet<State> reachableFromState = NFAState.getNextStatesForSymbol(symbol);
                     dfa.addEpsilonTransitionsOfStates(reachableFromState);
                     reachableFromAny.addAll(reachableFromState);
                 }
 
                 //turn into one subset state
                 State nextSubsetState;
+                if(symbol == 'a' && subsetStatesToBeInvestigated.size() == 1){
+                }
                 if (subsetStatesBySetsOfStates.containsKey(reachableFromAny)) {
                     nextSubsetState = subsetStatesBySetsOfStates.get(reachableFromAny);
                 } else {

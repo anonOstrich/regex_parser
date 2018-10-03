@@ -2,12 +2,10 @@ package utils;
 
 import domain.NFA;
 import domain.State;
-import domain.OwnStack; 
+import domain.OwnStack;
+import domain.OwnHashMap;
+import domain.OwnSet;
 import java.util.Arrays;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Set;
-import java.util.HashSet;
 
 /**
  *
@@ -23,7 +21,7 @@ public class NFAGenerator {
      * used more than once, the resulting NFA is quickly accessible.
      *
      */
-    private Map<String, NFA> cache;
+    private OwnHashMap<String, NFA> cache;
 
     /**
      * Tells whether cache is used to potentially speed up generation.
@@ -36,12 +34,12 @@ public class NFAGenerator {
      * The allowed symbols in the input that are not control characters.
      *
      */
-    private Set<Character> alphabet;
+    private OwnSet<Character> alphabet;
 
     /**
      * Set containing supported operations symbols.
      */
-    private Set<Character> operations;
+    private OwnSet<Character> operations;
     /**
      * Lowest positive integer that is not the id of any created state.
      */
@@ -63,7 +61,7 @@ public class NFAGenerator {
      *
      * @param alphabet Set of supported non-operational symbols.
      */
-    public NFAGenerator(Set<Character> alphabet) {
+    public NFAGenerator(OwnSet<Character> alphabet) {
         this(alphabet, true);
     }
 
@@ -80,9 +78,10 @@ public class NFAGenerator {
      * @param alphabet Set of supported non-operational symbols.
      * @param cache_enabled Whether cache should be used or not.
      */
-    public NFAGenerator(Set<Character> alphabet, boolean cache_enabled) {
+    public NFAGenerator(OwnSet<Character> alphabet, boolean cache_enabled) {
+
         if (alphabet == null) {
-            alphabet = new HashSet();
+            alphabet = new OwnSet();
             for (int i = (int) 'A'; i <= (int) 'Z'; i++) {
                 alphabet.add((char) i);
             }
@@ -97,15 +96,21 @@ public class NFAGenerator {
 
         }
 
-        this.cache = new HashMap();
+        this.cache = new OwnHashMap();
         this.alphabet = alphabet;
         this.cacheEnabled = cache_enabled;
         Character[] supported_operations = {'*', '|', '&', '(', ')', '!'};
-        this.operations = new HashSet();
-        this.operations.addAll(Arrays.asList(supported_operations));
+        this.operations = new OwnSet();
+        for (int i = 0; i < supported_operations.length; i++) {
+            this.operations.add(supported_operations[i]);
+        }
+
         Character[] supported_shorthands = {'+', '?', '[', '-'};
-        Set<Character> shorthands = new HashSet();
-        shorthands.addAll(Arrays.asList(supported_shorthands));
+        OwnSet<Character> shorthands = new OwnSet();
+
+        for (int i = 0; i < supported_shorthands.length; i++) {
+            shorthands.add(supported_shorthands[i]);
+        }
         this.patternProcessor = new PatternProcessor(alphabet, shorthands);
         dfaGenerator = new DFAGenerator(-1);
     }
@@ -157,6 +162,7 @@ public class NFAGenerator {
             cache.put(pattern, result);
         }
         return result;
+
     }
 
     /**
@@ -229,7 +235,7 @@ public class NFAGenerator {
         lowestAvailableId++;
         State newFinish = new State(lowestAvailableId);
         lowestAvailableId++;
-        Set<State> newAcceptingStates = new HashSet();
+        OwnSet<State> newAcceptingStates = new OwnSet();
         newAcceptingStates.add(newFinish);
         newStart.addNextStateForSymbol('#', result.getStartingState());
         newStart.addNextStateForSymbol('#', newFinish);
@@ -269,7 +275,7 @@ public class NFAGenerator {
             s.addNextStateForSymbol('#', finish);
         }
 
-        Set<State> acceptingStates = new HashSet();
+        OwnSet<State> acceptingStates = new OwnSet();
         acceptingStates.add(finish);
         result.setStartingState(start);
         result.setAcceptingStates(acceptingStates);
@@ -288,7 +294,7 @@ public class NFAGenerator {
         NFA first = automatonStack.pop();
 
         State start = first.getStartingState();
-        Set<State> accepting = second.getAcceptingStates();
+        OwnSet<State> accepting = second.getAcceptingStates();
 
         for (State s : first.getAcceptingStates()) {
             s.addNextStateForSymbol('#', second.getStartingState());
@@ -342,7 +348,7 @@ public class NFAGenerator {
         lowestAvailableId++;
         State s1 = new State(lowestAvailableId);
         lowestAvailableId++;
-        Set<State> finishingStates = new HashSet();
+        OwnSet<State> finishingStates = new OwnSet();
         finishingStates.add(s1);
         s0.addNextStateForSymbol(symbol, s1);
         NFA result = new NFA(s0, finishingStates);
@@ -358,7 +364,7 @@ public class NFAGenerator {
     public NFA generateNFAFromEmptyString() {
         State s = new State(lowestAvailableId);
         lowestAvailableId++;
-        Set<State> acceptingStates = new HashSet();
+        OwnSet<State> acceptingStates = new OwnSet();
         acceptingStates.add(s);
         NFA result = new NFA(s, acceptingStates);
         return result;
@@ -368,11 +374,11 @@ public class NFAGenerator {
      *
      * @return Set containing allowed non-operational symbols.
      */
-    public Set<Character> getAlphabet() {
+    public OwnSet<Character> getAlphabet() {
         return alphabet;
     }
 
-    public void setAlphabet(Set<Character> alphabet) {
+    public void setAlphabet(OwnSet<Character> alphabet) {
         this.alphabet = alphabet;
     }
 
@@ -380,7 +386,7 @@ public class NFAGenerator {
      *
      * @return Set containing supported operation symbols.
      */
-    public Set<Character> getOperations() {
+    public OwnSet<Character> getOperations() {
         return operations;
     }
 
@@ -389,7 +395,7 @@ public class NFAGenerator {
      * @return Cache - all the automata that the generator has produced, if
      * cacheEnabled has been true.
      */
-    public Map<String, NFA> getCache() {
+    public OwnHashMap<String, NFA> getCache() {
         return cache;
     }
 

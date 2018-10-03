@@ -5,10 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Set;
-import java.util.HashSet;
+import domain.OwnSet; 
 
 public class StateTest {
 
@@ -23,11 +20,11 @@ public class StateTest {
     public void tearDown() {
     }
 
-    private Map<Character, Set<State>> createTransitionExample() {
-        Map<Character, Set<State>> result = new HashMap();
-        result.put('0', new HashSet());
-        result.put('1', new HashSet());
-        result.put('#', new HashSet());
+    private OwnHashMap<Character, OwnSet<State>> createTransitionExample() {
+        OwnHashMap<Character, OwnSet<State>> result = new OwnHashMap();
+        result.put('0', new OwnSet());
+        result.put('1', new OwnSet());
+        result.put('#', new OwnSet());
 
         result.get('0').add(new State(2));
         result.get('#').add(new State(3));
@@ -44,8 +41,8 @@ public class StateTest {
 
     @Test
     public void idIsSetCorrectlyByComplexConstructor() {
-        Map<Character, Set<State>> data = new HashMap();
-
+        OwnHashMap<Character, OwnSet<State>> data = new OwnHashMap();
+        
         State s = new State(3, data);
         assertEquals(3, s.getId());
     }
@@ -53,12 +50,12 @@ public class StateTest {
     @Test
     public void transitionsAreSetCorrectlyBySimpleConstructor() {
         State s = new State(1);
-        assertEquals(new HashMap(), s.getAllTransitions());
+        assertEquals(new OwnHashMap(), s.getAllTransitions());
     }
 
     @Test
     public void transitionsAreSetCorrectlyByComplexConstructor() {
-        Map<Character, Set<State>> transitions = createTransitionExample();
+        OwnHashMap<Character, OwnSet<State>> transitions = createTransitionExample();
         State s = new State(3, transitions);
         assertEquals(transitions, s.getAllTransitions());
     }
@@ -87,7 +84,7 @@ public class StateTest {
     @Test
     public void statesAreEqualWhenSameIdButDifferentTransitions() {
         State s1 = new State(1);
-        Map<Character, Set<State>> transitions = createTransitionExample();
+        OwnHashMap<Character, OwnSet<State>> transitions = createTransitionExample();
         State s2 = new State(1, transitions);
         assertEquals(s1, s2);
     }
@@ -103,8 +100,8 @@ public class StateTest {
     @Test
     public void setTransitionsDiscardsExistingTransitions() {
         State s = new State(1, createTransitionExample());
-        s.setTransitions(new HashMap());
-        assertEquals(new HashMap(), s.getAllTransitions());
+        s.setTransitions(new OwnHashMap());
+        assertEquals(new OwnHashMap(), s.getAllTransitions());
     }
 
     @Test
@@ -116,8 +113,8 @@ public class StateTest {
 
     @Test
     public void addTransitionsKeepsExistingTransitions() {
-        Map<Character, Set<State>> existingTransitions = new HashMap();
-        existingTransitions.put('A', new HashSet());
+        OwnHashMap<Character, OwnSet<State>> existingTransitions = new OwnHashMap();
+        existingTransitions.put('A', new OwnSet());
         existingTransitions.get('A').add(new State(10));
         State s = new State(1, existingTransitions);
         s.addTransitions(createTransitionExample());
@@ -128,7 +125,7 @@ public class StateTest {
     @Test
     public void getNextStatesForSymbolWorksWhenThereAreNextStates() {
         State s = new State(1, createTransitionExample());
-        Set<State> expected = new HashSet();
+        OwnSet<State> expected = new OwnSet();
         expected.add(new State(3));
         expected.add(new State(4));
         assertEquals(expected, s.getNextStatesForSymbol('#'));
@@ -144,13 +141,13 @@ public class StateTest {
     @Test
     public void getNextStatesReturnsEmptySetWhenNoSymbolAsKeyAtAll(){
         State s = new State(1); 
-        assertEquals(new HashSet(), s.getNextStatesForSymbol('K'));
+        assertEquals(new OwnSet(), s.getNextStatesForSymbol('K'));
     }
 
     @Test
     public void setNextStatesForSymbolModifiesTransitionsCorrectly() {
         State s = new State(1);
-        Set<State> next_states = new HashSet();
+        OwnSet<State> next_states = new OwnSet();
         next_states.add(new State(2));
         next_states.add(new State(3));
         s.setNextStatesForSymbol('1', next_states);
@@ -160,8 +157,8 @@ public class StateTest {
     @Test
     public void setNextStatesForSymbolReplacesExistingStates() {
         State s = new State(1, createTransitionExample());
-        s.setNextStatesForSymbol('0', new HashSet());
-        assertEquals(new HashSet(), s.getNextStatesForSymbol('0'));
+        s.setNextStatesForSymbol('0', new OwnSet());
+        assertEquals(new OwnSet(), s.getNextStatesForSymbol('0'));
     }
 
     @Test
@@ -181,7 +178,7 @@ public class StateTest {
     @Test
     public void addNextStatesForSymbolAddsStates() {
         State s = new State(1);
-        Set<State> added_states = new HashSet();
+        OwnSet<State> added_states = new OwnSet();
         added_states.add(new State(2));
         added_states.add(new State(3));
         s.setNextStatesForSymbol('1', added_states);
@@ -191,7 +188,7 @@ public class StateTest {
     @Test
     public void addNextStatesForSymbolKeepsExistingStates() {
         State s = new State(1, createTransitionExample());
-        Set<State> added_states = new HashSet();
+        OwnSet<State> added_states = new OwnSet();
         added_states.add(new State(5));
         added_states.add(new State(9));
         s.addNextStatesForSymbol('0', added_states);
@@ -237,7 +234,7 @@ public class StateTest {
     @Test
     public void toStringReturnsExpectedResultsWhenMultipleTransitions(){
         State s = new State(1, createTransitionExample());
-        assertEquals("Id: 1\nSymbols and what states are reachable from them:\n0 --> [2]\n1 --> []\n# --> [3, 4]\n", s.toString());
+        assertEquals("Id: 1\nSymbols and what states are reachable from them:\n1 --> []\n0 --> [2]\n# --> [4, 3]\n", s.toString());
     }
     
 
