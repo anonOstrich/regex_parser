@@ -168,6 +168,17 @@ public class OwnLinkedList<K, V> {
         return first;
     }
     
+    public int size(){
+        int result = 0; 
+        PairNode<K,V> current = first; 
+        
+        while(current != null){
+            result++; 
+            current = current.getNext(); 
+        }
+        return result; 
+    }
+    
     @Override
     public boolean equals(Object o){
         if(o == null || o.getClass() != this.getClass()){
@@ -175,6 +186,10 @@ public class OwnLinkedList<K, V> {
         }
         
         OwnLinkedList<K, V> comp = (OwnLinkedList<K,V>) o; 
+        
+        if(preventMultipleKeys != comp.getPreventMultipleKeys()){
+            return false; 
+        }
         
         PairNode<K, V> thisNode = this.getFirstNode(); 
         PairNode<K, V> compNode = comp.getFirstNode(); 
@@ -206,4 +221,10 @@ public class OwnLinkedList<K, V> {
         
         return code; 
     }
+
+    public boolean getPreventMultipleKeys() {
+        return preventMultipleKeys;
+    }
+    
+    
 }

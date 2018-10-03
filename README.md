@@ -31,7 +31,7 @@ Links
 * [Implementation Document](documentation/implementation_document.md)
 * [Testing Document](documentation/testing_document.md)
 * User Guide
-* [JavaDoc](https://htmlpreview.github.io/?https://github.com/anonOstrich/regex_parser/blob/master/regex_parser/apidocs/overview-summary.html) 
+* [JavaDoc](https://htmlpreview.github.io/?https://github.com/anonOstrich/regex_parser/blob/master/documentation/apidocs/overview-summary.html) 
 
 ### Weekly reports 
 
@@ -39,3 +39,4 @@ Links
 * [Week 2](documentation/weekly_reports/week2.md)
 * [Week 3](documentation/weekly_reports/week3.md)
 * [Week 4](documentation/weekly_reports/week4.md)
+* [Week 5](documentation/weekly_reports/week5.md)

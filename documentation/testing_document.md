@@ -4,7 +4,7 @@ Testing document
 Unit tests
 ----------
 * JUnit tests for all classes except UI and the main class
-* Coverage and mutation tests with PIT
+* [Coverage and mutation tests with PIT](https://htmlpreview.github.io/?https://github.com/anonOstrich/regex_parser/blob/master/documentation/pitreport/index.html)
 
 
 Performance tests
