@@ -76,12 +76,24 @@ public class OwnSet<T> extends HashTable<T, T> implements Iterable<T>{
         }
 
         for (int i = 0; i < table.length; i++) {
-            if (table[i] == null && (comp.getTable()[i] == null || comp.getTable()[i].isEmpty())) {
-                continue;
+            
+            if(this.table[i] == null){
+                if(comp.getTable()[i] == null || comp.getTable()[i].isEmpty()){
+                    continue; 
+                } else {
+                    return false; 
+                }
             }
-            if (table[i].isEmpty() && (comp.getTable()[i] == null)) {
-                continue;
+            
+            if (comp.getTable()[i] == null){
+                if(table[i] == null || table[i].isEmpty()){
+                    continue; 
+                } else {
+                    return false; 
+                }
             }
+            
+            
             if (!table[i].equals(comp.getTable()[i])) {
                 return false;
             }
@@ -101,6 +113,17 @@ public class OwnSet<T> extends HashTable<T, T> implements Iterable<T>{
     public Iterator<T> iterator() {
         SetIterator<T> it = new SetIterator(table); 
         return it;
+    }
+
+    public OwnSet<T> copy() {
+        OwnSet<T> result = new OwnSet(capacity);
+        result.setNumOfElements(numOfElements);
+        OwnLinkedList<T,T>[] copyTable = new OwnLinkedList[capacity];
+        for(int i = 0; i < capacity; i++){
+            copyTable[i] = table[i];
+        }      
+        result.setTable(copyTable);
+        return result; 
     }
     
 

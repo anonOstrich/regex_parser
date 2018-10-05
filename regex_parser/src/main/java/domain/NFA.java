@@ -20,6 +20,15 @@ package domain;
 public class NFA {
 
     /**
+     * An attempt to cache the implicit DFA that is travelled when simulating
+     * the NFA Could decrease the performance requirements of simulation closer
+     * to that of DFA: O(mn) -> O(n) where m is the number of states in the
+     * automaton.
+     *
+     */
+    private OwnHashMap<OwnSet<State>, OwnHashMap<Character, OwnSet<State>>> cache;
+
+    /**
      * The state in which the automaton is prior to reading any input. The
      * following states are determined from the transition information contained
      * in the startingState
@@ -34,12 +43,14 @@ public class NFA {
      *
      */
     private OwnSet<State> acceptingStates;
-    
+
     /**
-     * Special attribute that is false by default and only needed with some regexes that contain negation. 
-     * If true, accepting states actually indicates all the states that are NOT accepting: every other state is accepting, in such a case. 
+     * Special attribute that is false by default and only needed with some
+     * regexes that contain negation. If true, accepting states actually
+     * indicates all the states that are NOT accepting: every other state is
+     * accepting, in such a case.
      */
-    private boolean inverted; 
+    private boolean inverted;
 
     /**
      * Indicates whether the NFA meets the stricter criteria of DFA. The NFA can
@@ -77,8 +88,9 @@ public class NFA {
     public NFA(State startingState, OwnSet<State> acceptingStates, boolean isDFA) {
         this.startingState = startingState;
         this.acceptingStates = acceptingStates;
+        cache = new OwnHashMap();
         this.isDFA = isDFA;
-        inverted = false; 
+        inverted = false;
     }
 
     /**
@@ -160,6 +172,7 @@ public class NFA {
     public boolean accepts(String test) {
         OwnSet<State> currentStates = new OwnSet();
         currentStates.add(startingState);
+        addEpsilonTransitionsOfStates(currentStates);
         OwnSet<State> nextStates = new OwnSet();
         //Used to momentarily store the pointer to the current set, so that current set and next set point to different sets
         //at the end of each cycle
@@ -167,11 +180,26 @@ public class NFA {
 
         for (int i = 0; i < test.length(); i++) {
             char symbol = test.charAt(i);
-            addEpsilonTransitionsOfStates(currentStates);
+
+            if (!isDFA) {
+                if (cache.containsKey(currentStates) && cache.get(currentStates).containsKey(symbol)) {
+                    currentStates = cache.get(currentStates).get(symbol).copy();
+                    continue;
+                }
+            }
 
             for (State currentState : currentStates) {
                 nextStates.addAll(currentState.getNextStatesForSymbol(symbol));
             }
+
+            addEpsilonTransitionsOfStates(nextStates);
+
+//            if (!isDFA) {
+//                if (!cache.containsKey(currentStates)) {
+//                    cache.put(currentStates.copy(), new OwnHashMap());
+//                }
+//                cache.get(currentStates).put(symbol, nextStates.copy());
+//            }
 
             empty = currentStates;
             currentStates = nextStates;
@@ -182,7 +210,7 @@ public class NFA {
                 return false;
             }
         }
-        addEpsilonTransitionsOfStates(currentStates);
+
         return containsAcceptingState(currentStates);
     }
 
@@ -193,33 +221,36 @@ public class NFA {
      *
      * <p>
      * If a state can be reached by a number of epsilon/# transitions from any
-     * of the states of the set, is is added to the same set. Uses a helper method to 
-     * discover transitions of different lengths. 
+     * of the states of the set, is is added to the same set. Uses a helper
+     * method to discover transitions of different lengths.
      * </p>
-
+     *
      *
      * @param states Set of states to be possible expanded
      */
     public void addEpsilonTransitionsOfStates(OwnSet<State> states) {
         addEpsilonTransitionsOfStates(states, new OwnSet());
     }
-    
 
     /**
-     * Adds to the given states the unvisited states that are reachable with one epsilon transition
-     * 
+     * Adds to the given states the unvisited states that are reachable with one
+     * epsilon transition
+     *
      * <p>
-     * Forms a new empty set. By going through the given states, the method then 
-     * adds to this set of new states all the states that are reachable with one epsilon transition
-     * and that are not in the visitedStates set. This decreases some extra work and prevents infitinte loops in cases
-     * where two states have an epsilon transition from and to each other. 
+     * Forms a new empty set. By going through the given states, the method then
+     * adds to this set of new states all the states that are reachable with one
+     * epsilon transition and that are not in the visitedStates set. This
+     * decreases some extra work and prevents infitinte loops in cases where two
+     * states have an epsilon transition from and to each other.
      * </p>
      * <p>
-     * If new states are found, the method calls itself recursively with the set of new states and the same set of visited states. 
-     * This continues for as long as new states are discovered. Each call tries to discover longer sequences of empty transitions. 
+     * If new states are found, the method calls itself recursively with the set
+     * of new states and the same set of visited states. This continues for as
+     * long as new states are discovered. Each call tries to discover longer
+     * sequences of empty transitions.
      * </p>
-     * 
-     * @param states Set of states that caller wants to expand. 
+     *
+     * @param states Set of states that caller wants to expand.
      * @param visitedStates States that have already been considered.
      */
     public void addEpsilonTransitionsOfStates(OwnSet<State> states, OwnSet<State> visitedStates) {
@@ -237,7 +268,7 @@ public class NFA {
     }
 
     /**
-     * 
+     *
      * @param isDFA Change the indicator of whether the NFA is also DFA
      */
     public void setIsDFA(boolean isDFA) {
@@ -245,79 +276,78 @@ public class NFA {
     }
 
     /**
-     * 
+     *
      * @return Whether the NFA is certain to be DFA
      */
     public boolean isDFA() {
         return isDFA;
     }
-    
+
     /**
-     * The accepting states changes in the following manner, depending on whether inverted is true or false: 
-     * accepting -> non-accepting (false)
+     * The accepting states changes in the following manner, depending on
+     * whether inverted is true or false: accepting -> non-accepting (false)
      * non-accepting -> accepting (true)
      */
-    public void invert(){
-        this.inverted = !this.inverted; 
+    public void invert() {
+        this.inverted = !this.inverted;
     }
-    
-    public boolean isInverted(){
-        return this.inverted; 
+
+    public boolean isInverted() {
+        return this.inverted;
     }
-    
-    
+
     /**
-     * Depending on the inverted bit, correctly returns whether the given set of states contains an accepting state. 
-     * By default inverted is false, so accepting states indicates actual accepting states; method returns true only if 
-     * that set contains any state of the input state. Vice versa when inverted is true. 
-     * 
+     * Depending on the inverted bit, correctly returns whether the given set of
+     * states contains an accepting state. By default inverted is false, so
+     * accepting states indicates actual accepting states; method returns true
+     * only if that set contains any state of the input state. Vice versa when
+     * inverted is true.
+     *
      * @param states
-     * @return 
+     * @return
      */
-    private boolean containsAcceptingState(OwnSet<State> states){
-           for(State s: states){
-               if (inverted != acceptingStates.contains(s)){
-                   return true;
-               }
-            }      
-        return false; 
-    }
-    
-    @Override
-    public boolean equals(Object o){
-        if(o == null || this.getClass() != o.getClass()){
-            return false; 
+    private boolean containsAcceptingState(OwnSet<State> states) {
+        for (State s : states) {
+            if (inverted != acceptingStates.contains(s)) {
+                return true;
+            }
         }
-        
+        return false;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || this.getClass() != o.getClass()) {
+            return false;
+        }
+
         NFA comp = (NFA) o;
-        
-        
-        if (inverted != comp.isInverted()){
-            return false; 
+
+        if (inverted != comp.isInverted()) {
+            return false;
         }
-        if(isDFA != comp.isDFA()){
-            return false; 
+        if (isDFA != comp.isDFA()) {
+            return false;
         }
-        
-        if(!startingState.equals(comp.getStartingState())){
-            return false; 
+
+        if (!startingState.equals(comp.getStartingState())) {
+            return false;
         }
-        
-        if(!acceptingStates.equals(comp.getAcceptingStates())){
-            return false; 
+
+        if (!acceptingStates.equals(comp.getAcceptingStates())) {
+            return false;
         }
-        
-        
-        return true; 
+
+        return true;
     }
-    
+
     @Override
-    public int hashCode(){
-        int code = 7; 
-        code = 31 * code + startingState.hashCode(); 
-        code = 31 * code + acceptingStates.hashCode(); 
-        code = 31 * code + 7 * (isDFA ? 1: 0);
-        code = 31 * code + 7 * (inverted ? 1: 0);
-        return code; 
+    public int hashCode() {
+        int code = 7;
+        code = 31 * code + startingState.hashCode();
+        code = 31 * code + acceptingStates.hashCode();
+        code = 31 * code + 7 * (isDFA ? 1 : 0);
+        code = 31 * code + 7 * (inverted ? 1 : 0);
+        return code;
     }
 }

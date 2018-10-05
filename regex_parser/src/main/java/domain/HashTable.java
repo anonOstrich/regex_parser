@@ -342,5 +342,14 @@ public abstract class HashTable<K, V> {
         }
         return code;
     }
-
+    
+    public void setTable(OwnLinkedList<K,V>[] lst){
+        table = lst; 
+    }
+    
+    public void setNumOfElements(int n){
+        numOfElements = n; 
+    }
+    
+    
 }
