@@ -33,8 +33,11 @@ To do next
 
 Time spent on the project
 -------------------------
+
 2.10. 5h 
+
 3.10. 3,5h
+
 5.10. 3h
 
 Total: 11,5h
