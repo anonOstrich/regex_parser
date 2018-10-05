@@ -94,7 +94,7 @@ public abstract class HashTable<K, V> {
         if (needsRehashing()) {
             rehash();
         }
-        int hashCode = scaledHashCode(node.getKey());
+        int hashCode = scaledHashCode(node.getKey());        
         if (table[hashCode] == null) {
             table[hashCode] = new OwnLinkedList();
         }
@@ -139,7 +139,7 @@ public abstract class HashTable<K, V> {
     public void rehash() {
         // load factor 0.7 -> 0.35
         OwnLinkedList<K, V>[] oldTable = this.table;
-        capacity *= 2;
+        this.capacity *= 2;
         OwnLinkedList<K, V>[] newTable = new OwnLinkedList[capacity];
         this.table = newTable;
 
@@ -289,6 +289,7 @@ public abstract class HashTable<K, V> {
     public void clear() {
         numOfElements = 0;
         table = new OwnLinkedList[100];
+        capacity = 100; 
     }
 
     @Override

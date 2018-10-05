@@ -172,7 +172,7 @@ public class PatternProcessor {
                 //min -> 0, max -> -1
                 values[j] = -1*j;
             } else {
-                values[j] = Integer.parseInt(valueStrings[j]);
+                values[j] = Integer.parseInt(valueStrings[j].trim());
             }
         }
 
