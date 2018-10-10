@@ -26,7 +26,13 @@ public class NFA {
      * automaton.
      *
      */
-    private OwnHashMap<OwnSet<State>, OwnHashMap<Character, OwnSet<State>>> cache;
+    private OwnMap<OwnSet<State>, OwnMap<Character, OwnSet<State>>> cache;
+
+    /**
+     * Whether simulated parts of the implicit DFA are stored and retrieved when
+     * suitable.
+     */
+    private boolean cacheEnabled;
 
     /**
      * The state in which the automaton is prior to reading any input. The
@@ -86,11 +92,16 @@ public class NFA {
      * False by default.
      */
     public NFA(State startingState, OwnSet<State> acceptingStates, boolean isDFA) {
+        this(startingState, acceptingStates, isDFA, true);
+    }
+
+    public NFA(State startingState, OwnSet<State> acceptingStates, boolean isDFA, boolean cacheEnabled) {
         this.startingState = startingState;
         this.acceptingStates = acceptingStates;
-        cache = new OwnHashMap();
         this.isDFA = isDFA;
-        inverted = false;
+        this.cacheEnabled = cacheEnabled;
+        cache = new OwnMap();
+        inverted = false; 
     }
 
     /**
@@ -110,6 +121,19 @@ public class NFA {
      */
     public State getStartingState() {
         return this.startingState;
+    }
+    
+    public void enableCaching(){
+        this.cacheEnabled = true; 
+    }
+    
+    public void disableCaching(){
+        this.cacheEnabled = false; 
+    
+    }
+    
+    public OwnMap<OwnSet<State>, OwnMap<Character, OwnSet<State>>> getCache(){
+        return this.cache; 
     }
 
     /**
@@ -180,8 +204,9 @@ public class NFA {
 
         for (int i = 0; i < test.length(); i++) {
             char symbol = test.charAt(i);
-
-            if (!isDFA) {
+            
+           
+            if (cacheEnabled) {
                 if (cache.containsKey(currentStates) && cache.get(currentStates).containsKey(symbol)) {
                     currentStates = cache.get(currentStates).get(symbol).copy();
                     continue;
@@ -194,18 +219,17 @@ public class NFA {
 
             addEpsilonTransitionsOfStates(nextStates);
 
-//            if (!isDFA) {
-//                if (!cache.containsKey(currentStates)) {
-//                    cache.put(currentStates.copy(), new OwnHashMap());
-//                }
-//                cache.get(currentStates).put(symbol, nextStates.copy());
-//            }
-
+            if (cacheEnabled) {
+                if (!cache.containsKey(currentStates)) {
+                    cache.put(currentStates.copy(), new OwnMap());
+                }
+                cache.get(currentStates).put(symbol, nextStates.copy());
+            }
             empty = currentStates;
             currentStates = nextStates;
             nextStates = empty;
             nextStates.clear();
-            
+
             if (currentStates.isEmpty()) {
                 return false;
             }
@@ -273,6 +297,11 @@ public class NFA {
      */
     public void setIsDFA(boolean isDFA) {
         this.isDFA = isDFA;
+        if(isDFA){
+            this.disableCaching();
+        } else {
+            this.enableCaching(); 
+        }
     }
 
     /**
@@ -281,6 +310,10 @@ public class NFA {
      */
     public boolean isDFA() {
         return isDFA;
+    }
+    
+    public boolean usesCaching(){
+        return this.cacheEnabled; 
     }
 
     /**
@@ -306,7 +339,7 @@ public class NFA {
      * @param states
      * @return
      */
-    private boolean containsAcceptingState(OwnSet<State> states) {
+    public boolean containsAcceptingState(OwnSet<State> states) {
         for (State s : states) {
             if (inverted != acceptingStates.contains(s)) {
                 return true;

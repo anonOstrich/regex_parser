@@ -10,7 +10,7 @@ package domain;
  * @param <K> Type for stored keys.
  * @param <V> Type for stored values.
  */
-public class OwnHashMap<K, V> extends HashTable<K, V> {
+public class OwnMap<K, V> extends HashTable<K, V> {
 
     /**
      * Set of all the keys in the map.
@@ -20,7 +20,7 @@ public class OwnHashMap<K, V> extends HashTable<K, V> {
     /**
      * Sets capacity to 100 and initializes the key set.
      */
-    public OwnHashMap() {
+    public OwnMap() {
         super();
         keySet = new OwnSet();
     }
@@ -30,7 +30,7 @@ public class OwnHashMap<K, V> extends HashTable<K, V> {
      *
      * @param capacity Initial capacity.
      */
-    public OwnHashMap(int capacity) {
+    public OwnMap(int capacity) {
         super(capacity);
         keySet = new OwnSet();
     }
@@ -105,8 +105,8 @@ public class OwnHashMap<K, V> extends HashTable<K, V> {
     }
   
     
-    public OwnHashMap<K, V> copy() {
-        OwnHashMap<K,V> result = new OwnHashMap(capacity);
+    public OwnMap<K, V> copy() {
+        OwnMap<K,V> result = new OwnMap(capacity);
         result.setNumOfElements(numOfElements);
         OwnLinkedList<K, V>[] copyTable = new OwnLinkedList[capacity];
         for (int i = 0; i < capacity; i++) {

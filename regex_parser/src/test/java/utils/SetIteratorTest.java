@@ -51,7 +51,7 @@ public class SetIteratorTest {
     }
     
     @Test
-    public void callingNextOnEmptyIteratorDoesNotCauseException(){
+    public void callingNextOnNonEmptyIteratorDoesNotCauseException(){
         try{
             iter.next(); 
             assertTrue(true);

@@ -1,27 +1,15 @@
 package domain;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
-
-import domain.OwnSet; 
 
 public class StateTest {
 
     public StateTest() {
     }
 
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
-    }
-
-    private OwnHashMap<Character, OwnSet<State>> createTransitionExample() {
-        OwnHashMap<Character, OwnSet<State>> result = new OwnHashMap();
+    private OwnMap<Character, OwnSet<State>> createTransitionExample() {
+        OwnMap<Character, OwnSet<State>> result = new OwnMap();
         result.put('0', new OwnSet());
         result.put('1', new OwnSet());
         result.put('#', new OwnSet());
@@ -32,6 +20,7 @@ public class StateTest {
 
         return result;
     }
+    
 
     @Test
     public void idIsSetCorrectlyBySimpleConstructor() {
@@ -41,7 +30,7 @@ public class StateTest {
 
     @Test
     public void idIsSetCorrectlyByComplexConstructor() {
-        OwnHashMap<Character, OwnSet<State>> data = new OwnHashMap();
+        OwnMap<Character, OwnSet<State>> data = new OwnMap();
         
         State s = new State(3, data);
         assertEquals(3, s.getId());
@@ -50,28 +39,25 @@ public class StateTest {
     @Test
     public void transitionsAreSetCorrectlyBySimpleConstructor() {
         State s = new State(1);
-        assertEquals(new OwnHashMap(), s.getAllTransitions());
+        assertEquals(new OwnMap(), s.getAllTransitions());
     }
 
     @Test
     public void transitionsAreSetCorrectlyByComplexConstructor() {
-        OwnHashMap<Character, OwnSet<State>> transitions = createTransitionExample();
-        State s = new State(3, transitions);
-        assertEquals(transitions, s.getAllTransitions());
+        State s = new State(3, createTransitionExample());
+        assertEquals(createTransitionExample(), s.getAllTransitions());
     }
 
     @Test
     public void statesAreNotEqualWithDifferentIDs() {
         State s1 = new State(1);
         State s2 = new State(2);
-
         assertFalse(s1.equals(s2));
     }
 
     @Test
     public void stateIsNotEqualToNull() {
         State s1 = new State(2);
-
         assertFalse(s1.equals(null));
     }
 
@@ -84,14 +70,13 @@ public class StateTest {
     @Test
     public void statesAreEqualWhenSameIdButDifferentTransitions() {
         State s1 = new State(1);
-        OwnHashMap<Character, OwnSet<State>> transitions = createTransitionExample();
+        OwnMap<Character, OwnSet<State>> transitions = createTransitionExample();
         State s2 = new State(1, transitions);
         assertEquals(s1, s2);
     }
 
     @Test
     public void setTransitionsAddsTransitions() {
-
         State s = new State(1);
         s.setTransitions(createTransitionExample());
         assertEquals(s.getAllTransitions(), createTransitionExample());
@@ -100,8 +85,8 @@ public class StateTest {
     @Test
     public void setTransitionsDiscardsExistingTransitions() {
         State s = new State(1, createTransitionExample());
-        s.setTransitions(new OwnHashMap());
-        assertEquals(new OwnHashMap(), s.getAllTransitions());
+        s.setTransitions(new OwnMap());
+        assertEquals(new OwnMap(), s.getAllTransitions());
     }
 
     @Test
@@ -113,7 +98,7 @@ public class StateTest {
 
     @Test
     public void addTransitionsKeepsExistingTransitions() {
-        OwnHashMap<Character, OwnSet<State>> existingTransitions = new OwnHashMap();
+        OwnMap<Character, OwnSet<State>> existingTransitions = new OwnMap();
         existingTransitions.put('A', new OwnSet());
         existingTransitions.get('A').add(new State(10));
         State s = new State(1, existingTransitions);
@@ -133,7 +118,6 @@ public class StateTest {
 
     @Test
     public void getNextStatesForSymbolReturnsEmptySetWhenNoNextStates() {
-
         State s = new State(1, createTransitionExample());
         assertTrue(s.getNextStatesForSymbol('1').isEmpty());
     }
@@ -213,15 +197,13 @@ public class StateTest {
     public void hashCodeReturnsSameWhenSameId(){
         State s1 = new State(1);
         State s2 = new State(1, createTransitionExample());
-        
         assertTrue(s1.hashCode() == s2.hashCode());
     }
     
     @Test 
     public void hashCodeReturnsDifferentWhenDifferentId(){
         State s1 = new State(2);
-        State s2 = new State(5);
-        
+        State s2 = new State(5);      
         assertTrue(s1.hashCode() != s2.hashCode());
     }
     

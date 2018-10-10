@@ -1,16 +1,59 @@
 package domain;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
-
 
 public class NFATest {
 
     public NFATest() {
+    }
+
+    private NFA simpleUnionNFA(char firstOption, char secondOption) {
+        State s0 = new State(0);
+        State s1 = new State(1);
+        State s2 = new State(2);
+        State s3 = new State(3);
+        State s4 = new State(4);
+        State s5 = new State(5);
+        s0.addNextStateForSymbol('#', s1);
+        s0.addNextStateForSymbol('#', s2);
+        s1.addNextStateForSymbol(firstOption, s3);
+        s2.addNextStateForSymbol(secondOption, s4);
+        s3.addNextStateForSymbol('#', s5);
+        s4.addNextStateForSymbol('#', s5);
+        OwnSet<State> accepting = new OwnSet();
+        accepting.add(s5);
+        return new NFA(s0, accepting);
+    }
+
+    private NFA simpleKleeneStarNFA(char symbol) {
+        State s0 = new State(0);
+        State s1 = new State(1);
+        State s2 = new State(2);
+        State s3 = new State(3);
+        s0.addNextStateForSymbol('#', s1);
+        s0.addNextStateForSymbol('#', s3);
+        s1.addNextStateForSymbol(symbol, s2);
+        s2.addNextStateForSymbol('#', s1);
+        s2.addNextStateForSymbol('#', s3);
+        OwnSet<State> accepting = new OwnSet();
+        accepting.add(s3);
+        return new NFA(s0, accepting);
+    }
+
+    private NFA simpleConcatenationNFA(char firstOption, char secondOption) {
+        State s0 = new State(0);
+        State s1 = new State(1);
+        State s2 = new State(2);
+        State s3 = new State(3);
+
+        s0.addNextStateForSymbol(firstOption, s1);
+        s1.addNextStateForSymbol('#', s2);
+        s2.addNextStateForSymbol(secondOption, s3);
+        OwnSet<State> accepting = new OwnSet();
+        accepting.add(s3);
+
+        return new NFA(s0, accepting);
     }
 
     @Test
@@ -67,99 +110,143 @@ public class NFATest {
 
     @Test
     public void acceptReturnsTrueWithUnionWithMatchingString() {
-        State s0 = new State(0);
-        State s1 = new State(1);
-        State s2 = new State(2);
-        State s3 = new State(3);
-        State s4 = new State(4);
-        State s5 = new State(5);
-        s0.addNextStateForSymbol('#', s1);
-        s0.addNextStateForSymbol('#', s2);
-        s1.addNextStateForSymbol('0', s3);
-        s2.addNextStateForSymbol('1', s4);
-        s3.addNextStateForSymbol('#', s5);
-        s4.addNextStateForSymbol('#', s5);
-        OwnSet<State> accepting = new OwnSet();
-        accepting.add(s5);
-
-        NFA unionNFA = new NFA(s0, accepting);
+        NFA unionNFA = simpleUnionNFA('0', '1');
         assertTrue(unionNFA.accepts("0") && unionNFA.accepts("1"));
     }
-    
+
     @Test
-    public void acceptReturnsTrueWithUnionWithEmptyStringWhenThatIsOneOption(){}
+    public void acceptReturnsTrueWithUnionWithEmptyStringWhenThatIsOneOption() {
+        NFA unionNFA = simpleUnionNFA('a', '#');
+        assertTrue(unionNFA.accepts(""));
+
+    }
 
     @Test
     public void acceptReturnsFalseWithUnionWithNonmatchingString() {
-        State s0 = new State(0);
-        State s1 = new State(1);
-        State s2 = new State(2);
-        State s3 = new State(3);
-        State s4 = new State(4);
-        State s5 = new State(5);
-        s0.addNextStateForSymbol('#', s1);
-        s0.addNextStateForSymbol('#', s2);
-        s1.addNextStateForSymbol('0', s3);
-        s2.addNextStateForSymbol('1', s4);
-        s3.addNextStateForSymbol('#', s5);
-        s4.addNextStateForSymbol('#', s5);
-        OwnSet<State> accepting = new OwnSet();
-        accepting.add(s5);
-
-        NFA unionNFA = new NFA(s0, accepting);
-        boolean accepts = unionNFA.accepts("01");
-        assertTrue(!accepts);
+        NFA unionNFA = simpleUnionNFA('0', '1');
+        assertFalse(unionNFA.accepts("01"));
     }
 
     @Test
     public void acceptReturnsTrueWithKeeneStarWithMatchingString() {
-        State s0 = new State(0);
-        State s1 = new State(1);
-        State s2 = new State(2);
-        State s3 = new State(3);
-        s0.addNextStateForSymbol('#', s1);
-        s0.addNextStateForSymbol('#', s3);
-        s1.addNextStateForSymbol('a', s2);
-        s2.addNextStateForSymbol('#', s1);
-        s2.addNextStateForSymbol('#', s3);
-        OwnSet<State> accepting = new OwnSet(); 
-        accepting.add(s3);
-        NFA keene_nfa = new NFA(s0, accepting);
+        NFA keene_nfa = simpleKleeneStarNFA('a');
         assertTrue(keene_nfa.accepts("") && keene_nfa.accepts("a") && keene_nfa.accepts("aaaaaaaaaaaaaaaaaaa"));
     }
 
     @Test
     public void acceptReturnsFalseWithKeeneStarWithNonmatchingString() {
+        NFA keene_nfa = simpleKleeneStarNFA('a');
+        assertFalse(keene_nfa.accepts("b"));
+    }
+
+    @Test
+    public void acceptReturnsTrueWithConcatenationAndMatchingString() {
+        NFA nfa = simpleConcatenationNFA('a', 'b');
+        assertTrue(nfa.accepts("ab"));
+    }
+
+    @Test
+    public void acceptReturnsFalseWithConcatenationAndEmptyString() {
+        NFA nfa = simpleConcatenationNFA('a', 'b');
+        assertFalse(nfa.accepts(""));
+    }
+
+    @Test
+    public void acceptReturnsFalseWithConcatenationAndNonMatchingString() {
+        NFA nfa = simpleConcatenationNFA('a', 'b');
+        assertFalse(nfa.accepts("fu"));
+    }
+
+    @Test
+    public void NFAIsNotDFAByDefault() {
+        NFA nfa = new NFA();
+        assertFalse(nfa.isDFA());
+    }
+
+    @Test
+    public void NFACanBeSetToIdentifyAsDFA() {
+        NFA nfa = new NFA();
+        nfa.setIsDFA(true);
+        assertTrue(nfa.isDFA());
+    }
+
+    @Test
+    public void containsAcceptingStateReturnsTrueWhenOneStateIsAcceptingAndNFANotInverted() {
+        State s0 = new State(0);
+        OwnSet<State> accepting = new OwnSet();
+        accepting.add(s0);
+        OwnSet<State> set = new OwnSet();
+        set.add(s0);
+        NFA nfa = new NFA(s0, accepting);
+        assertTrue(nfa.containsAcceptingState(set));
+
+    }
+
+    @Test
+    public void containsAcceptingStateReturnsFalseWhenNoStatesAreAcceptingAndNFANotInverted() {
         State s0 = new State(0);
         State s1 = new State(1);
-        State s2 = new State(2);
-        State s3 = new State(3);
-        s0.addNextStateForSymbol('#', s1);
-        s0.addNextStateForSymbol('#', s3);
-        s1.addNextStateForSymbol('a', s2);
-        s2.addNextStateForSymbol('#', s1);
-        s2.addNextStateForSymbol('#', s3);
-        OwnSet<State> accepting = new OwnSet(); 
-        accepting.add(s3);
-        NFA keene_nfa = new NFA(s0, accepting);
-        assertTrue(!keene_nfa.accepts("b"));
+        s0.addNextStateForSymbol('a', s1);
+        OwnSet<State> accepting = new OwnSet();
+        accepting.add(s0);
+        OwnSet<State> set = new OwnSet();
+        set.add(s1);
+        NFA nfa = new NFA(s0, accepting);
+        assertFalse(nfa.containsAcceptingState(set));
     }
-    
+
     @Test
-    public void acceptReturnsTrueWithConcatenationAndMatchingString(){}
-    
+    public void containsAcceptingStateReturnsFalseWhenOneStateIsAcceptingAndNFAIsInverted() {
+        State s0 = new State(0);
+        OwnSet<State> accepting = new OwnSet();
+        accepting.add(s0);
+        OwnSet<State> set = new OwnSet();
+        set.add(s0);
+        NFA nfa = new NFA(s0, accepting);
+        nfa.invert();
+        assertFalse(nfa.containsAcceptingState(set));
+    }
+
     @Test
-    public void acceptReturnsFalseWithConcatenationAndEmptyString(){}
-    
+    public void containsAcceptingStateReturnsTrueWhenNoStatesAreAcceptingAndNFAIsInverted() {
+        State s0 = new State(0);
+        State s1 = new State(1);
+        s0.addNextStateForSymbol('a', s1);
+        OwnSet<State> accepting = new OwnSet();
+        accepting.add(s0);
+        OwnSet<State> set = new OwnSet();
+        set.add(s1);
+        NFA nfa = new NFA(s0, accepting);
+        nfa.invert(); 
+        assertTrue(nfa.containsAcceptingState(set)); 
+    }
+
     @Test
-    public void acceptReturnsFalseWithConcatenationAndNonMatchingString(){}
-    
+    public void cachingIsEnabledByDefault() {
+        NFA nfa = new NFA();
+        assertTrue(nfa.usesCaching());
+    }
+
     @Test
-    public void NFAIsNotDFAByDefault(){}
-    
+    public void cachingCanBeDisabledWithConstructor() {
+        NFA nfa = new NFA(new State(0), new OwnSet(), false, false);
+        assertFalse(nfa.usesCaching());
+    }
+
     @Test
-    public void NFACanBeSetToIdentifyAsDFA(){}
-    
-    
+    public void sizeOfCacheIsZeroAfterOneRunWhenCacheDisabled() {
+        NFA nfa = simpleUnionNFA('a', 'b');
+        nfa.disableCaching();
+        nfa.accepts("a");
+        assertEquals(0, nfa.getCache().size());
+    }
+
+    @Test
+    public void sizeOfCacheHasBeenIncreadsedAfterOneRunWhenCacheEnabled() {
+        NFA nfa = simpleUnionNFA('a', 'b');
+        nfa.accepts("a");
+        assertTrue(nfa.getCache().size() > 0);
+
+    }
 
 }

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package utils;
 
 import domain.NFA;
@@ -10,10 +5,6 @@ import domain.OwnSet;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-/**
- *
- * @author jesper
- */
 public class DFAGeneratorTest {
 
     OwnSet<Character> alphabet;
@@ -39,56 +30,52 @@ public class DFAGeneratorTest {
 
         return result;
     }
+    
+    private NFA generateComplementFromPattern(String pattern){
+        NFA nfa = nGenerator.generateNFA(pattern);
+        return dGenerator.generateComplementDFA(nfa, alphabet);
+    }
 
     @Test
     public void generateComplementDFAFromSingleCharacterDoesNotAcceptTheCharacter() {
-        NFA nfa = nGenerator.generateNFA("a");
-        nfa = dGenerator.generateComplementDFA(nfa, alphabet);
+        NFA nfa = generateComplementFromPattern("a");
         assertTrue(!nfa.accepts("a"));
     }
 
     @Test
     public void generateComplementDFAFromSingleCharacterAcceptsEmptyString() {
-        NFA nfa = nGenerator.generateNFA("a");
-        nfa = dGenerator.generateComplementDFA(nfa, alphabet);
-        System.out.println(nfa.getAcceptingStates().size());
+        NFA nfa = generateComplementFromPattern("a");
         assertTrue(nfa.accepts(""));
     }
 
     @Test
     public void generateComplementDFAFromSingleCharacterAcceptsDifferentCharacter() {
-
-        NFA nfa = nGenerator.generateNFA("a");
-        nfa = dGenerator.generateComplementDFA(nfa, alphabet);
+        NFA nfa = generateComplementFromPattern("a");
         assertTrue(nfa.accepts("b"));
     }
 
     @Test
     public void generateComplementDFAFromSingleCharacterAcceptsLongerStrings() {
-        NFA nfa = nGenerator.generateNFA("a");
-        nfa = dGenerator.generateComplementDFA(nfa, alphabet);
+        NFA nfa = generateComplementFromPattern("a");
         assertTrue(nfa.accepts("alpakka"));
     }
 
     @Test
     public void generateComplementDFAFromEmptyStringDoesNotAcceptEmptyString() {
-        NFA nfa = nGenerator.generateNFA("");
-        nfa = dGenerator.generateComplementDFA(nfa, alphabet);
+        NFA nfa = generateComplementFromPattern("");
         assertTrue(!nfa.accepts(""));
     }
 
     @Test
     public void generateComplementDFAFromEmptyStringAcceptsStringOfOneCharacter() {
-        NFA nfa = nGenerator.generateNFA("");
-        nfa = dGenerator.generateComplementDFA(nfa, alphabet);
+        NFA nfa = generateComplementFromPattern("");
         assertTrue(nfa.accepts("a"));
 
     }
 
     @Test
     public void generateComplementDFAFromEmptyStringAcceptsLongStrings() {
-        NFA nfa = nGenerator.generateNFA("");
-        nfa = dGenerator.generateComplementDFA(nfa, alphabet);
+        NFA nfa = generateComplementFromPattern("");
         assertTrue(nfa.accepts("alpaqa"));
     }
     

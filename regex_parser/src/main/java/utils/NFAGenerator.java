@@ -3,7 +3,7 @@ package utils;
 import domain.NFA;
 import domain.State;
 import domain.OwnStack;
-import domain.OwnHashMap;
+import domain.OwnMap;
 import domain.OwnSet;
 import java.util.Arrays;
 
@@ -21,7 +21,7 @@ public class NFAGenerator {
      * used more than once, the resulting NFA is quickly accessible.
      *
      */
-    private OwnHashMap<String, NFA> cache;
+    private OwnMap<String, NFA> cache;
 
     /**
      * Tells whether cache is used to potentially speed up generation.
@@ -96,7 +96,7 @@ public class NFAGenerator {
 
         }
 
-        this.cache = new OwnHashMap();
+        this.cache = new OwnMap();
         this.alphabet = alphabet;
         this.cacheEnabled = cache_enabled;
         Character[] supported_operations = {'*', '|', '&', '(', ')', '!'};
@@ -395,7 +395,7 @@ public class NFAGenerator {
      * @return Cache - all the automata that the generator has produced, if
      * cacheEnabled has been true.
      */
-    public OwnHashMap<String, NFA> getCache() {
+    public OwnMap<String, NFA> getCache() {
         return cache;
     }
 

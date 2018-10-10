@@ -27,7 +27,7 @@ public class State {
      * states that a given symbol can lead to.
      * </p>
      */
-    private OwnHashMap<Character, OwnSet<State>> transitions;
+    private OwnMap<Character, OwnSet<State>> transitions;
 
     /**
      * Creates an instance of the class with predetermined transitions.
@@ -36,7 +36,7 @@ public class State {
      * @param transitions Predetermined information about transitions to other
      * states.
      */
-    public State(int id, OwnHashMap<Character, OwnSet<State>> transitions) {
+    public State(int id, OwnMap<Character, OwnSet<State>> transitions) {
         this.id = id;
         this.transitions = transitions;
     }
@@ -49,7 +49,7 @@ public class State {
      *
      */
     public State(int id) {
-        this(id, new OwnHashMap());
+        this(id, new OwnMap());
     }
 
     /**
@@ -58,7 +58,7 @@ public class State {
      * @return Transition info for all the symbols that might lead to next
      * states
      */
-    public OwnHashMap<Character, OwnSet<State>> getAllTransitions() {
+    public OwnMap<Character, OwnSet<State>> getAllTransitions() {
         return this.transitions;
     }
 
@@ -68,7 +68,7 @@ public class State {
      *
      * @param transitions New transitions.
      */
-    public void setTransitions(OwnHashMap<Character, OwnSet<State>> transitions) {
+    public void setTransitions(OwnMap<Character, OwnSet<State>> transitions) {
         this.transitions = transitions;
     }
 
@@ -79,7 +79,7 @@ public class State {
      *
      * @param transitions New information to be added. 
      */
-    public void addTransitions(OwnHashMap<Character, OwnSet<State>> transitions) {
+    public void addTransitions(OwnMap<Character, OwnSet<State>> transitions) {
         this.transitions.putAll(transitions);
     }
 

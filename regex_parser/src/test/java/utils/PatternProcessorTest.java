@@ -1,53 +1,27 @@
 package utils;
 
-import java.util.Arrays;
 import domain.OwnSet; 
-
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class PatternProcessorTest {
 
-    private PatternProcessor processor;
+    private final PatternProcessor processor;
 
-    public OwnSet<Character> simpleAlphabet() {
-        OwnSet<Character> alphabet = new OwnSet();
-        for (int i = (int) 'A'; i <= (int) 'z'; i++) {
-            alphabet.add((char) i);
-        }
-        for (int i = (int) '0'; i <= (int) '9'; i++) {
-            alphabet.add((char) i);
-        }
-        return alphabet;
-    }
 
-    public OwnSet<Character> simpleShorthands() {
-        OwnSet<Character> shorthands = new OwnSet();
-        Character[] supportedShorthands = {'?', '+', '[', '-'};
-        for(int i = 0; i < supportedShorthands.length; i++){
-            shorthands.add(supportedShorthands[i]);
-        }
-        //shorthands.addAll(Arrays.asList(supportedShorthands));
-        return shorthands;
-    }
 
     public PatternProcessorTest() {
-        processor = new PatternProcessor(simpleAlphabet(), simpleShorthands());
-
+        processor = new PatternProcessor(Utilities.defaultAlphabet(), Utilities.defaultShorthands());
     }
 
     @Test
     public void constructorSetsAlphabetCorrectly() {
-        assertEquals(simpleAlphabet(), processor.getAlphabet());
+        assertEquals(Utilities.defaultAlphabet(), processor.getAlphabet());
     }
 
     @Test
     public void constructorSetsShorthandsCorrectly() {
-        assertEquals(simpleShorthands(), processor.getShorthandSymbols());
+        assertEquals(Utilities.defaultShorthands(), processor.getShorthandSymbols());
     }
 
     @Test

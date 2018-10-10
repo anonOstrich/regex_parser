@@ -5,16 +5,16 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 
-public class OwnHashMapTest {
-    private OwnHashMap<String, Integer> map; 
+public class OwnMapTest {
+    private OwnMap<String, Integer> map; 
     
-    public OwnHashMapTest() {
+    public OwnMapTest() {
         
     }
     
     @Before
     public void setUp(){
-        map = new OwnHashMap(); 
+        map = new OwnMap(); 
     }
     
     @Test
@@ -24,7 +24,7 @@ public class OwnHashMapTest {
     
     @Test
     public void capacityCanBeSetWithConstructor(){
-        OwnHashMap<String, Integer> map2 = new OwnHashMap(20); 
+        OwnMap<String, Integer> map2 = new OwnMap(20); 
         assertEquals(20, map2.getCapacity()); 
     }
     
@@ -150,7 +150,7 @@ public class OwnHashMapTest {
     @Test
     public void addAllChangesNothingIfAddedMapIsEmpty(){
         addHundredElements(); 
-        map.putAll(new OwnHashMap());
+        map.putAll(new OwnMap());
         assertTrue(map.getNumOfElements() == 100); 
         assertTrue(map.containsKey("key3") && map.containsKey("key99"));
     }
@@ -158,7 +158,7 @@ public class OwnHashMapTest {
     @Test
     public void addAllAddsOnePairWhenAddedMapContainsOnePair(){
         map.put("monkey", 200);
-        OwnHashMap<String, Integer> map2 = new OwnHashMap(); 
+        OwnMap<String, Integer> map2 = new OwnMap(); 
         map2.put("nauris", -100);
         map2.put("vorna", 10);
         map.putAll(map2);
@@ -167,7 +167,7 @@ public class OwnHashMapTest {
     
     @Test
     public void addAllAddsEveryPairFromBigMap(){
-        OwnHashMap<String, Integer> map2 = new OwnHashMap(); 
+        OwnMap<String, Integer> map2 = new OwnMap(); 
         map2.put("monkey", 1);
         addHundredElements(); 
         map2.putAll(map);

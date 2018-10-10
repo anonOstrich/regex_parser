@@ -2,8 +2,8 @@ package utils;
 
 import domain.NFA;
 import domain.State;
-import domain.OwnHashMap; 
-import domain.OwnSet; 
+import domain.OwnMap;
+import domain.OwnSet;
 
 /**
  *
@@ -18,7 +18,13 @@ public class DFAGenerator {
      * Stores negations based on the NFA key.
      *
      */
-    private OwnHashMap<NFA, NFA> cache;
+    private OwnMap<NFA, NFA> cache;
+
+    /**
+     * Boolean that indicates whether cache is used to boost performance.
+     */
+    private boolean cacheEnabled;
+
     /**
      * Highest available negative integer for creating unique states.
      */
@@ -30,8 +36,15 @@ public class DFAGenerator {
      * new states.
      */
     public DFAGenerator(int highestAvailable) {
-        cache = new OwnHashMap();
+        this(highestAvailable, true);
+    }
+
+    public DFAGenerator(int highestAvailable, boolean cacheEnabled) {
         this.highestAvailable = highestAvailable;
+        this.cacheEnabled = cacheEnabled;
+        if (cacheEnabled) {
+            cache = new OwnMap();
+        }
     }
 
     /**
@@ -69,8 +82,8 @@ public class DFAGenerator {
      */
     public NFA generateComplementDFA(NFA nfa, OwnSet<Character> alphabet) {
         //messy and overly long, to be cleaned up at some point... 
-        
-        if (cache.containsKey(nfa)) {
+
+        if (cacheEnabled && cache.containsKey(nfa)) {
             return cache.get(nfa);
         }
 
@@ -81,8 +94,8 @@ public class DFAGenerator {
 
         NFA dfa = new NFA();
 
-        OwnHashMap<OwnSet<State>, State> subsetStatesBySetsOfStates = new OwnHashMap();
-        OwnHashMap<State, OwnSet<State>> setsOfStatesBySubsetStates = new OwnHashMap();
+        OwnMap<OwnSet<State>, State> subsetStatesBySetsOfStates = new OwnMap();
+        OwnMap<State, OwnSet<State>> setsOfStatesBySubsetStates = new OwnMap();
 
         State startingSubsetState = new State(highestAvailable);
         highestAvailable--;
@@ -116,9 +129,12 @@ public class DFAGenerator {
             investigatedSubsetStates.add(currentSubsetState);
             subsetStatesToBeInvestigated.remove(currentSubsetState);
             OwnSet<State> NFAStates = setsOfStatesBySubsetStates.get(currentSubsetState);
-            
+
             for (Character symbol : alphabet) {
+                
                 OwnSet<State> reachableFromAny = new OwnSet();
+                
+                
                 for (State NFAState : NFAStates) {
                     OwnSet<State> reachableFromState = NFAState.getNextStatesForSymbol(symbol);
                     dfa.addEpsilonTransitionsOfStates(reachableFromState);
@@ -127,8 +143,7 @@ public class DFAGenerator {
 
                 //turn into one subset state
                 State nextSubsetState;
-                if(symbol == 'a' && subsetStatesToBeInvestigated.size() == 1){
-                }
+
                 if (subsetStatesBySetsOfStates.containsKey(reachableFromAny)) {
                     nextSubsetState = subsetStatesBySetsOfStates.get(reachableFromAny);
                 } else {
@@ -155,9 +170,24 @@ public class DFAGenerator {
             }
         }
 
-        cache.put(nfa, dfa);
+        if (cacheEnabled) {
+            cache.put(nfa, dfa);
+        }
+        
         dfa.setIsDFA(true);
         return dfa;
+    }
+
+    public void enableCaching() {
+        cacheEnabled = true;
+        if(cache == null){
+            cache = new OwnMap(); 
+        }
+        
+    }
+
+    public void disableCaching() {
+        cacheEnabled = false; 
     }
 
 }
