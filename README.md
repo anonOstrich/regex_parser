@@ -22,6 +22,7 @@ Some symbols have special meanings in detailing the structure of the regular exp
 * `?` - repeats at most once (0 or 1 times).
 * `-` - one of the symbols in between. E.g. 'A-F' matches any of the following: 'A', 'B', 'C', 'D', 'E', 'F'. Single digit numbers work as well. 
 * `!` - complement / anything but. E.g. '!a' accepts any other string except 'a'.  
+* `/` - escape character. E.g. if you want to match strings that contain only the character ?, you must construct the regex from pattern `/?`. NOT FULLY IMPLEMENTED YET!
 
 
 Links

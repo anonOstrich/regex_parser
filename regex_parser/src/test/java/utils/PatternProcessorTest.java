@@ -240,7 +240,41 @@ public class PatternProcessorTest {
     public void removeUnnecessaryNegationsRemovesCorrectly2() {
         assertEquals("(kuikka!(b[2,3]))",processor.removeUnnecessaryNegations("!!!!(kuikka!!!(b[2,3]))")); 
     }
-
+    
+    @Test
+    public void escapeCharacterAndSymbolAreOnlyParenthesized(){
+        assertEquals("(/a)", processor.elongateRegularExpression("/a"));
+    }
+    
+    @Test
+    public void escapeCharacterPrecedingExclamationProtectsExclamationFromBeingRemoved(){
+        assertEquals("(/!)&!a", processor.elongateRegularExpression("/!!a"));
+    }
+    
+    @Test
+    public void escapeCharacterPrecedingParenthesesProtectsThemFromBeingInterpretedAsOperationalSymbols(){
+        assertEquals("(/()&n&a&k&s&u&(/))*", processor.elongateRegularExpression("/(naksu/)*"));
+    }
+    
+    @Test
+    public void fourEscapeCharactersTurnsIntoASingleConcatenation(){
+        assertEquals("(//)&(//)", processor.elongateRegularExpression("////"));
+    }
+    
+    @Test
+    public void escapapingQuestionMarkWorks(){
+        assertEquals("((/?)&(/?)*)", processor.elongateRegularExpression("/?+"));
+    }
+    
+    @Test
+    public void escapingPlusMarkWorksWithQuestionMark(){
+        assertEquals("((/+)|#)", processor.elongateRegularExpression("/+?"));
+    }
+    
+    @Test
+    public void escapingPlusMarkWorksWithRepetition(){
+        assertEquals("((/[)&(/[)&(/[)&(/[)&(/[)|(/[)&(/[)&(/[)&(/[)|(/[)&(/[)&(/[))", processor.elongateRegularExpression("/[[3,5]"));
+    }
 
 
 }
