@@ -5,7 +5,6 @@ import domain.State;
 import domain.OwnStack;
 import domain.OwnMap;
 import domain.OwnSet;
-import java.util.Arrays;
 
 /**
  *
@@ -80,38 +79,19 @@ public class NFAGenerator {
      */
     public NFAGenerator(OwnSet<Character> alphabet, boolean cache_enabled) {
 
-        if (alphabet == null) {
-            alphabet = new OwnSet();
-            for (int i = (int) 'A'; i <= (int) 'Z'; i++) {
-                alphabet.add((char) i);
-            }
-
-            for (int i = (int) 'a'; i <= (int) 'z'; i++) {
-                alphabet.add((char) i);
-            }
-
-            for (int i = (int) '0'; i <= (int) '9'; i++) {
-                alphabet.add((char) i);
-            }
-
-        }
-
         this.cache = new OwnMap();
-        this.alphabet = alphabet;
         this.cacheEnabled = cache_enabled;
+
+        this.alphabet = Utilities.defaultAlphabet();
+        
         Character[] supported_operations = {'*', '|', '&', '(', ')', '!'};
         this.operations = new OwnSet();
         for (int i = 0; i < supported_operations.length; i++) {
             this.operations.add(supported_operations[i]);
+          //  this.alphabet.add(supported_operations[i]);
         }
 
-        Character[] supported_shorthands = {'+', '?', '[', '-'};
-        OwnSet<Character> shorthands = new OwnSet();
-
-        for (int i = 0; i < supported_shorthands.length; i++) {
-            shorthands.add(supported_shorthands[i]);
-        }
-        this.patternProcessor = new PatternProcessor(alphabet, shorthands);
+        this.patternProcessor = new PatternProcessor(alphabet, Utilities.defaultShorthands());
         dfaGenerator = new DFAGenerator(-1);
     }
 
@@ -135,7 +115,13 @@ public class NFAGenerator {
         for (int i = 0; i < pattern.length(); i++) {
             char currentSymbol = pattern.charAt(i);
 
-            if (alphabet.contains(currentSymbol) || currentSymbol == '#') {
+            if(currentSymbol == '/'){
+                NFAStack.push(generateNFAFromOneSymbol(pattern.charAt(i+1)));
+                i++; 
+                continue; 
+            }
+            
+            if ( alphabet.contains(currentSymbol) || currentSymbol == '#') {
                 NFAStack.push(generateNFAFromOneSymbol(currentSymbol));
             }
 
@@ -201,7 +187,7 @@ public class NFAGenerator {
             return true;
         }
         if (operation == '!') {
-            result = dfaGenerator.generateComplementDFA(automatonStack.pop(), alphabet);
+            result = dfaGenerator.generateComplementDFA(automatonStack.pop());
         }
         automatonStack.push(result);
         return true;

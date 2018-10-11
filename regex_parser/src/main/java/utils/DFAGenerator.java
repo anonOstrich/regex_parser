@@ -13,6 +13,11 @@ import domain.OwnSet;
  *
  */
 public class DFAGenerator {
+    
+    /**
+     * Any possible symbols that might be encountered in 
+     */
+    private OwnSet<Character> allPossibleSymbols;
 
     /**
      * Stores negations based on the NFA key.
@@ -45,6 +50,10 @@ public class DFAGenerator {
         if (cacheEnabled) {
             cache = new OwnMap();
         }
+        allPossibleSymbols = Utilities.defaultAlphabet(); 
+        allPossibleSymbols.addAll(Utilities.defaultShorthands());
+        allPossibleSymbols.addAll(Utilities.defaultBasicOperations());
+        allPossibleSymbols.add('/');
     }
 
     /**
@@ -80,7 +89,7 @@ public class DFAGenerator {
      * @return Deterministic (also non-deterministic) finite automaton that
      * recognizes the complement language of the parameter nfa.
      */
-    public NFA generateComplementDFA(NFA nfa, OwnSet<Character> alphabet) {
+    public NFA generateComplementDFA(NFA nfa) {
         //messy and overly long, to be cleaned up at some point... 
 
         if (cacheEnabled && cache.containsKey(nfa)) {
@@ -130,7 +139,7 @@ public class DFAGenerator {
             subsetStatesToBeInvestigated.remove(currentSubsetState);
             OwnSet<State> NFAStates = setsOfStatesBySubsetStates.get(currentSubsetState);
 
-            for (Character symbol : alphabet) {
+            for (Character symbol : allPossibleSymbols) {
                 
                 OwnSet<State> reachableFromAny = new OwnSet();
                 

@@ -53,11 +53,8 @@ public class PatternProcessor {
             return pattern;
         }
         pattern = replaceShorthands(pattern);
-        System.out.println(pattern);
         pattern = removeUnnecessaryNegations(pattern);
-        System.out.println(pattern);
         pattern = addConcatenationSymbols(pattern);
-        System.out.println(pattern);
         return pattern;
     }
 

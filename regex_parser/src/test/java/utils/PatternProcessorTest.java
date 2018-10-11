@@ -275,6 +275,11 @@ public class PatternProcessorTest {
     public void escapingPlusMarkWorksWithRepetition(){
         assertEquals("((/[)&(/[)&(/[)&(/[)&(/[)|(/[)&(/[)&(/[)&(/[)|(/[)&(/[)&(/[))", processor.elongateRegularExpression("/[[3,5]"));
     }
+    
+    @Test
+    public void escapingDifferentOperationsWorksAtSameTime(){
+        assertEquals("(/#)&(/])|(/-)", processor.elongateRegularExpression("/#/]|/-"));
+    }
 
 
 }

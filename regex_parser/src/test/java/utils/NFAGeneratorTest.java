@@ -2,11 +2,7 @@ package utils;
 
 import domain.NFA;
 import domain.OwnSet;
-import java.util.Collections;
-import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -415,7 +411,7 @@ public class NFAGeneratorTest {
 
     @Test
     public void generateNFAGeneratesNFAThatAcceptsCorrectlyWithLongPattern2() {
-      NFA nfa = g.generateNFA("(a|b)[3,5]C(1-9)(a-z)(A-Z)!#");
+        NFA nfa = g.generateNFA("(a|b)[3,5]C(1-9)(a-z)(A-Z)!#");
         assertTrue(nfa.accepts("aaaC1zLlongstringattheend123"));
 
     }
@@ -455,4 +451,49 @@ public class NFAGeneratorTest {
         NFA nfa = g.generateNFA("(car)?W+!(nafta|#)");
         assertFalse(nfa.accepts("carW"));
     }
+
+    @Test
+    public void generatesNFAFromSingleLiteralShorthandSymbolAcceptsSameSymbol() {
+        NFA nfa = g.generateNFA("/?");
+        assertTrue(nfa.accepts("?"));
+    }
+
+    @Test
+    public void generateNFAFromSingleLiteralKleeneStarAcceptsStar() {
+        NFA nfa = g.generateNFA("/*");
+        assertTrue(nfa.accepts("*"));
+    }
+
+    @Test
+    public void generateNFAFromUnionOfTwoLiteralSpecialSymbolsAcceptsEither() {
+        NFA nfa = g.generateNFA("/||/+");
+        assertTrue(nfa.accepts("|") && nfa.accepts("+"));
+    }
+
+    @Test
+    public void generateNFAFromConcatenationOfMultipleLiteralSpecialSymbolsAcceptsCorrectString() {
+        NFA nfa = g.generateNFA("/(/?/)/[/]/!/+/|");
+        assertTrue(nfa.accepts("(?)[]!+|"));
+    }
+
+    @Test
+    public void generateNFAFromLiteralSlashAcceptsSlash() {
+        NFA nfa = g.generateNFA("//");
+        assertTrue(nfa.accepts("/"));
+    }
+
+    @Test
+    public void generateComplexNFAWithLiteralsAcceptsCorrectly1() {
+        NFA nfa = g.generateNFA("ka/](/!|(ab/+ra))[3,4](!(/*))");
+        
+        assertTrue(nfa.accepts("ka]!ab+ra!!kamy")); 
+    }
+
+    @Test
+    public void generateComplexNFAWithLiteralsDoesNotAcceptsWrong() {
+        NFA nfa = g.generateNFA("ka(]((/!|(ab/+ra)))[3,4](!(/*))");
+        assertFalse(nfa.accepts("ka]!ab+ra!*"));
+    }
+
+
 }
