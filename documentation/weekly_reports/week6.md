@@ -29,3 +29,6 @@ To do next
 
 Time spent on the project
 -------------------------
+
+* 10.11.18: 3h, refactoring and beginning with escape characters
+* 11.11.18: 3h, fully implementing escape characters, cleaning up code, extending the input alphabet

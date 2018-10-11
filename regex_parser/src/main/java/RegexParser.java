@@ -1,8 +1,3 @@
-
-
-import domain.NFA;
-import domain.OwnSet;
-import domain.State;
 import ui.TextUI; 
 
 /**

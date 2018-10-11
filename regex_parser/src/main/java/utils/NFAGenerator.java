@@ -58,40 +58,28 @@ public class NFAGenerator {
     /**
      * Sets cache on by as the default.
      *
-     * @param alphabet Set of supported non-operational symbols.
+     * 
      */
-    public NFAGenerator(OwnSet<Character> alphabet) {
-        this(alphabet, true);
-    }
-
     public NFAGenerator() {
-        this(null);
+        this(true);
     }
 
     /**
      *
-     * Initializes all the necessary constructs. Supported operations and
-     * shorthands are hardcoded, since there is no need to change them in the
-     * scope of this project.
+     * Initializes all the necessary constructs. 
      *
-     * @param alphabet Set of supported non-operational symbols.
      * @param cache_enabled Whether cache should be used or not.
      */
-    public NFAGenerator(OwnSet<Character> alphabet, boolean cache_enabled) {
+    public NFAGenerator(boolean cache_enabled) {
 
         this.cache = new OwnMap();
         this.cacheEnabled = cache_enabled;
 
         this.alphabet = Utilities.defaultAlphabet();
         
-        Character[] supported_operations = {'*', '|', '&', '(', ')', '!'};
-        this.operations = new OwnSet();
-        for (int i = 0; i < supported_operations.length; i++) {
-            this.operations.add(supported_operations[i]);
-          //  this.alphabet.add(supported_operations[i]);
-        }
 
-        this.patternProcessor = new PatternProcessor(alphabet, Utilities.defaultShorthands());
+        this.operations = Utilities.defaultBasicOperations();
+        this.patternProcessor = new PatternProcessor();
         dfaGenerator = new DFAGenerator(-1);
     }
 

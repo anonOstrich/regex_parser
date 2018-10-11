@@ -18,12 +18,23 @@ public class Utilities {
             alphabet.add((char) i);
         }
 
+        alphabet.add('Å');
+        alphabet.add('Ä');
+        alphabet.add('Ö');
+        
         for (int i = (int) 'a'; i <= (int) 'z'; i++) {
             alphabet.add((char) i);
         }
+        alphabet.add('å');
+        alphabet.add('ä');
+        alphabet.add('ö');
 
         for (int i = (int) '0'; i <= (int) '9'; i++) {
             alphabet.add((char) i);
+        }
+        char[] miscAllowedChars = {' ', '^', ';', '_', '@', '%', '{', '}', '=', '<', '>'};
+        for (int i = 0; i < miscAllowedChars.length; i++){
+            alphabet.add(miscAllowedChars[i]);
         }
         return alphabet;
     }

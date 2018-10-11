@@ -25,9 +25,9 @@ public class PatternProcessor {
 
     private OwnSet<Character> shorthandSymbols;
 
-    public PatternProcessor(OwnSet<Character> alphabet, OwnSet<Character> shorthandSymbols) {
-        this.alphabet = alphabet;
-        this.shorthandSymbols = shorthandSymbols;
+    public PatternProcessor() {
+        this.alphabet = Utilities.defaultAlphabet();
+        this.shorthandSymbols = Utilities.defaultShorthands();
     }
 
     /**

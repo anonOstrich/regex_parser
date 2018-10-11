@@ -11,7 +11,7 @@ public class PatternProcessorTest {
 
 
     public PatternProcessorTest() {
-        processor = new PatternProcessor(Utilities.defaultAlphabet(), Utilities.defaultShorthands());
+        processor = new PatternProcessor();
     }
 
     @Test
@@ -281,5 +281,21 @@ public class PatternProcessorTest {
         assertEquals("(/#)&(/])|(/-)", processor.elongateRegularExpression("/#/]|/-"));
     }
 
+    @Test
+    public void spaceIsNotModified(){
+        assertEquals(" ", processor.elongateRegularExpression(" ")); 
+    }
+    
+    @Test
+    public void spaceWorksWithRepetition(){
+        assertEquals("( & & | & )", processor.elongateRegularExpression(" [2,3]"));
+    }
+    
+    @Test
+    public void spaceIsModifiedCorrectlyAsPartOfLongerString(){
+        assertEquals(" &(w|#)&a&y& ", processor.elongateRegularExpression(" w?ay ")); 
+    }
+    
+   
 
 }

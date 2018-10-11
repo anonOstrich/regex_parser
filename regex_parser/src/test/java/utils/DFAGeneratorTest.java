@@ -11,7 +11,7 @@ public class DFAGeneratorTest {
     DFAGenerator dGenerator;
 
     public DFAGeneratorTest() {
-        nGenerator = new NFAGenerator(Utilities.defaultAlphabet());
+        nGenerator = new NFAGenerator();
         dGenerator = new DFAGenerator(-1);
     }
 

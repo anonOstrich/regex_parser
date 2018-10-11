@@ -17,7 +17,7 @@ public class NFAGeneratorTest {
 
     @Before
     public void setUp() {
-        g = new NFAGenerator(alphabet);
+        g = new NFAGenerator();
     }
 
     private NFA complexNFA() {
@@ -37,7 +37,7 @@ public class NFAGeneratorTest {
 
     @Test
     public void cacheCanBeDisabledWithConstructor() {
-        NFAGenerator genWithoutCache = new NFAGenerator(alphabet, false);
+        NFAGenerator genWithoutCache = new NFAGenerator(false);
         assertFalse(genWithoutCache.getCacheEnabled());
     }
 
@@ -54,7 +54,7 @@ public class NFAGeneratorTest {
 
     @Test
     public void cacheIsEmptyAfterGenerationWithCacheDisabled() {
-        NFAGenerator withoutCache = new NFAGenerator(Utilities.defaultAlphabet(), false);
+        NFAGenerator withoutCache = new NFAGenerator(false);
         withoutCache.generateNFA("a");
         assertEquals(0, withoutCache.getCache().size());
     }
@@ -494,6 +494,27 @@ public class NFAGeneratorTest {
         NFA nfa = g.generateNFA("ka(]((/!|(ab/+ra)))[3,4](!(/*))");
         assertFalse(nfa.accepts("ka]!ab+ra!*"));
     }
+    
+    @Test
+    public void generateNFAFromSingleSpaceAcceptsSpace(){
+        NFA nfa = g.generateNFA(" ");
+        assertTrue(nfa.accepts(" "));
+    }
+    
+    @Test
+    public void generateNFAIncludingSpacesAcceptsCorrectly(){
+        NFA nfa = g.generateNFA(" [3,4]olisipa (((j|k)o)|O)ulu/!");
+     
+        assertTrue(nfa.accepts("    olisipa Oulu!") && nfa.accepts("   olisipa joulu!")); 
+    }
+    
+    @Test
+    public void generateNFAIncludingNegationOfSpaceDoesNotAcceptWrongly(){
+        NFA nfa = g.generateNFA("! ");
+        assertFalse(nfa.accepts(" "));
+    }
+    
+    
 
 
 }

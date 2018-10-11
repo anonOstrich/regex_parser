@@ -18,7 +18,8 @@ public class TextUI {
     }
 
     public TextUI() {
-        this(new Scanner(System.in));
+        //ääkkösten käsittely, näyttäysi toimivan tällä koodauksella
+        this(new Scanner(System.in, "ISO-8859-1"));
     }
 
     public void run() {
