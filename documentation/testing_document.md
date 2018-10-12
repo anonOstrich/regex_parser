@@ -27,9 +27,8 @@ Both my solution and the default Java tools have the same task: to match `(a?){n
 | 100 | 303  | 10 | 0 |
 
 
-Also as a graph: 
+[Also as a graph](performance/performance_chart.pdf)
 
-to be linked
 
 A few things are clear: my implementation gives no competition to the defaults, and caching improves performance significantly. There are some weird details, for instance when n = 20 takes more time thatn n = 50 or the variation in how much caching helps. 
 
