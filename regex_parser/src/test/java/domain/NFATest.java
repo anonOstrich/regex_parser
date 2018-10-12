@@ -1,5 +1,6 @@
 package domain;
 
+import utils.structures.OwnSet;
 import org.junit.Test;
 import static org.junit.Assert.*;
 

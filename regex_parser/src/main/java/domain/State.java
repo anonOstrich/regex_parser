@@ -1,5 +1,7 @@
 package domain;
 
+import utils.structures.OwnSet;
+import utils.structures.OwnMap;
 import java.util.Arrays;
 
 /**

@@ -1,7 +1,7 @@
 package utils;
 
-import domain.OwnLinkedList;
-import domain.PairNode;
+import utils.structures.OwnLinkedList;
+import utils.structures.PairNode;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 

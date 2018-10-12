@@ -1,6 +1,6 @@
 package utils;
 
-import domain.OwnSet;
+import utils.structures.OwnSet;
 
 /**
  * Common tools and methods used in multiple classes 

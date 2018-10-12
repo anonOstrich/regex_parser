@@ -1,6 +1,5 @@
 package utils;
 
-import domain.OwnSet; 
 import org.junit.Test;
 import static org.junit.Assert.*;
 

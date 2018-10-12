@@ -1,10 +1,10 @@
 package utils;
 
 
+import utils.structures.OwnSet;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import domain.OwnSet; 
 import java.util.Iterator;
 
 

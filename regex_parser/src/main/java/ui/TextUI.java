@@ -1,10 +1,11 @@
 package ui;
 
 import domain.NFA;
+import java.io.File;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import utils.NFAGenerator;
+import utils.generators.NFAGenerator;
 
 public class TextUI {
 
@@ -18,7 +19,7 @@ public class TextUI {
     }
 
     public TextUI() {
-        //ääkkösten käsittely, näyttäysi toimivan tällä koodauksella
+        // works with scands
         this(new Scanner(System.in, "ISO-8859-1"));
     }
 
@@ -33,13 +34,15 @@ public class TextUI {
             testTrickyPerformance();
         } else if (choice == 2) {
             matchExpressionsAndStrings();
+        } else if (choice == 3) {
+            searchLongText();
         }
 
         System.out.println("Goodbye!");
     }
 
     public void matchExpressionsAndStrings() {
-        long start, generated, end; 
+        long start, generated, end;
 
         while (true) {
             System.out.print("Enter a regular expression:\n> ");
@@ -50,31 +53,30 @@ public class TextUI {
             String verb = "does not match";
             start = System.nanoTime();
             NFA nfa = nfaGenerator.generateNFA(regex);
-            generated = System.nanoTime(); 
+            generated = System.nanoTime();
             boolean accepts = nfa.accepts(test);
-            end = System.nanoTime(); 
+            end = System.nanoTime();
             if (accepts) {
                 verb = "matches";
             }
-            
 
             System.out.println("Regular expression " + regex + " " + verb + " string " + test);
-            System.out.println("Generation took " + ((generated - start) / 1000000) +" ms, and matching " + ((end - generated) / 1000000)  + " ms.");
+            System.out.println("Generation took " + ((generated - start) / 1000000) + " ms, and matching " + ((end - generated) / 1000000) + " ms.");
             System.out.println("\nContinue? (y/n)");
             String input = scanner.nextLine();
 
             if (input.toLowerCase().equals("n")) {
+
                 break;
 
             }
+            run();
 
         }
     }
 
     private void printInstructions() {
-        System.out.println("Supported characters in both regexes and input strings are a-z, A-Z and 0-9.");
-        System.out.println("In regexes you can also use operations (, ), !, *, +, ?, [min,max] , first-last");
-        System.out.println("See README.md or documentation for more explanation (might not be provided yet, though :P)");
+        System.out.println("See README.md or documentation for info on supported operations and symbols)");
     }
 
     private int chooseOperation() {
@@ -83,18 +85,19 @@ public class TextUI {
             System.out.println("Choose by entering the corresponding number: ");
             System.out.println("1: Test performance with possibly tricky expressions");
             System.out.println("2: Match expressions and strings of your choice");
-            System.out.println("3: Exit");
+            System.out.println("3: Search Frankenstein for phrases");
+            System.out.println("4: Exit");
             System.out.print("> ");
             String input = scanner.nextLine();
 
             try {
                 choice = Integer.parseInt(input);
-                if (choice < 1 || choice > 3) {
+                if (choice < 1 || choice > 4) {
                     throw new IllegalArgumentException();
                 }
                 break;
             } catch (Exception e) {
-                System.out.println("Input must be an integer between 1-3");
+                System.out.println("Input must be an integer between 1-4");
             }
         }
 
@@ -140,29 +143,65 @@ public class TextUI {
         long start, delta;
         start = System.nanoTime();
         NFA nfa = nfaGenerator.generateNFA(ownPattern);
-        System.out.println("\t" + nfa.accepts(test));
+        nfa.accepts(test);
         delta = System.nanoTime() - start;
         System.out.println("\tMy implementation: " + (delta / 1000) + " micro s");
 
         start = System.nanoTime();
         Pattern pattern = Pattern.compile(defaultPattern);
         Matcher m = pattern.matcher(test);
-        System.out.println("\t" + m.matches());
+        m.matches();
         delta = System.nanoTime() - start;
         System.out.println("\tDefault implementation: " + (delta / 1000) + " micro s");
 
         System.out.println("2nd time: ");
         start = System.nanoTime();
-        System.out.println("\t" + nfa.accepts(test));
+        nfa.accepts(test);
         delta = System.nanoTime() - start;
         System.out.println("\tMy implementation: " + (delta / 1000) + " micro s");
 
         start = System.nanoTime();
         // would seem unfair to call matcher directly, since it knows the test string...
-        System.out.println("\t" + pattern.matcher(test).matches());
+        pattern.matcher(test).matches();
         delta = System.nanoTime() - start;
-        System.out.println("\tDefault implementation: " + (delta / 1000)  + " micro s");
+        System.out.println("\tDefault implementation: " + (delta / 1000) + " micro s");
         System.out.println("-------------------------------");
+    }
+
+    private void searchLongText() {
+        System.out.println("Reading...");
+        File f = new File("src/main/resources/frankenstein.txt");
+        String text = "";
+        try (Scanner s = new Scanner(f)) {
+            while (s.hasNext()) {
+                text += s.nextLine();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return; 
+        }
+        System.out.println("Done!");
+
+        while (true) {
+            System.out.println("Give a search phrase (regular expression that will be searched for):");
+            String input = scanner.nextLine();
+            NFA nfa = nfaGenerator.generateNFA(".*(" + input + ").*");
+            long start = System.nanoTime();
+            boolean found = nfa.accepts(text);
+            long delta = System.nanoTime() - start;
+            String contain = found ? "contains" : "does not contain";
+            System.out.println("Frankenstein " + contain + " a part that matches the given regular expression " + input);
+            System.out.println("Testing after generating a suitable automaton took " + delta / 1000000 + " milliseconds.");
+            System.out.println("Try a new regular expression? (y/n)");
+            System.out.print(" >");
+            input = scanner.nextLine();
+            if (input.equals("n")) {
+                break;
+            }
+
+        }
+        run();
+
     }
 
 }

@@ -1,5 +1,8 @@
 package domain;
 
+import utils.structures.OwnSet;
+import utils.structures.OwnMap;
+
 /**
  * A representation of a nondeterministic finite automaton.
  *

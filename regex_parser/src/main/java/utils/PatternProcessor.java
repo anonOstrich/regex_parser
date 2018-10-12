@@ -5,8 +5,8 @@
  */
 package utils;
 
-import domain.OwnSet;
-import domain.OwnStack;
+import utils.structures.OwnSet;
+import utils.structures.OwnStack;
 /**
  * Class containing methods for preprocessing patterns for regular expressions.
  *

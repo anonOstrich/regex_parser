@@ -1,0 +1,151 @@
+cd /home/jesper/Documents/regex_parser/regex_parser; JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64 /home/jesper/tmcbeans/java/maven/bin/mvn "-Dexec.args=-classpath %classpath RegexParser" -Dexec.executable=/usr/lib/jvm/java-8-openjdk-amd64/bin/java org.codehaus.mojo:exec-maven-plugin:1.2.1:exec
+Running NetBeans Compile On Save execution. Phase execution is skipped and output directories of dependency projects (with Compile on Save turned on) will be used instead of their jar artifacts.
+Scanning for projects...
+                                                                        
+------------------------------------------------------------------------
+Building regex_parser 1.0-SNAPSHOT
+------------------------------------------------------------------------
+
+--- exec-maven-plugin:1.2.1:exec (default-cli) @ regex_parser ---
+Welcome to Regex parser!
+
+Supported characters in both regexes and input strings are a-z, A-Z and 0-9.
+In regexes you can also use operations (, ), !, *, +, ?, [min,max] , first-last
+See README.md or documentation for more explanation (might not be provided yet, though :P)
+
+Choose by entering the corresponding number: 
+1: Test performance with possibly tricky expressions
+2: Match expressions and strings of your choice
+3: Exit
+> 1
+Will compare the performance of two regex parses with patterns of the form '(a?){n}a{n}' when matched with 'a...a' (repeating n times)
+Choose maximum for n: 100
+n = 10:
+1st time:
+	true
+	My implementation: 20612 micro s
+	true
+	Default implementation: 978 micro s
+2nd time: 
+	true
+	My implementation: 3300 micro s
+	true
+	Default implementation: 120 micro s
+-------------------------------
+n = 20:
+1st time:
+	true
+	My implementation: 26327 micro s
+	true
+	Default implementation: 762 micro s
+2nd time: 
+	true
+	My implementation: 6188 micro s
+	true
+	Default implementation: 203 micro s
+-------------------------------
+n = 30:
+1st time:
+	true
+	My implementation: 19217 micro s
+	true
+	Default implementation: 334 micro s
+2nd time: 
+	true
+	My implementation: 11434 micro s
+	true
+	Default implementation: 230 micro s
+-------------------------------
+n = 40:
+1st time:
+	true
+	My implementation: 23033 micro s
+	true
+	Default implementation: 441 micro s
+2nd time: 
+	true
+	My implementation: 8665 micro s
+	true
+	Default implementation: 310 micro s
+-------------------------------
+n = 50:
+1st time:
+	true
+	My implementation: 25831 micro s
+	true
+	Default implementation: 252 micro s
+2nd time: 
+	true
+	My implementation: 15793 micro s
+	true
+	Default implementation: 156 micro s
+-------------------------------
+n = 60:
+1st time:
+	true
+	My implementation: 88951 micro s
+	true
+	Default implementation: 228 micro s
+2nd time: 
+	true
+	My implementation: 10895 micro s
+	true
+	Default implementation: 75 micro s
+-------------------------------
+n = 70:
+1st time:
+	true
+	My implementation: 67403 micro s
+	true
+	Default implementation: 145 micro s
+2nd time: 
+	true
+	My implementation: 23968 micro s
+	true
+	Default implementation: 1183 micro s
+-------------------------------
+n = 80:
+1st time:
+	true
+	My implementation: 79177 micro s
+	true
+	Default implementation: 157 micro s
+2nd time: 
+	true
+	My implementation: 15455 micro s
+	true
+	Default implementation: 116 micro s
+-------------------------------
+n = 90:
+1st time:
+	true
+	My implementation: 199577 micro s
+	true
+	Default implementation: 157 micro s
+2nd time: 
+	true
+	My implementation: 112730 micro s
+	true
+	Default implementation: 152 micro s
+-------------------------------
+n = 100:
+1st time:
+	true
+	My implementation: 304223 micro s
+	true
+	Default implementation: 228 micro s
+2nd time: 
+	true
+	My implementation: 9434 micro s
+	true
+	Default implementation: 116 micro s
+-------------------------------
+Comparisons finished
+Goodbye!
+------------------------------------------------------------------------
+BUILD SUCCESS
+------------------------------------------------------------------------
+Total time: 6.506s
+Finished at: Fri Oct 12 16:20:44 EEST 2018
+Final Memory: 6M/109M
+------------------------------------------------------------------------

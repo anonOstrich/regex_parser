@@ -2,3 +2,5 @@
 domain
 ui
 utils
+utils.generators
+utils.structures
