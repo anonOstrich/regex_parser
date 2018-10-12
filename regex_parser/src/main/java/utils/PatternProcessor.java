@@ -343,15 +343,15 @@ public class PatternProcessor {
                 continue;
             }
 
-            if (alphabet.contains(c1) && alphabet.contains(c2)
-                    || alphabet.contains(c1) && c2 == '('
-                    || c1 == '*' && alphabet.contains(c2)
+            if ((alphabet.contains(c1) || c1 == '.') && (alphabet.contains(c2) || c2 == '.')
+                    || (alphabet.contains(c1) ||c1 == '.') && c2 == '('
+                    || c1 == '*' && (alphabet.contains(c2) || c2 == '.')
                     || c1 == '*' && c2 == '('
                     || c1 == ')' && c2 == '('
-                    || c1 == ')' && alphabet.contains(c2)
+                    || c1 == ')' && (alphabet.contains(c2) || c2 == '.')
                     || c1 == ')' && c2 == '!'
                     || c1 == '*' && c2 == '!'
-                    || alphabet.contains(c1) && c2 == '!'
+                    || (alphabet.contains(c1) || c1 == '.') && c2 == '!'
                     || c2 == '/' && (c1 != '(' && c1 != '|' )) {
 
                 sb.insert(i + 1, '&');

@@ -58,7 +58,7 @@ public class NFAGenerator {
     /**
      * Sets cache on by as the default.
      *
-     * 
+     *
      */
     public NFAGenerator() {
         this(true);
@@ -66,7 +66,7 @@ public class NFAGenerator {
 
     /**
      *
-     * Initializes all the necessary constructs. 
+     * Initializes all the necessary constructs.
      *
      * @param cache_enabled Whether cache should be used or not.
      */
@@ -76,7 +76,6 @@ public class NFAGenerator {
         this.cacheEnabled = cache_enabled;
 
         this.alphabet = Utilities.defaultAlphabet();
-        
 
         this.operations = Utilities.defaultBasicOperations();
         this.patternProcessor = new PatternProcessor();
@@ -91,7 +90,7 @@ public class NFAGenerator {
     public NFA generateNFA(String pattern) {
         //add explicit concatenation symbols and see if the pattern has been encountered before
         pattern = patternProcessor.elongateRegularExpression(pattern);
-        if (cache.containsKey(pattern) && cacheEnabled) {
+        if (cacheEnabled && cache.containsKey(pattern)) {
             return cache.get(pattern);
         }
 
@@ -103,13 +102,21 @@ public class NFAGenerator {
         for (int i = 0; i < pattern.length(); i++) {
             char currentSymbol = pattern.charAt(i);
 
-            if(currentSymbol == '/'){
-                NFAStack.push(generateNFAFromOneSymbol(pattern.charAt(i+1)));
-                i++; 
-                continue; 
+            if (currentSymbol == '/') {
+                NFAStack.push(generateNFAFromOneSymbol(pattern.charAt(i + 1)));
+                i++;
+                continue;
             }
-            
-            if ( alphabet.contains(currentSymbol) || currentSymbol == '#') {
+
+            if (currentSymbol == '#') {
+                NFAStack.push(generateNFAFromEmptySymbol());
+            }
+
+            if (currentSymbol == '.') {
+                NFAStack.push(generateNFAFromAnySingleSymbol());
+            }
+
+            if (alphabet.contains(currentSymbol)) {
                 NFAStack.push(generateNFAFromOneSymbol(currentSymbol));
             }
 
@@ -211,11 +218,12 @@ public class NFAGenerator {
         lowestAvailableId++;
         OwnSet<State> newAcceptingStates = new OwnSet();
         newAcceptingStates.add(newFinish);
-        newStart.addNextStateForSymbol('#', result.getStartingState());
-        newStart.addNextStateForSymbol('#', newFinish);
+        newStart.addStatesReachableWithoutSymbols(result.getStartingState());
+        newStart.addStatesReachableWithoutSymbols(newFinish);
+        
         for (State fState : result.getAcceptingStates()) {
-            fState.addNextStateForSymbol('#', result.getStartingState());
-            fState.addNextStateForSymbol('#', newFinish);
+            fState.addStatesReachableWithoutSymbols(result.getStartingState());
+            fState.addStatesReachableWithoutSymbols(newFinish);
         }
         result.setStartingState(newStart);
         result.setAcceptingStates(newAcceptingStates);
@@ -238,15 +246,15 @@ public class NFAGenerator {
         State finish = new State(lowestAvailableId);
         lowestAvailableId++;
 
-        start.addNextStateForSymbol('#', first.getStartingState());
-        start.addNextStateForSymbol('#', second.getStartingState());
+        start.addStatesReachableWithoutSymbols(first.getStartingState());
+        start.addStatesReachableWithoutSymbols(second.getStartingState());
 
         for (State s : first.getAcceptingStates()) {
-            s.addNextStateForSymbol('#', finish);
+            s.addStatesReachableWithoutSymbols(finish);
         }
 
         for (State s : second.getAcceptingStates()) {
-            s.addNextStateForSymbol('#', finish);
+            s.addStatesReachableWithoutSymbols(finish);
         }
 
         OwnSet<State> acceptingStates = new OwnSet();
@@ -271,7 +279,7 @@ public class NFAGenerator {
         OwnSet<State> accepting = second.getAcceptingStates();
 
         for (State s : first.getAcceptingStates()) {
-            s.addNextStateForSymbol('#', second.getStartingState());
+            s.addStatesReachableWithoutSymbols(second.getStartingState());
         }
         result.setStartingState(start);
         result.setAcceptingStates(accepting);
@@ -325,6 +333,30 @@ public class NFAGenerator {
         OwnSet<State> finishingStates = new OwnSet();
         finishingStates.add(s1);
         s0.addNextStateForSymbol(symbol, s1);
+        NFA result = new NFA(s0, finishingStates);
+        return result;
+    }
+    
+    private NFA generateNFAFromEmptySymbol(){
+        State s0 = new State(lowestAvailableId);
+        lowestAvailableId++;
+        State s1 = new State(lowestAvailableId);
+        lowestAvailableId++;
+        OwnSet<State> finishingStates = new OwnSet();
+        finishingStates.add(s1);
+        s0.addStatesReachableWithoutSymbols(s1);
+        NFA result = new NFA(s0, finishingStates);
+        return result;
+    }
+
+    private NFA generateNFAFromAnySingleSymbol() {
+               State s0 = new State(lowestAvailableId);
+        lowestAvailableId++;
+        State s1 = new State(lowestAvailableId);
+        lowestAvailableId++;
+        OwnSet<State> finishingStates = new OwnSet();
+        finishingStates.add(s1);
+        s0.addStatesReachableWithAnyCharacter(s1);
         NFA result = new NFA(s0, finishingStates);
         return result;
     }

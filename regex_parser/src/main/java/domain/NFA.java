@@ -215,6 +215,7 @@ public class NFA {
 
             for (State currentState : currentStates) {
                 nextStates.addAll(currentState.getNextStatesForSymbol(symbol));
+                nextStates.addAll(currentState.getNextStatesWithAnyCharacter());
             }
 
             addEpsilonTransitionsOfStates(nextStates);
@@ -281,7 +282,7 @@ public class NFA {
         OwnSet<State> newStates = new OwnSet();
         for (State s : states) {
             if (!visitedStates.contains(s)) {
-                newStates.addAll(s.getNextStatesForSymbol('#'));
+                newStates.addAll(s.getNextStatesWithEmptyTransitions());
                 visitedStates.add(s);
             }
         }

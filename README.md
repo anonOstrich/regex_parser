@@ -22,7 +22,9 @@ Some symbols have special meanings in detailing the structure of the regular exp
 * `?` - repeats at most once (0 or 1 times).
 * `-` - one of the symbols in between. E.g. 'A-F' matches any of the following: 'A', 'B', 'C', 'D', 'E', 'F'. Single digit numbers work as well. 
 * `!` - complement / anything but. E.g. '!a' accepts any other string except 'a'.  
-* `/` - escape character. E.g. if you want to match strings that contain only the character ?, you must construct the regex from pattern `/?`. NOT FULLY IMPLEMENTED YET!
+* `#` - empty string. E.g. 'a|#' will match 'a' or ''.
+* `.` - any single symbol. E.g. '.*fish' will match any string that ends with 'fish'.
+* `/` - escape character. E.g. if you want to match strings that contain only the character ?, you must construct the regex from pattern `/?`. 
 
 
 Links
@@ -41,3 +43,4 @@ Links
 * [Week 3](documentation/weekly_reports/week3.md)
 * [Week 4](documentation/weekly_reports/week4.md)
 * [Week 5](documentation/weekly_reports/week5.md)
+* [Week 6](documentation/weekly_reports/week6.md)

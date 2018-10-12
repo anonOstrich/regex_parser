@@ -15,12 +15,12 @@ public class NFATest {
         State s3 = new State(3);
         State s4 = new State(4);
         State s5 = new State(5);
-        s0.addNextStateForSymbol('#', s1);
-        s0.addNextStateForSymbol('#', s2);
+        s0.addStatesReachableWithoutSymbols(s1);
+        s0.addStatesReachableWithoutSymbols(s2);
         s1.addNextStateForSymbol(firstOption, s3);
         s2.addNextStateForSymbol(secondOption, s4);
-        s3.addNextStateForSymbol('#', s5);
-        s4.addNextStateForSymbol('#', s5);
+        s3.addStatesReachableWithoutSymbols(s5);
+        s4.addStatesReachableWithoutSymbols(s5);
         OwnSet<State> accepting = new OwnSet();
         accepting.add(s5);
         return new NFA(s0, accepting);
@@ -31,11 +31,11 @@ public class NFATest {
         State s1 = new State(1);
         State s2 = new State(2);
         State s3 = new State(3);
-        s0.addNextStateForSymbol('#', s1);
-        s0.addNextStateForSymbol('#', s3);
+        s0.addStatesReachableWithoutSymbols(s1);
+        s0.addStatesReachableWithoutSymbols(s3);
         s1.addNextStateForSymbol(symbol, s2);
-        s2.addNextStateForSymbol('#', s1);
-        s2.addNextStateForSymbol('#', s3);
+        s2.addStatesReachableWithoutSymbols(s1);
+        s2.addStatesReachableWithoutSymbols(s3);
         OwnSet<State> accepting = new OwnSet();
         accepting.add(s3);
         return new NFA(s0, accepting);
@@ -48,7 +48,7 @@ public class NFATest {
         State s3 = new State(3);
 
         s0.addNextStateForSymbol(firstOption, s1);
-        s1.addNextStateForSymbol('#', s2);
+        s1.addStatesReachableWithoutSymbols(s2);
         s2.addNextStateForSymbol(secondOption, s3);
         OwnSet<State> accepting = new OwnSet();
         accepting.add(s3);
@@ -114,12 +114,6 @@ public class NFATest {
         assertTrue(unionNFA.accepts("0") && unionNFA.accepts("1"));
     }
 
-    @Test
-    public void acceptReturnsTrueWithUnionWithEmptyStringWhenThatIsOneOption() {
-        NFA unionNFA = simpleUnionNFA('a', '#');
-        assertTrue(unionNFA.accepts(""));
-
-    }
 
     @Test
     public void acceptReturnsFalseWithUnionWithNonmatchingString() {
