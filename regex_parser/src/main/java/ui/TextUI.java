@@ -48,21 +48,30 @@ public class TextUI {
             System.out.print("Enter a regular expression:\n> ");
             String regex = scanner.nextLine();
 
-            System.out.print("Enter a test string:\n> ");
-            String test = scanner.nextLine();
-            String verb = "does not match";
-            start = System.nanoTime();
-            NFA nfa = nfaGenerator.generateNFA(regex);
-            generated = System.nanoTime();
-            boolean accepts = nfa.accepts(test);
-            end = System.nanoTime();
-            if (accepts) {
-                verb = "matches";
-            }
+            while (true) {
+                System.out.print("Enter a test string: (press enter twice to change the regex)\n> ");
+                String test = scanner.nextLine();
+                if(test.isEmpty()){
+                    System.out.print(">");
+                    if(scanner.nextLine().isEmpty()){
+                        break; 
+                    }
+                }
+                String verb = "does not match";
+                start = System.nanoTime();
+                NFA nfa = nfaGenerator.generateNFA(regex);
+                generated = System.nanoTime();
+                boolean accepts = nfa.accepts(test);
+                end = System.nanoTime();
+                if (accepts) {
+                    verb = "matches";
+                }
 
-            System.out.println("Regular expression " + regex + " " + verb + " string " + test);
-            System.out.println("Generation took " + ((generated - start) / 1000000) + " ms, and matching " + ((end - generated) / 1000000) + " ms.");
-            System.out.println("\nContinue? (y/n)");
+                System.out.println("Regular expression " + regex + " " + verb + " string " + test);
+                System.out.println("Generation took " + ((generated - start) / 1000000) + " ms, and matching " + ((end - generated) / 1000000) + " ms.");
+            }
+            
+            System.out.println("\nEnter new regular expression? (y/n)");
             String input = scanner.nextLine();
 
             if (input.toLowerCase().equals("n")) {
@@ -85,7 +94,7 @@ public class TextUI {
             System.out.println("Choose by entering the corresponding number: ");
             System.out.println("1: Test performance with possibly tricky expressions");
             System.out.println("2: Match expressions and strings of your choice");
-            System.out.println("3: Search Frankenstein for phrases");
+            System.out.println("3: Search text file for phrases");
             System.out.println("4: Exit");
             System.out.print("> ");
             String input = scanner.nextLine();
@@ -169,8 +178,14 @@ public class TextUI {
     }
 
     private void searchLongText() {
+        System.out.print("Give the name of the file or leave empty for default file (Frankenstein)\n"
+                + "Files should be located in src/main/resources/ and contain only the allowed symbols\n>");
+        String filename = scanner.nextLine();
+        if (filename.isEmpty()) {
+            filename = "frankenstein.txt";
+        }
         System.out.println("Reading...");
-        File f = new File("src/main/resources/frankenstein.txt");
+        File f = new File("src/main/resources/" + filename);
         String text = "";
         try (Scanner s = new Scanner(f)) {
             while (s.hasNext()) {
@@ -178,7 +193,7 @@ public class TextUI {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            return; 
+            return;
         }
         System.out.println("Done!");
 
@@ -190,7 +205,7 @@ public class TextUI {
             boolean found = nfa.accepts(text);
             long delta = System.nanoTime() - start;
             String contain = found ? "contains" : "does not contain";
-            System.out.println("Frankenstein " + contain + " a part that matches the given regular expression " + input);
+            System.out.println(filename + " " + contain + " a part that matches the given regular expression " + input);
             System.out.println("Testing after generating a suitable automaton took " + delta / 1000000 + " milliseconds.");
             System.out.println("Try a new regular expression? (y/n)");
             System.out.print(" >");
