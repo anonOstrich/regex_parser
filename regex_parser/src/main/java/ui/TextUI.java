@@ -84,11 +84,11 @@ public class TextUI {
         }
     }
 
-    private void printInstructions() {
+    protected void printInstructions() {
         System.out.println("See README.md or documentation for info on supported operations and symbols)");
     }
 
-    private int chooseOperation() {
+    protected int chooseOperation() {
         int choice;
         while (true) {
             System.out.println("Choose by entering the corresponding number: ");
@@ -113,7 +113,7 @@ public class TextUI {
         return choice;
     }
 
-    public void testTrickyPerformance() {
+    protected void testTrickyPerformance() {
         System.out.println("Will compare the performance of two regex parses with patterns of the form '(a?){n}a{n}' when matched with 'a...a' (repeating n times)");
 
         int max;
@@ -138,7 +138,7 @@ public class TextUI {
 
     }
 
-    private void compareTricky(int n) {
+    protected void compareTricky(int n) {
         String ownPattern = "(a?)[" + n + "," + n + "]a[" + n + "," + n + "]";
         String defaultPattern = "(a?){" + n + "}a{" + n + "}";
         String test = "";
@@ -177,7 +177,7 @@ public class TextUI {
         System.out.println("-------------------------------");
     }
 
-    private void searchLongText() {
+    protected void searchLongText() {
         System.out.print("Give the name of the file or leave empty for default file (Frankenstein)\n"
                 + "Files should be located in src/main/resources/ and contain only the allowed symbols\n>");
         String filename = scanner.nextLine();
