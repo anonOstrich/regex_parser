@@ -68,7 +68,7 @@ public class PatternProcessor {
      * operations
      */
     public String replaceShorthands(String pattern) {
-        StringBuilder sb = new StringBuilder(pattern);
+        OwnStringBuilder sb = new OwnStringBuilder(pattern);
 
         for (int i = 0; i < sb.length(); i++) {
             char currentSymbol = sb.charAt(i);
@@ -117,7 +117,7 @@ public class PatternProcessor {
      * @return index that points to the next character in the sb after the
      * inserted unions and closing parenthesis
      */
-    private int replaceBetween(StringBuilder sb, int i) {
+    private int replaceBetween(OwnStringBuilder sb, int i) {
         char first = sb.charAt(i - 1);
         char last = sb.charAt(i + 1);
         sb.delete(i - 1, i + 2);
@@ -143,7 +143,7 @@ public class PatternProcessor {
      * @return index that points to the next character in the sb after the
      * inserted unions and closing parenthesis
      */
-    private int replaceQuestionmark(StringBuilder sb, int i, String affectedPart) {
+    private int replaceQuestionmark(OwnStringBuilder sb, int i, String affectedPart) {
         sb.deleteCharAt(i);
         sb.insert(i, "|#)");
         sb.insert(i - affectedPart.length(), "(");
@@ -179,7 +179,7 @@ public class PatternProcessor {
      * @return index that points to the next character in the sb after the
      * inserted unions and closing parenthesis
      */
-    private int replaceRepetitions(StringBuilder sb, int i, String affectedPart) {
+    private int replaceRepetitions(OwnStringBuilder sb, int i, String affectedPart) {
 
         int closing_idx = sb.indexOf("]", i);
 
@@ -247,7 +247,7 @@ public class PatternProcessor {
      * @return index that points to the next character in the sb after the
      * inserted unions and closing parenthesis
      */
-    private int replacePlus(StringBuilder sb, int i, String affectedPart) {
+    private int replacePlus(OwnStringBuilder sb, int i, String affectedPart) {
         sb.deleteCharAt(i);
         sb.insert(i - affectedPart.length(), "(");
         //i++;
@@ -327,7 +327,7 @@ public class PatternProcessor {
      * @return pattern Same pattern with the concatenation symbols inserted
      */
     public String addConcatenationSymbols(String pattern) {
-        StringBuilder sb = new StringBuilder(pattern);
+        OwnStringBuilder sb = new OwnStringBuilder(pattern);
         char c1;
         char c2;
 
@@ -336,9 +336,9 @@ public class PatternProcessor {
             c2 = sb.charAt(i + 1);
 
             if (c1 == '/') {
-                sb.insert(i, '(');
+                sb.insert(i, "(");
                 i++;
-                sb.insert(i + 2, ')');
+                sb.insert(i + 2, ")");
                 i++;
                 continue;
             }
@@ -354,7 +354,7 @@ public class PatternProcessor {
                     || (alphabet.contains(c1) || c1 == '.') && c2 == '!'
                     || c2 == '/' && (c1 != '(' && c1 != '|' )) {
 
-                sb.insert(i + 1, '&');
+                sb.insert(i + 1, "&");
                 i++;
             }
 

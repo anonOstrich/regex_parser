@@ -2,7 +2,6 @@ package domain;
 
 import utils.structures.OwnSet;
 import utils.structures.OwnMap;
-import java.util.Arrays;
 
 /**
  *
@@ -174,11 +173,6 @@ public class State {
     }
     
     public OwnSet<State> getNextStatesWithEmptyTransitions() {
-//        OwnSet<State> result = transitions.get('#');
-//        if(result == null){
-//            return new OwnSet(); 
-//        }
-//        return transitions.get('#');
         return this.emptyTransitions; 
     }
 
@@ -264,14 +258,17 @@ public class State {
 
             OwnSet<State> reachable_states = transitions.get(symbol);
 
-            int[] reachable_ids = new int[reachable_states.size()];
+            String reachable_info = "["; 
             int i = 0;
             for (State s : reachable_states) {
-                reachable_ids[i] = s.getId();
+                reachable_info += s.getId(); 
+                reachable_info += ", ";
                 i++;
             }
+            reachable_info += "]";
+            reachable_info = reachable_info.replace(", ]", "]");
 
-            result += symbol + " --> " + Arrays.toString(reachable_ids) + "\n";
+            result += symbol + " --> " + reachable_info + "\n";
         }
         return result;
     }
