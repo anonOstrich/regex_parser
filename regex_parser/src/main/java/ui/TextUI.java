@@ -2,6 +2,7 @@ package ui;
 
 import domain.NFA;
 import java.io.File;
+import java.net.URL;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -20,7 +21,12 @@ public class TextUI {
 
     public TextUI() {
         // works with scands
-        this(new Scanner(System.in, "ISO-8859-1"));
+        try {
+            this.scanner = new Scanner(System.console().reader());
+        } catch (Exception e) {
+            this.scanner = new Scanner(System.in, "ISO-8859-1");
+        }
+        nfaGenerator = new NFAGenerator();
     }
 
     public void run() {
@@ -39,6 +45,7 @@ public class TextUI {
         }
 
         System.out.println("Goodbye!");
+        return; 
     }
 
     public void matchExpressionsAndStrings() {
@@ -51,10 +58,10 @@ public class TextUI {
             while (true) {
                 System.out.print("Enter a test string: (press enter twice to change the regex)\n> ");
                 String test = scanner.nextLine();
-                if(test.isEmpty()){
+                if (test.isEmpty()) {
                     System.out.print(">");
-                    if(scanner.nextLine().isEmpty()){
-                        break; 
+                    if (scanner.nextLine().isEmpty()) {
+                        break;
                     }
                 }
                 String verb = "does not match";
@@ -67,10 +74,10 @@ public class TextUI {
                     verb = "matches";
                 }
 
-                System.out.println("Regular expression " + regex + " " + verb + " string " + test);
+                System.out.println("Regular expression '" + regex + "' " + verb + " string '" + test + "'.");
                 System.out.println("Generation took " + ((generated - start) / 1000000) + " ms, and matching " + ((end - generated) / 1000000) + " ms.");
             }
-            
+
             System.out.println("\nEnter new regular expression? (y/n)");
             String input = scanner.nextLine();
 
@@ -79,9 +86,9 @@ public class TextUI {
                 break;
 
             }
-            run();
 
         }
+        run();
     }
 
     protected void printInstructions() {
@@ -178,24 +185,10 @@ public class TextUI {
     }
 
     protected void searchLongText() {
-        System.out.print("Give the name of the file or leave empty for default file (Frankenstein)\n"
-                + "Files should be located in src/main/resources/ and contain only the allowed symbols\n>");
-        String filename = scanner.nextLine();
-        if (filename.isEmpty()) {
-            filename = "frankenstein.txt";
-        }
-        System.out.println("Reading...");
-        File f = new File("src/main/resources/" + filename);
-        String text = "";
-        try (Scanner s = new Scanner(f)) {
-            while (s.hasNext()) {
-                text += s.nextLine();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return;
-        }
-        System.out.println("Done!");
+
+        String[] fileInfo = buildStringFromUserSelectedFile();
+        String filename = fileInfo[0];
+        String text = fileInfo[1];
 
         while (true) {
             System.out.println("Give a search phrase (regular expression that will be searched for):");
@@ -205,7 +198,8 @@ public class TextUI {
             boolean found = nfa.accepts(text);
             long delta = System.nanoTime() - start;
             String contain = found ? "contains" : "does not contain";
-            System.out.println(filename + " " + contain + " a part that matches the given regular expression " + input);
+            System.out.println(filename + " " + contain
+                    + " a part that matches the given regular expression '" + input + "'.");
             System.out.println("Testing after generating a suitable automaton took " + delta / 1000000 + " milliseconds.");
             System.out.println("Try a new regular expression? (y/n)");
             System.out.print(" >");
@@ -217,6 +211,34 @@ public class TextUI {
         }
         run();
 
+    }
+
+    protected String[] buildStringFromUserSelectedFile() {
+        String filename;
+        ClassLoader cl = getClass().getClassLoader();
+        while (true) {
+            System.out.print("Give the name of the file or leave empty for default file (Frankenstein)\n"
+                    + ">");
+            filename = scanner.nextLine();
+
+            if (filename.isEmpty()) {
+                filename = "frankenstein.txt";
+            }
+
+            String text = "";
+            try (Scanner s = new Scanner(cl.getResourceAsStream(filename), "UTF-8")) {
+                System.out.println("Reading...");
+                while (s.hasNext()) {
+                    text += s.nextLine();
+                }
+                text = filename + "\n" + text;
+                System.out.println("Done!");
+                String[] info = new String[]{filename, text};
+                return info;
+            } catch (Exception e) {
+                System.out.println("File resources/" + filename + " does not exist or some other error occured.");
+            }
+        }
     }
 
 }

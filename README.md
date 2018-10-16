@@ -26,6 +26,20 @@ Some symbols have special meanings in detailing the structure of the regular exp
 * `.` - any single symbol. E.g. '.*fish' will match any string that ends with 'fish'.
 * `/` - escape character. E.g. if you want to match strings that contain only the character ?, you must construct the regex from pattern `/?`. 
 
+Installation
+------------
+Required: 
+* Java 8
+* Maven, if you want the build the project yourself
+
+### Run the program
+Copy the github repository. Inside it run 'java -jar Regex_parser.jar' to open the program in terminal. 
+
+### Modify and build the program
+Copy the github repository. When you want to build the project, run 'mvn clean install' in the terminal. The .jar files and documentation will be created in the target folder. 
+
+
+
 
 Links
 -----
@@ -34,7 +48,7 @@ Links
 * [Implementation Document](documentation/implementation_document.md)
 * [Testing Document](documentation/testing_document.md)
 * User Guide
-* [JavaDoc](https://htmlpreview.github.io/?https://github.com/anonOstrich/regex_parser/blob/master/documentation/apidocs/overview-summary.html) 
+* [JavaDoc](https://htmlpreview.github.io/?https://github.com/anonOstrich/regex_parser/blob/master/regex_parser/apidocs/overview-summary.html) 
 
 ### Weekly reports 
 
@@ -44,3 +58,4 @@ Links
 * [Week 4](documentation/weekly_reports/week4.md)
 * [Week 5](documentation/weekly_reports/week5.md)
 * [Week 6](documentation/weekly_reports/week6.md)
+* [Week 7](documentation/weekly_reporst/week7.md)

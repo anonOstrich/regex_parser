@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="../style.css">
+</head>
+<body>
+
+
+<h1>OwnStringBuilder.java</h1>
+
+<table class="src">
+
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5522f9b_1'/>
+1
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5522f9b_1'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>package utils;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5522f9b_2'/>
+2
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5522f9b_2'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5522f9b_3'/>
+3
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5522f9b_3'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>public class OwnStringBuilder {</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5522f9b_4'/>
+4
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5522f9b_4'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5522f9b_5'/>
+5
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5522f9b_5'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    private String string;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5522f9b_6'/>
+6
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5522f9b_6'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5522f9b_7'/>
+7
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5522f9b_7'></a>
+<span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    public OwnStringBuilder(String string) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5522f9b_8'/>
+8
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5522f9b_8'></a>
+<span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        this.string = string;</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5522f9b_9'/>
+9
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5522f9b_9'></a>
+<span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5522f9b_10'/>
+10
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5522f9b_10'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5522f9b_11'/>
+11
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5522f9b_11'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    public OwnStringBuilder deleteCharAt(int idx) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5522f9b_12'/>
+12
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5522f9b_12'>1</a>
+<span>
+1. deleteCharAt : Replaced integer addition with subtraction &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        string = string.substring(0, idx) + string.substring(idx+1);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5522f9b_13'/>
+13
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5522f9b_13'>1</a>
+<span>
+1. deleteCharAt : mutated return of Object value for utils/OwnStringBuilder::deleteCharAt to ( if (x != null) null else throw new RuntimeException ) &rarr; SURVIVED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>        return this;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5522f9b_14'/>
+14
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5522f9b_14'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5522f9b_15'/>
+15
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5522f9b_15'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5522f9b_16'/>
+16
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5522f9b_16'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    public OwnStringBuilder delete(int i1, int i2) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5522f9b_17'/>
+17
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5522f9b_17'></a>
+<span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        string =  string.substring(0, i1) +  string.substring(i2);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5522f9b_18'/>
+18
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5522f9b_18'>1</a>
+<span>
+1. delete : mutated return of Object value for utils/OwnStringBuilder::delete to ( if (x != null) null else throw new RuntimeException ) &rarr; SURVIVED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>        return this;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5522f9b_19'/>
+19
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5522f9b_19'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5522f9b_20'/>
+20
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5522f9b_20'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5522f9b_21'/>
+21
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5522f9b_21'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    public OwnStringBuilder insert(int idx, String inserted) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5522f9b_22'/>
+22
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5522f9b_22'>1</a>
+<span>
+1. insert : negated conditional &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        if (idx == 0) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5522f9b_23'/>
+23
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5522f9b_23'></a>
+<span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>            string = inserted + string;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5522f9b_24'/>
+24
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5522f9b_24'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        } else {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5522f9b_25'/>
+25
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5522f9b_25'></a>
+<span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>            string = string.substring(0, idx) + inserted + string.substring(idx);</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5522f9b_26'/>
+26
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5522f9b_26'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        }</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5522f9b_27'/>
+27
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5522f9b_27'>1</a>
+<span>
+1. insert : mutated return of Object value for utils/OwnStringBuilder::insert to ( if (x != null) null else throw new RuntimeException ) &rarr; SURVIVED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>        return this;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5522f9b_28'/>
+28
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5522f9b_28'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5522f9b_29'/>
+29
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5522f9b_29'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    </span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5522f9b_30'/>
+30
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5522f9b_30'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    public int length(){</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5522f9b_31'/>
+31
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5522f9b_31'>1</a>
+<span>
+1. length : replaced return of integer sized value with (x == 0 ? 1 : 0) &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        return string.length(); </span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5522f9b_32'/>
+32
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5522f9b_32'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5522f9b_33'/>
+33
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5522f9b_33'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    </span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5522f9b_34'/>
+34
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5522f9b_34'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    public char charAt(int i){</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5522f9b_35'/>
+35
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5522f9b_35'>1</a>
+<span>
+1. charAt : replaced return of integer sized value with (x == 0 ? 1 : 0) &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        return string.charAt(i);</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5522f9b_36'/>
+36
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5522f9b_36'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5522f9b_37'/>
+37
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5522f9b_37'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    </span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5522f9b_38'/>
+38
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5522f9b_38'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    public int indexOf(String str, int i){</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5522f9b_39'/>
+39
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5522f9b_39'>1</a>
+<span>
+1. indexOf : replaced return of integer sized value with (x == 0 ? 1 : 0) &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        return string.indexOf(str, i);</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5522f9b_40'/>
+40
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5522f9b_40'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5522f9b_41'/>
+41
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5522f9b_41'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    </span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5522f9b_42'/>
+42
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5522f9b_42'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    public String substring(int i, int j){</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5522f9b_43'/>
+43
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5522f9b_43'>1</a>
+<span>
+1. substring : mutated return of Object value for utils/OwnStringBuilder::substring to ( if (x != null) null else throw new RuntimeException ) &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        return string.substring(i, j);</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5522f9b_44'/>
+44
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5522f9b_44'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5522f9b_45'/>
+45
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5522f9b_45'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5522f9b_46'/>
+46
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5522f9b_46'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    @Override</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5522f9b_47'/>
+47
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5522f9b_47'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    public String toString() {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5522f9b_48'/>
+48
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5522f9b_48'>1</a>
+<span>
+1. toString : mutated return of Object value for utils/OwnStringBuilder::toString to ( if (x != null) null else throw new RuntimeException ) &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        return string;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5522f9b_49'/>
+49
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5522f9b_49'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5522f9b_50'/>
+50
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5522f9b_50'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>}</span></pre></td></tr>
+
+
+
+<tr><td></td><td></td><td><h2>Mutations</h2></td></tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@5522f9b_12'>12</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@5522f9b_12'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>deleteCharAt<br/><b>Killed by : </b>utils.OwnStringBuilderTest.deleteCharAtCanDeleteFirstCharacter(utils.OwnStringBuilderTest)</span></span> Replaced integer addition with subtraction &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@5522f9b_13'>13</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@5522f9b_13'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>deleteCharAt<br/><b>Killed by : </b>none</span></span> mutated return of Object value for utils/OwnStringBuilder::deleteCharAt to ( if (x != null) null else throw new RuntimeException ) &rarr; SURVIVED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@5522f9b_18'>18</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@5522f9b_18'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>delete<br/><b>Killed by : </b>none</span></span> mutated return of Object value for utils/OwnStringBuilder::delete to ( if (x != null) null else throw new RuntimeException ) &rarr; SURVIVED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@5522f9b_22'>22</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@5522f9b_22'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>insert<br/><b>Killed by : </b>utils.OwnStringBuilderTest.insertInsertsStringToTheEnd(utils.OwnStringBuilderTest)</span></span> negated conditional &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@5522f9b_27'>27</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@5522f9b_27'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>insert<br/><b>Killed by : </b>none</span></span> mutated return of Object value for utils/OwnStringBuilder::insert to ( if (x != null) null else throw new RuntimeException ) &rarr; SURVIVED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@5522f9b_31'>31</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@5522f9b_31'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>length<br/><b>Killed by : </b>utils.OwnStringBuilderTest.charAtReturnsCorrectLastCharacter(utils.OwnStringBuilderTest)</span></span> replaced return of integer sized value with (x == 0 ? 1 : 0) &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@5522f9b_35'>35</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@5522f9b_35'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>charAt<br/><b>Killed by : </b>utils.OwnStringBuilderTest.charAtReturnsCorrectLastCharacter(utils.OwnStringBuilderTest)</span></span> replaced return of integer sized value with (x == 0 ? 1 : 0) &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@5522f9b_39'>39</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@5522f9b_39'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>indexOf<br/><b>Killed by : </b>utils.OwnStringBuilderTest.indexOfReturnsFirstOccurrenceWhenIndexZero(utils.OwnStringBuilderTest)</span></span> replaced return of integer sized value with (x == 0 ? 1 : 0) &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@5522f9b_43'>43</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@5522f9b_43'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>substring<br/><b>Killed by : </b>utils.OwnStringBuilderTest.substringReturnsSpecifiedSubstring(utils.OwnStringBuilderTest)</span></span> mutated return of Object value for utils/OwnStringBuilder::substring to ( if (x != null) null else throw new RuntimeException ) &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@5522f9b_48'>48</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@5522f9b_48'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>toString<br/><b>Killed by : </b>utils.OwnStringBuilderTest.deleteCharAtCanDeleteFirstCharacter(utils.OwnStringBuilderTest)</span></span> mutated return of Object value for utils/OwnStringBuilder::toString to ( if (x != null) null else throw new RuntimeException ) &rarr; KILLED</p> 
+</td>
+</tr>
+
+</table>
+
+
+<h2>Active mutators</h2>
+<ul>
+<li class='mutator'>INCREMENTS_MUTATOR</li>
+<li class='mutator'>VOID_METHOD_CALL_MUTATOR</li>
+<li class='mutator'>RETURN_VALS_MUTATOR</li>
+<li class='mutator'>MATH_MUTATOR</li>
+<li class='mutator'>NEGATE_CONDITIONALS_MUTATOR</li>
+<li class='mutator'>INVERT_NEGS_MUTATOR</li>
+<li class='mutator'>CONDITIONALS_BOUNDARY_MUTATOR</li>
+
+</ul>
+
+<h2>Tests examined</h2>
+<ul>
+<li>utils.PatternProcessorTest.addConcatenationSymbolsAddsSymbolBetweenTwoParenthesizedParts(utils.PatternProcessorTest) (1 ms)</li><li>ui.TextUITest.searchLongTextStatesMatchWhenSomePartMatchesInputRegex(ui.TextUITest) (5590 ms)</li><li>utils.OwnStringBuilderTest.insertInsertsStringToSpecifiedPosition(utils.OwnStringBuilderTest) (1 ms)</li><li>utils.PatternProcessorTest.replaceShorthandsWorksWithMultipleChoiceWithOneDigitNumbers(utils.PatternProcessorTest) (1 ms)</li><li>utils.generators.NFAGeneratorTest.generateNFAWorksWithComplementInComplexCase2(utils.generators.NFAGeneratorTest) (19 ms)</li><li>utils.generators.DFAGeneratorTest.generateComplementDFAFromComplementDFAWorksCorrectly(utils.generators.DFAGeneratorTest) (24 ms)</li><li>ui.TextUITest.matchExpressionAndStringsTellsRightlyThatExpressionDoesNotMatch(ui.TextUITest) (5 ms)</li><li>utils.PatternProcessorTest.escapingPlusMarkWorksWithQuestionMark(utils.PatternProcessorTest) (1 ms)</li><li>utils.generators.NFAGeneratorTest.generateNFAFromCharacterAndRepetitionsWithoutMaximumAcceptsMinimumRepetitions(utils.generators.NFAGeneratorTest) (1 ms)</li><li>utils.PatternProcessorTest.replaceShorthandsWorksWithMultipleChoiceWithLetters(utils.PatternProcessorTest) (1 ms)</li><li>utils.PatternProcessorTest.replaceShorthandsWorksWithParenthesisQuestionMark(utils.PatternProcessorTest) (1 ms)</li><li>utils.PatternProcessorTest.replaceShorthandsWorksWithRepetitionWhenOnlyMinimumSpecified(utils.PatternProcessorTest) (1 ms)</li><li>utils.generators.NFAGeneratorTest.generateNFAFromCharacterAndQuestionmarkAcceptsEpsilon(utils.generators.NFAGeneratorTest) (2 ms)</li><li>utils.OwnStringBuilderTest.deleteDeletesEverythingWithZeroAndLengthAsArguments(utils.OwnStringBuilderTest) (1 ms)</li><li>utils.generators.NFAGeneratorTest.generatesNFAFromSingleLiteralShorthandSymbolAcceptsSameSymbol(utils.generators.NFAGeneratorTest) (1 ms)</li><li>utils.PatternProcessorTest.addConcatenationSymbolsDoesNotAddBetweenNegationAndCharacter(utils.PatternProcessorTest) (1 ms)</li><li>utils.generators.NFAGeneratorTest.generateNFAFromCharacterAndRepetitionWithoutMinimumDoesNotAcceptTooManyRepetitions(utils.generators.NFAGeneratorTest) (2 ms)</li><li>utils.generators.NFAGeneratorTest.generateNFAFromSimpleUnionDoesNotAcceptEmptyString(utils.generators.NFAGeneratorTest) (2 ms)</li><li>utils.generators.NFAGeneratorTest.generateNFAFromParenthesesAndPlusAcceptsSameParenthesizedPart(utils.generators.NFAGeneratorTest) (2 ms)</li><li>utils.generators.NFAGeneratorTest.generateNFAFromNegationProducesNFAThatAcceptsNegation(utils.generators.NFAGeneratorTest) (5 ms)</li><li>utils.generators.NFAGeneratorTest.generateNFAWorksWithComplementInComplexCase1(utils.generators.NFAGeneratorTest) (6 ms)</li><li>utils.PatternProcessorTest.elongateRegularExpressionDoesnotModifySingleCharacter(utils.PatternProcessorTest) (1 ms)</li><li>utils.PatternProcessorTest.addConcatenationSymboslDoesNotModifySingleCharacter(utils.PatternProcessorTest) (1 ms)</li><li>utils.generators.NFAGeneratorTest.generateNFAFromMultipleNestedParenthesesAcceptsContentInsideInnermostOnes(utils.generators.NFAGeneratorTest) (1 ms)</li><li>utils.generators.NFAGeneratorTest.generateNFAFromCharacterAndPlusAcceptsSameCharacter(utils.generators.NFAGeneratorTest) (2 ms)</li><li>utils.generators.NFAGeneratorTest.generateNFAFromSingleLiteralKleeneStarAcceptsStar(utils.generators.NFAGeneratorTest) (2 ms)</li><li>utils.PatternProcessorTest.addConcatenationSymbolsDoesNotModifyEmptyString(utils.PatternProcessorTest) (1 ms)</li><li>utils.generators.NFAGeneratorTest.generateNFAFromCharacterAndRepetitionsWithBothLimitsPresentDoesNotAcceptToomanyRepetitions(utils.generators.NFAGeneratorTest) (2 ms)</li><li>utils.PatternProcessorTest.replaceShorthandsWorksWithRepetitionWhenOnlyMaximumSpecified(utils.PatternProcessorTest) (1 ms)</li><li>utils.PatternProcessorTest.replaceShorthandsWorksWithRepetitionWhenBothNumbersSame(utils.PatternProcessorTest) (1 ms)</li><li>utils.PatternProcessorTest.spaceIsModifiedCorrectlyAsPartOfLongerString(utils.PatternProcessorTest) (1 ms)</li><li>utils.generators.NFAGeneratorTest.generateNFAFromCharacterAndRepetitionsWithoutLimitsAcceptsEmptyString(utils.generators.NFAGeneratorTest) (2 ms)</li><li>utils.PatternProcessorTest.addConcatenationSymbolsDoesNotModifySimpleKeeneStar(utils.PatternProcessorTest) (1 ms)</li><li>utils.PatternProcessorTest.addConcatenationSymbolsAddsSymbolBetweenStarAndNegation(utils.PatternProcessorTest) (1 ms)</li><li>utils.OwnStringBuilderTest.insertInsertStringToTheBeginning(utils.OwnStringBuilderTest) (0 ms)</li><li>utils.generators.NFAGeneratorTest.generateNFAFromMultipleParenthesesChangesOrderOfOperations(utils.generators.NFAGeneratorTest) (1 ms)</li><li>utils.generators.NFAGeneratorTest.generateNFAWorksWithNegationOfUnion(utils.generators.NFAGeneratorTest) (10 ms)</li><li>utils.generators.DFAGeneratorTest.generateComplementDFAFromSingleCharacterAcceptsEmptyString(utils.generators.DFAGeneratorTest) (5 ms)</li><li>utils.PatternProcessorTest.addConcatenationSymbolsWorksForLongString(utils.PatternProcessorTest) (1 ms)</li><li>ui.TextUITest.testTrickyPerformanceDoesNotShowGuidingMessageWhenInputIsPositiveInteger(ui.TextUITest) (4 ms)</li><li>utils.PatternProcessorTest.replaceShorthandsWorksWithSimpleQuestionMark(utils.PatternProcessorTest) (1 ms)</li><li>ui.TextUITest.compareTrickyDoesNotDisplayHigherValueForNThanIsGiven(ui.TextUITest) (13 ms)</li><li>ui.TextUITest.matchExpressionAndStringsAllowsChangingTheRegularExpression(ui.TextUITest) (144 ms)</li><li>utils.generators.NFAGeneratorTest.generateNFAFromMultipleChoiceDoesNotAcceptEmptyString(utils.generators.NFAGeneratorTest) (1 ms)</li><li>utils.generators.NFAGeneratorTest.generateNFAFromCharacterAndRepetitionsWithBothLimitsPresentDoesnotAcceptTooFewRepetitions(utils.generators.NFAGeneratorTest) (2 ms)</li><li>utils.generators.NFAGeneratorTest.generateNFAFromCharacterAndRepetitionsWithoutLimitationsAcceptsVeryManyRepetitions(utils.generators.NFAGeneratorTest) (4 ms)</li><li>utils.PatternProcessorTest.replaceShorthandsWorksWithMultipleChoiceWithSameNumberInBothPlaces(utils.PatternProcessorTest) (1 ms)</li><li>utils.generators.NFAGeneratorTest.generateNFAFromSimpleUnionDoesNotAcceptSimpleConcatenation(utils.generators.NFAGeneratorTest) (1 ms)</li><li>utils.OwnStringBuilderTest.charAtReturnsCorrectFirstCharacter(utils.OwnStringBuilderTest) (1 ms)</li><li>utils.generators.NFAGeneratorTest.generateNFAIncludingSpacesAcceptsCorrectly(utils.generators.NFAGeneratorTest) (3 ms)</li><li>utils.generators.NFAGeneratorTest.generateNFAFromCharacterAndRepetitionsWithoutLimitationsAcceptsTwoRepetitions(utils.generators.NFAGeneratorTest) (2 ms)</li><li>utils.PatternProcessorTest.escapingDifferentOperationsWorksAtSameTime(utils.PatternProcessorTest) (2 ms)</li><li>utils.OwnStringBuilderTest.deleteCharAtCanDeleteArbitraryCharacter(utils.OwnStringBuilderTest) (1 ms)</li><li>utils.generators.NFAGeneratorTest.generateComplexNFAWithLiteralsAcceptsCorrectly1(utils.generators.NFAGeneratorTest) (7 ms)</li><li>utils.generators.NFAGeneratorTest.generateNFAGeneratesNFAThatDoesNotAcceptNonmatchingStringWithLongPattern1(utils.generators.NFAGeneratorTest) (8 ms)</li><li>utils.OwnStringBuilderTest.toStringReturnsStoredString(utils.OwnStringBuilderTest) (1 ms)</li><li>utils.PatternProcessorTest.addConcatenationSymbolsAddsSymbolBetweenCharacterAndNegation(utils.PatternProcessorTest) (1 ms)</li><li>utils.generators.NFAGeneratorTest.generateNFAFromLiteralSlashAcceptsSlash(utils.generators.NFAGeneratorTest) (1 ms)</li><li>utils.generators.NFAGeneratorTest.generateNFAFromCharacterAndRepetitionsWithoutMaximumDoesNotAcceptTooFewRepetitions(utils.generators.NFAGeneratorTest) (2 ms)</li><li>utils.generators.NFAGeneratorTest.generateNFAFromSingleSpaceAcceptsSpace(utils.generators.NFAGeneratorTest) (1 ms)</li><li>utils.generators.NFAGeneratorTest.generateNFAGeneratesNFAThatAcceptsCorrectlyWithLongPattern3(utils.generators.NFAGeneratorTest) (16 ms)</li><li>utils.generators.NFAGeneratorTest.generateNFAFromParenthesesAndPlusDoesNotAcceptEmptyString(utils.generators.NFAGeneratorTest) (2 ms)</li><li>utils.OwnStringBuilderTest.deleteDoesNotModifyIfBothArgumentsZero(utils.OwnStringBuilderTest) (1 ms)</li><li>utils.generators.NFAGeneratorTest.cacheContainsNFAAfterGenerationWithCacheEnabled(utils.generators.NFAGeneratorTest) (1 ms)</li><li>utils.generators.NFAGeneratorTest.generateNFAFromCharacterAndRepetitionsWithoutMaximumAcceptsVeryManyRepetitions(utils.generators.NFAGeneratorTest) (4 ms)</li><li>utils.generators.NFAGeneratorTest.generateNFAFromMultipleChoiceDoesNotAcceptNonchoiceCharacter(utils.generators.NFAGeneratorTest) (2 ms)</li><li>utils.generators.NFAGeneratorTest.generateNFAFromCharacterAndPlusDoesNotAcceptEpsilon(utils.generators.NFAGeneratorTest) (1 ms)</li><li>utils.generators.NFAGeneratorTest.generateNFAFromNegationProducesNFAThatDoesNotAcceptOriginal(utils.generators.NFAGeneratorTest) (4 ms)</li><li>utils.generators.NFAGeneratorTest.generateNFAFromComplexExpressionAcceptsPossibility3(utils.generators.NFAGeneratorTest) (2 ms)</li><li>utils.PatternProcessorTest.replaceShorthandsWorksWithRepetitionWhenBothValuesDoubleDigits(utils.PatternProcessorTest) (2 ms)</li><li>utils.generators.NFAGeneratorTest.cacheIsEmptyAfterGenerationWithCacheDisabled(utils.generators.NFAGeneratorTest) (2 ms)</li><li>utils.generators.NFAGeneratorTest.generateNFAFromParenthesesAndQuestionmarkAcceptsParenthesizedPart(utils.generators.NFAGeneratorTest) (2 ms)</li><li>utils.PatternProcessorTest.addConcatenationSymbolsAddsSymbolBetweenStarAndParenthesis(utils.PatternProcessorTest) (1 ms)</li><li>utils.PatternProcessorTest.addConcatenationSymbolsDoesNotModifyUnionOfTwoCharacters(utils.PatternProcessorTest) (2 ms)</li><li>ui.TextUITest.searchLongTextStatesNonMatchWhenNoPartMatchesInputRegex(ui.TextUITest) (4 ms)</li><li>utils.OwnStringBuilderTest.sizeReturnsCorrectsSizeAfterConstructing(utils.OwnStringBuilderTest) (1 ms)</li><li>utils.OwnStringBuilderTest.indexOfReturnsFirstOccurrenceWhenIndexZero(utils.OwnStringBuilderTest) (0 ms)</li><li>utils.PatternProcessorTest.spaceIsNotModified(utils.PatternProcessorTest) (1 ms)</li><li>utils.generators.NFAGeneratorTest.generateNFAFromCharacterAndRepetitionWithoutMinimunAcceptsEmptyString(utils.generators.NFAGeneratorTest) (2 ms)</li><li>utils.generators.NFAGeneratorTest.generateNFAGeneratesNFAThatAcceptsCorrectlyWithLongPattern2(utils.generators.NFAGeneratorTest) (12 ms)</li><li>utils.OwnStringBuilderTest.charAtReturnsCorrectLastCharacter(utils.OwnStringBuilderTest) (0 ms)</li><li>utils.generators.NFAGeneratorTest.generateNFAFromCharacterAndQuestionmarkAcceptsSameCharacter(utils.generators.NFAGeneratorTest) (2 ms)</li><li>ui.TextUITest.matchExpressionAndStringsTellsRightlyThatExpressionMatches(ui.TextUITest) (9 ms)</li><li>utils.generators.NFAGeneratorTest.generateNFAFromSingleCharacterAcceptsSameCharacter(utils.generators.NFAGeneratorTest) (1 ms)</li><li>utils.PatternProcessorTest.addConcatenationSymbolsAddsSymbolBetweenStarAndCharacter(utils.PatternProcessorTest) (1 ms)</li><li>utils.PatternProcessorTest.addConcatenationSymbolsDoesNotModifyLongStringThatContainsNoConcatenation(utils.PatternProcessorTest) (1 ms)</li><li>utils.OwnStringBuilderTest.substringReturnsSpecifiedSubstring(utils.OwnStringBuilderTest) (0 ms)</li><li>ui.TextUITest.searchLongTextWorksWithScands(ui.TextUITest) (3 ms)</li><li>utils.PatternProcessorTest.fourEscapeCharactersTurnsIntoASingleConcatenation(utils.PatternProcessorTest) (1 ms)</li><li>utils.PatternProcessorTest.replaceShorthandsWorksWithRepetitionWhenBothValuesSpecified(utils.PatternProcessorTest) (1 ms)</li><li>utils.PatternProcessorTest.escapeCharacterPrecedingExclamationProtectsExclamationFromBeingRemoved(utils.PatternProcessorTest) (1 ms)</li><li>ui.TextUITest.testTrickyPerformanceShowsGuidingMessageWhenInputNotInteger(ui.TextUITest) (1 ms)</li><li>utils.PatternProcessorTest.replaceShorthandsWorksWithSimplePlusSymbol(utils.PatternProcessorTest) (1 ms)</li><li>utils.PatternProcessorTest.escapeCharacterPrecedingParenthesesProtectsThemFromBeingInterpretedAsOperationalSymbols(utils.PatternProcessorTest) (1 ms)</li><li>utils.generators.NFAGeneratorTest.generateNFAGeneratesNFAThatDoesNotAcceptNonmatchingStringWithLongPattern3(utils.generators.NFAGeneratorTest) (15 ms)</li><li>utils.generators.NFAGeneratorTest.generateNFAFromParenthesesAndPlusAcceptsMultipleRepetitions(utils.generators.NFAGeneratorTest) (2 ms)</li><li>utils.generators.NFAGeneratorTest.generateNFAFromSingleCharacterDoesNotAcceptDifferentCharacter(utils.generators.NFAGeneratorTest) (1 ms)</li><li>ui.TextUITest.searchLongTextWorksWithMultipleConsequtiveInputRegexes(ui.TextUITest) (19 ms)</li><li>utils.generators.NFAGeneratorTest.generateNFAFromSingleCharacterDoesNotAcceptLongString(utils.generators.NFAGeneratorTest) (1 ms)</li><li>utils.generators.NFAGeneratorTest.generateNFAFromSingleCharacterDoesNotAcceptEmptyString(utils.generators.NFAGeneratorTest) (1 ms)</li><li>utils.generators.NFAGeneratorTest.generateComplexNFAWithLiteralsDoesNotAcceptsWrong(utils.generators.NFAGeneratorTest) (8 ms)</li><li>utils.generators.NFAGeneratorTest.generateNFAFromParenthesesAndQuestionmarkDoesNotAcceptMultipleRepetitions(utils.generators.NFAGeneratorTest) (2 ms)</li><li>ui.TextUITest.compareTrickyDisplaysValueOfNThatIsTheParameter(ui.TextUITest) (12 ms)</li><li>utils.generators.NFAGeneratorTest.generateNFAFromMultipleChoiceWorksWithOneDigitNumbers(utils.generators.NFAGeneratorTest) (2 ms)</li><li>utils.PatternProcessorTest.escapapingQuestionMarkWorks(utils.PatternProcessorTest) (1 ms)</li><li>utils.PatternProcessorTest.replaceShorthandsWorksWithParenthesisPlusSymbol(utils.PatternProcessorTest) (3 ms)</li><li>utils.generators.NFAGeneratorTest.generateNFAGeneratesNFAThatAcceptsCorrectlyWithLongPattern1(utils.generators.NFAGeneratorTest) (8 ms)</li><li>utils.generators.NFAGeneratorTest.generateNFAFromCharacterAndQuestionmarkDoesNotAcceptTwoRepetitions(utils.generators.NFAGeneratorTest) (3 ms)</li><li>utils.generators.NFAGeneratorTest.generateNFAFromSimpleConcatenationDoesNotAcceptEmptyString(utils.generators.NFAGeneratorTest) (2 ms)</li><li>utils.generators.NFAGeneratorTest.generateNFAGeneratesNFAThatDoesNotAcceptNonmatchingStringWithLongPattern4(utils.generators.NFAGeneratorTest) (14 ms)</li><li>utils.PatternProcessorTest.spaceWorksWithRepetition(utils.PatternProcessorTest) (1 ms)</li><li>utils.OwnStringBuilderTest.deleteDeletesSpecifiedPartFromTheMiddle(utils.OwnStringBuilderTest) (0 ms)</li><li>ui.TextUITest.testTrickyPerformanceShowsGuidingMessageWhenInputNegativeInteger(ui.TextUITest) (1 ms)</li><li>utils.generators.NFAGeneratorTest.generateNFAFromComplexExpressionAcceptsPossibility1(utils.generators.NFAGeneratorTest) (2 ms)</li><li>utils.PatternProcessorTest.addConcatenationSymbolsDoesNotAddBetweenNegationAndStartingParenthesis(utils.PatternProcessorTest) (1 ms)</li><li>utils.generators.NFAGeneratorTest.generateNFAFromSimpleKeeneStarAcceptsMultipleRepetitions(utils.generators.NFAGeneratorTest) (2 ms)</li><li>utils.generators.DFAGeneratorTest.generateComplementDFAFromSingleCharacterDoesNotAcceptTheCharacter(utils.generators.DFAGeneratorTest) (4 ms)</li><li>utils.generators.NFAGeneratorTest.generateNFAFromCharacterAndRepetitionsWithBothLimitsPresentAcceptsAnyOfTheOptions(utils.generators.NFAGeneratorTest) (2 ms)</li><li>utils.generators.NFAGeneratorTest.generateNFAIncludingNegationOfSpaceDoesNotAcceptWrongly(utils.generators.NFAGeneratorTest) (13 ms)</li><li>utils.OwnStringBuilderTest.insertInsertsStringToTheEnd(utils.OwnStringBuilderTest) (0 ms)</li><li>utils.generators.NFAGeneratorTest.generateNFAFromCharacterAndQuestionmarkDoesNotAcceptDifferentCharacter(utils.generators.NFAGeneratorTest) (3 ms)</li><li>utils.generators.NFAGeneratorTest.generateNFAGeneratesNFAThatAcceptsCorrectlyWithLongPattern4(utils.generators.NFAGeneratorTest) (13 ms)</li><li>utils.generators.NFAGeneratorTest.generateNFAFromSimpleUnionAcceptsBothStrings(utils.generators.NFAGeneratorTest) (1 ms)</li><li>utils.generators.NFAGeneratorTest.generateNFAFromMultipleChoiceAcceptsEveryChoice(utils.generators.NFAGeneratorTest) (2 ms)</li><li>utils.generators.DFAGeneratorTest.generateComplementDFAFromSingleCharacterAcceptsLongerStrings(utils.generators.DFAGeneratorTest) (4 ms)</li><li>utils.generators.NFAGeneratorTest.generateNFAFromSimpleKeeneStarAcceptsEmptyString(utils.generators.NFAGeneratorTest) (1 ms)</li><li>utils.generators.NFAGeneratorTest.generateNFAFromCharacterAndPlusAcceptsTwoCharacters(utils.generators.NFAGeneratorTest) (2 ms)</li><li>utils.PatternProcessorTest.addConcatenationSymbolsAddsSymbolBetweenClosingParenthesisAndnegation(utils.PatternProcessorTest) (1 ms)</li><li>utils.generators.DFAGeneratorTest.generateComplementDFAFromSingleCharacterAcceptsDifferentCharacter(utils.generators.DFAGeneratorTest) (4 ms)</li><li>ui.TextUITest.matchExpressionAndStringsDisplaysSuccessForEveryStringThatMatches(ui.TextUITest) (10 ms)</li><li>utils.generators.NFAGeneratorTest.generateNFAFromComplexExpressionAcceptsPossibility2(utils.generators.NFAGeneratorTest) (3 ms)</li><li>utils.OwnStringBuilderTest.deleteCharAtCanDeleteFirstCharacter(utils.OwnStringBuilderTest) (0 ms)</li><li>utils.generators.NFAGeneratorTest.generateNFAFromSimpleConcatenationAcceptsSameConcatenation(utils.generators.NFAGeneratorTest) (2 ms)</li><li>utils.OwnStringBuilderTest.indexOfReturnsSecondOccurrenceWhenIndexIsSuitable(utils.OwnStringBuilderTest) (1 ms)</li><li>utils.generators.NFAGeneratorTest.generateNFAFromCharacterAndPlusDoesNotAccceptDifferentCharacter(utils.generators.NFAGeneratorTest) (2 ms)</li><li>utils.generators.NFAGeneratorTest.generateNFAWorksWithNegationOfParentheses(utils.generators.NFAGeneratorTest) (6 ms)</li><li>utils.generators.NFAGeneratorTest.generateNFAFromConcatenationOfMultipleLiteralSpecialSymbolsAcceptsCorrectString(utils.generators.NFAGeneratorTest) (1 ms)</li><li>utils.PatternProcessorTest.escapingPlusMarkWorksWithRepetition(utils.PatternProcessorTest) (1 ms)</li><li>utils.generators.NFAGeneratorTest.generateNFAFromSimpleKeeneStarAcceptsOneRepetition(utils.generators.NFAGeneratorTest) (2 ms)</li><li>utils.PatternProcessorTest.escapeCharacterAndSymbolAreOnlyParenthesized(utils.PatternProcessorTest) (1 ms)</li><li>utils.generators.NFAGeneratorTest.generateNFAFromSimpleKeeneStarDoesNotAcceptDifferentShortConcatenation(utils.generators.NFAGeneratorTest) (1 ms)</li><li>utils.generators.NFAGeneratorTest.generateNFAFromParenthesesAndQuestionmarkAcceptsEmptyString(utils.generators.NFAGeneratorTest) (2 ms)</li><li>utils.generators.NFAGeneratorTest.generateNFAFromUnionOfTwoLiteralSpecialSymbolsAcceptsEither(utils.generators.NFAGeneratorTest) (1 ms)</li><li>utils.generators.NFAGeneratorTest.generateNFAFromParenthesesAndRepetitionsWithBothLimitsAcceptsSuitableNumberOfRepetitions(utils.generators.NFAGeneratorTest) (5 ms)</li><li>utils.generators.NFAGeneratorTest.generateNFAFromSimpleParenthesesAcceptsContentBetweenParentheses(utils.generators.NFAGeneratorTest) (1 ms)</li><li>utils.PatternProcessorTest.addConcatenationSymbolsAddsSymbolBetweenTwoCharacters(utils.PatternProcessorTest) (1 ms)</li><li>utils.generators.NFAGeneratorTest.generateNFAGeneratesNFAThatDoesNotAcceptNonmatchingStringWithLongPattern2(utils.generators.NFAGeneratorTest) (8 ms)</li>
+</ul>
+
+<br/>
+
+Report generated by <a href='http://pitest.org'>PIT</a> 1.4.2
+
+</body>
+</html>

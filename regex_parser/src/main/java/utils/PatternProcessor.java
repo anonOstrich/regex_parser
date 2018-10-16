@@ -7,6 +7,7 @@ package utils;
 
 import utils.structures.OwnSet;
 import utils.structures.OwnStack;
+import utils.structures.OwnMap; 
 /**
  * Class containing methods for preprocessing patterns for regular expressions.
  *
@@ -24,10 +25,13 @@ public class PatternProcessor {
     private OwnSet<Character> alphabet;
 
     private OwnSet<Character> shorthandSymbols;
+    
+    private OwnMap<String, String> cache;
 
     public PatternProcessor() {
         this.alphabet = Utilities.defaultAlphabet();
         this.shorthandSymbols = Utilities.defaultShorthands();
+        cache = new OwnMap(); 
     }
 
     /**
@@ -48,6 +52,11 @@ public class PatternProcessor {
      * construct an NFA
      */
     public String elongateRegularExpression(String pattern) {
+        String original = pattern; 
+        if(cache.containsKey(pattern)){
+            return cache.get(pattern);
+        }
+        
         if (pattern.isEmpty()) {
             pattern = "#";
             return pattern;
@@ -55,6 +64,7 @@ public class PatternProcessor {
         pattern = replaceShorthands(pattern);
         pattern = removeUnnecessaryNegations(pattern);
         pattern = addConcatenationSymbols(pattern);
+        cache.put(original, pattern);
         return pattern;
     }
 
