@@ -1,24 +1,49 @@
 package ui;
 
 import domain.NFA;
-import java.io.File;
-import java.net.URL;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import utils.generators.NFAGenerator;
 
+/**
+ * Responsible for communicating with the user and providing services based
+ * on regular expressions.
+ * 
+ */
 public class TextUI {
 
+    /**
+     * Used solely to query the user for input. 
+     */
     private Scanner scanner;
+    /**
+     * Generator for all automata that are used to work with regular expressions.
+     * 
+     * <p>Only one instance in the course of the program to best utilize 
+     * caching.</p>
+     * 
+     */
     private NFAGenerator nfaGenerator;
 
-    public TextUI(Scanner scanner) {
+    /**
+     * For easing testing, not usually needed.
+     * 
+     * @param scanner 
+     */
+    protected TextUI(Scanner scanner) {
         this.scanner = scanner;
         nfaGenerator = new NFAGenerator();
 
     }
 
+    /**
+     * Initializes the tools to read user input
+     * 
+     * <p>Usually a reader can be obtained from the console, but there is no
+     * console when executing code in some development environments. If the 
+     * former fails, an alternative input is used for the scanner.</p>
+     */
     public TextUI() {
         // works with scands
         try {
@@ -29,6 +54,11 @@ public class TextUI {
         nfaGenerator = new NFAGenerator();
     }
 
+    
+    /**
+     * Queries the user for preferred task and passes control to the right
+     * method. 
+     */
     public void run() {
         System.out.println("Welcome to Regex parser!\n");
         printInstructions();
@@ -45,9 +75,16 @@ public class TextUI {
         }
 
         System.out.println("Goodbye!");
-        return; 
     }
 
+    /**
+     * Queries the user for regex patterns and test strings. 
+     * 
+     * <p>Has two loops: the outer to decide if the user wants to enter a 
+     * new regular expression; the inner to ask for test strings to match 
+     * against the given regular expression.</p>
+     * 
+     */
     public void matchExpressionsAndStrings() {
         long start, generated, end;
 
@@ -91,10 +128,21 @@ public class TextUI {
         run();
     }
 
+    /**
+     * Prints guidance to use the system and to properly construct 
+     * regular expressions.
+     * 
+     */
     protected void printInstructions() {
         System.out.println("See README.md or documentation for info on supported operations and symbols)");
     }
 
+    /** 
+     * 
+     * Prints available operation numbers and their descriptions.
+     * 
+     * @return Integer indicating the preferred operation.
+     */
     protected int chooseOperation() {
         int choice;
         while (true) {
@@ -120,6 +168,13 @@ public class TextUI {
         return choice;
     }
 
+    /**
+     * Queries the user for how many demanding tests are run. 
+     * 
+     * <p>At around n = 100 won't take much time, at n = 200 will take over 5 
+     * minutes.</p>
+     * 
+     */
     protected void testTrickyPerformance() {
         System.out.println("Will compare the performance of two regex parses with patterns of the form '(a?){n}a{n}' when matched with 'a...a' (repeating n times)");
 
@@ -145,6 +200,22 @@ public class TextUI {
 
     }
 
+    /**
+     * 
+     * Prints performance information of matching a complex-ish regex with a 
+     * successful test string. 
+     * 
+     * <p>First constructs the correct strings for my implementation and Java
+     * default implementation. Then the mutual test string is matched against
+     * the regular expressions constructed by both methods. The elapsed times
+     * are printed.</p>
+     * 
+     * <p>The test is run the second time. This time caching is utilised, 
+     * since the same regular expression has been already used once. The two
+     * elapsed times are again printed to the user output.</p>
+     * 
+     * @param n How long regular expression will be constructed and matched.
+     */
     protected void compareTricky(int n) {
         String ownPattern = "(a?)[" + n + "," + n + "]a[" + n + "," + n + "]";
         String defaultPattern = "(a?){" + n + "}a{" + n + "}";
@@ -184,6 +255,15 @@ public class TextUI {
         System.out.println("-------------------------------");
     }
 
+    /**
+     * Queries a regex and searches a text file for portions that match it.
+     * 
+     * <p>Does not try to match the whole text file's contents with the 
+     * given regular expression. It wraps the regex whith .* in the beginning
+     * and beginning, so the contents match the expression if any part of the 
+     * contents matches the regular expression. Only prints whether there is 
+     * a mathching part. </p>
+     */
     protected void searchLongText() {
 
         String[] fileInfo = buildStringFromUserSelectedFile();
@@ -213,6 +293,20 @@ public class TextUI {
 
     }
 
+    /**
+     * 
+     * Queries user for file name and tries to read that file into a string.
+     * 
+     * <p>The file must be in the src/main/resources/ folder for the program
+     * to find it. If running the .jar only the files packed into it can 
+     * be chosen.</p>
+     * <p>If left blank, the choice defaults to the novel Frankenstein. If there
+     * is a problem with reading from the specified file, the user is prompted 
+     * again for input for as long as it takes to correctly read a text file.</p>
+     * 
+     * @return An array of two strings: the name of the file and the contents 
+     * of the file, respectively.
+     */
     protected String[] buildStringFromUserSelectedFile() {
         String filename;
         ClassLoader cl = getClass().getClassLoader();

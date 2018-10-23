@@ -16,10 +16,16 @@ Inspects the input string one character at a time. If the character is the escap
 
 
 ##### ?
+The affected part may appear at most once. The string "(ab)?" would be replaced with "((ab)|#)".
+
 
 ##### +
+The affected part must appear once or more. The string "(ab)+" would be replaced with "((ab)(ab)*)".
+
 
 ##### -
+Any of the characters 'in between' will do. Both characters surrounding this symbol must belong to the same category of the following three: small letters, capitalized letters, digits. The replacements is done by union, so it's possible to construct a large replacement if the two symbols are far apart. The string "a-g" would be replaced by "(g|f|e|d|c|b|a)"
+
 
 ##### [ 
 
