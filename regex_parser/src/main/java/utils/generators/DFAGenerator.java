@@ -164,16 +164,17 @@ public class DFAGenerator {
                 }
                 currentSubsetState.addNextStateForSymbol(symbol, nextSubsetState);
 
-                boolean acceptingState = true;
+                //boolean acceptingState = true;
                 for (State s : reachableFromAny) {
                     if (nfa.getAcceptingStates().contains(s)) {
-                        acceptingState = false;
+                       // acceptingState = false;
+                       dfa.getAcceptingStates().add(nextSubsetState);
                         break;
                     }
                 }
-                if (acceptingState) {
-                    dfa.getAcceptingStates().add(nextSubsetState);
-                }
+                //if (acceptingState) {
+               //     dfa.getAcceptingStates().add(nextSubsetState);
+                //}
                 if (!investigatedSubsetStates.contains(nextSubsetState)) {
                     subsetStatesToBeInvestigated.add(nextSubsetState);
                 }

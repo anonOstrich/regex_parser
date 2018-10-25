@@ -47,15 +47,19 @@ Clearly O(n) time complexity.
 
 ### Constructing a nondeterministic finite automaton
 
-After the pattern string has been preprocessed, an NFA recognizing that language must be constructed. If NFAGenerator uses caching (default option) and the preprocessed pattern string has been used as a blueprint for an NFA before, the automaton stored in the cache is returned without further consideration. Otherwise NFAGenerator initializes the tools for constructing an NFA: it resets the id attribute to zero (to give a different ID for every state that is part of the automaton), and creates a stack of characters and a stack of NFA.
+After the pattern string has been preprocessed, an NFA recognizing that language must be constructed. If NFAGenerator uses caching (default option) and the preprocessed pattern string has been used as a blueprint for an NFA before, the automaton stored in the cache is returned without further consideration. Otherwise NFAGenerator initializes the tools for constructing an NFA. The construction algorithm constructs increasingly complex NFA by using two stacks: an operational stack (stores characters symbolizing operations, e.g. '&') and an automaton stack (storing NFA). The algorithm scans the pattern string character by character and manipulates the contents of the stacks in a manner that depends on the symbol.
 
-The construction algorithm constructs increasingly complex NFA by using two stacks: an operational stack (stores characters symbolizing operations, e.g. '&') and an automaton stack (storing NFA). The algorithm scans the pattern string character by character and manipulates the contents of the stacks in a manner that depends on the symbol. If it belongs to the supported alphabet of the program, a simple NFA that corresponds to that symbol is constructed. If the symbol is a normal alphabet symbol, e.g. 'Y' or '4', this means an NFA that has a starting state and finishing state and only one transition that can be traversed with the symbol in question. If the symbol is '#' or '.' (empty symbol or any single symbol, respectively) an NFA that can move from starting state to the accepting state with empty symbol / any single symbol is created; these are their own methods, since states store this information slightly differently. In addition, if the read symbol is '/', that symbol is disregarded and the next symbol is used to create an NFA as if it were a normal alphabet symbol. For example, if the next two symbols are '/&', an NFA is created that can only change from starting state to accepting state by reading the symbol '&'.
+#### Constructing simplest automata
 
-If any of these NFA is created, it is pushed to the NFA stack. A very different sequence of events occures if the algorithm reads an operational symbol: '&', '|', '*', '(', ')', or '!'. Once an operational symbol is read, the operations indicated by the operation symbols on top of the stack are evaluated as long as they have higher priority than the symbol that was read. For example, '&' has higher priority than '|' because 'a&b|c&c' is meant as '(a&b)|(c&c)'. Once all the operations with higher priority have been evaluated, the current symbol is pushed to the operation stack.
+If the inspected character belongs to the supported alphabet of the program, a simple NFA that corresponds to that symbol is constructed. If the symbol is a normal alphabet symbol, e.g. 'Y' or '4', this means an NFA that has a starting state and finishing state and only one transition that can be traversed with the symbol in question. If the symbol is '#' or '.' (empty symbol or any single symbol, respectively) an NFA that can move from starting state to the accepting state with empty symbol / any single symbol is created; these are their own methods, since states store this information slightly differently. In addition, if the read symbol is '/', that symbol is disregarded and the next symbol is used to create an NFA as if it were a normal alphabet symbol. For example, if the next two symbols are '/&', an NFA is created that can only change from starting state to accepting state by reading the symbol '&'. Having created any of these NFA, the algorithm then pushes the created automaton to the automaton stack. 
 
-Evaluation depends on the operation. In the case of '&', '|' or '*' [Thompson's algorithm](https://en.wikipedia.org/wiki/Thompson%27s_construction) is applied in a straightforward manner. First the correct number of operands are popped from the automaton stack, and by using their starting states, accepting states and a few new states and transitions indicated by Thompson's algorithm, a new NFA is constructed. This slightly more complex NFA is then pushed to the automaton stack.
+#### Combining simple automata
 
-Symbol '(' has the lowest priority and is not considered until ')' is encountered. Then the operations in the operation stack are evaluated until '(' is encountered and discarded. Now the contents between these parentheses has been evaluated and the corresponding NFA is at the top of the automaton stack. 
+A very different sequence of events occures if the algorithm reads an operational symbol: '&', '|', '*', '(', ')', or '!'. Once an operational symbol is read, the operations indicated by the operation symbols on top of the stack are evaluated as long as they have higher priority than the symbol that was read. For example, '&' has higher priority than '|' because 'a&b|c&c' is meant as '(a&b)|(c&c)'. Once all the operations with higher priority have been evaluated, the current symbol is pushed to the operation stack for later evaluation.
+
+Evaluation depends on the operation. In the case of '&', '|' or '*' [Thompson's algorithm](https://en.wikipedia.org/wiki/Thompson%27s_construction) is applied in a straightforward manner. First the correct number of operands are popped from the automaton stack in the right order, and by using their starting states, accepting states, and a few new states and transitions indicated by Thompson's algorithm, a new NFA is constructed. This slightly more complex NFA is then pushed to the automaton stack.
+
+Symbol '(' has the lowest priority and is not considered until ')' is encountered. Then the operations in the operation stack are evaluated until '(' is encountered and discarded. Now the contents between these parentheses has been evaluated and the corresponding NFA is pushed to the top of the automaton stack. 
 
 Negation, symbolized with '!', is a special case that has the potential to exponentially increase time and space requirements. The evaluation is explained in detail in the next subsection.
 
@@ -69,26 +73,43 @@ Sometimes it is easy to replace a regular expression with negation. If there is 
 
 #### Caching and NFA that have been negated before
 
-When possible, construction of negation automata should be avoided, so the resulting automata are cached. Each NFA has information about whether they are also DFA. If they are, the negation process is very fast, since accepting states become non-accepting and vice versa.
+When possible, construction of negation automata should be avoided, so the resulting automata are cached. Each NFA has information about whether they are also DFA. If they are, the negation process is very fast, since accepting states become non-accepting and vice versa. This is done by swapping the value of a boolean attribute in the NFA to indicate that the set of states that earlier indicated accepting states now means the non-accepting states. 
 
 
 #### Powerset algorithm
 
-Fairly standard [powerset construction algorithm](https://en.wikipedia.org/wiki/Powerset_construction) for creating a deterministic finite automaton that recognizes exactly the same language as some nondetermistic finite automaton. 
+Fairly standard [powerset construction algorithm](https://en.wikipedia.org/wiki/Powerset_construction) for creating a deterministic finite automaton that recognizes exactly the same language as some nondetermistic finite automaton. Only sets of states that the nondeterministic automaton can ever be in are considered, so the number of states in the resulting DFA may be lower than 2^|number of states in the NFA|. If some set of states has already been inspected, it won't be inspected again: no more information can be obtained. 
 
 
 
 #### Negating the regular expression
 
-Why not just first construct, then swap states as is done with DFA? Uniformity, faster performance.... Let's test and probably implement. Would be dumb to have two ways of doing the same thing when one will do. 
+If an NFA has to be converted with Thompson's algorithm, each subset of states is made an accepting state of the DFA being made if NONE of those states is accepting in the NFA. Similarly, a subset of states is NOT an accepting state in the DFA if any of those states is accepting in the NFA. 
 
-CHANGE AND WRITE EXPLANATION
 
 
 ### Simulating the automaton on test input
 
-Once an NFA has been generated from a regular expression, we can use it to discover if the regular expression matches with different strings. 
-WRITING IN PROCESS
+The useful part of the program is using the constructed automata to match regular expressions and strings; to discover if a certain string matches the pattern of some regular expression. The problem is equal to giving the test string as input to a finite automaton that has been constructed using the way described above.
+
+#### Basics
+
+To simulate a nondeterministic automaton the simulation algorithm keeps track of all the possible states that the automaton may be in at any given moment. Before reading any input the automaton is in the starting state. The cycle of simulation begins by expanding the current set of states: in it are added all the states that can be reached by following only empty transitions, so without the need for any input symbols. Then the next character in the test string is read. A new set of states is formed by examining each of the current possible states: the states that are reachable with the input symbol from all of the current states are joined together to form the next set of states that the automaton can be in. 
+
+Once all the input characters have been exhausted, the final set of possible states is extended with empty transitions. Then the method returns true if this set contains any of the accepting states (since there is at least one path of choices that leads to an accepting state), and false otherwise. In addition, if at any point the current set of states is empty, there is no possibility of reaching other states so the simulation can be halted. 
+
+
+#### DFA vs NFA
+
+The construction of a DFA can take significantly longer than that of NFA: however, the worst-case time complexity for simulating the workings of automata favors DFA, since in that case reading one symbol leads to exactly one transition from the current state to the state where the appropriate transitions guides operation. The time complexity is always O(n) where n is the length of the test string. In the nondeterministic version the machine may be at most in all of its states at one point, so the worst-case scenario is O(n*|number of states|) without further techniques. The worst-case scenario holds for a newly-created NFA in my implementation. 
+
+#### Caching parts of the implicitly constructed DFA
+
+With the preceding description every simulation of the same test string can take significantly longer with an NFA than DFA - with enough match cheking, the initial requirements to generate a DFA might be offsetted by the speedy simulation process. However, when an NFA calculates the set of states that can be reached from another set of states by a given symbol, this corresponds to discovering a transition between two states in a DFA that could be formed by Thompson's algorithm. Many such implicit fragments of the deterministic automaton may be encountered, and my program attempts to store them to speed up the simulation of similar events in the future. 
+
+// more explanation
+
+
 
 
 Space complexity of data structures

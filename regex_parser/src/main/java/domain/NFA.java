@@ -18,7 +18,6 @@ import utils.structures.OwnMap;
  * isDFA attribute
  * </p>
  *
- * @author jesper
  */
 public class NFA {
 
@@ -209,6 +208,7 @@ public class NFA {
             char symbol = test.charAt(i);
             
            
+            
             if (cacheEnabled) {
                 if (cache.containsKey(currentStates) && cache.get(currentStates).containsKey(symbol)) {
                     currentStates = cache.get(currentStates).get(symbol).copy();
@@ -235,7 +235,7 @@ public class NFA {
             nextStates.clear();
 
             if (currentStates.isEmpty()) {
-                return false;
+                return inverted;
             }
         }
 
