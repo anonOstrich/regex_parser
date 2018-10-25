@@ -91,7 +91,7 @@ public class NFAGenerator {
      */
     public NFA generateNFA(String pattern) {
         //add explicit concatenation symbols and see if the pattern has been encountered before
-        pattern = patternProcessor.elongateRegularExpression(pattern);
+        pattern = patternProcessor.elongateRegularExpression(pattern);   
         if (cacheEnabled && cache.containsKey(pattern)) {
             return cache.get(pattern);
         }
@@ -352,7 +352,7 @@ public class NFAGenerator {
     }
 
     private NFA generateNFAFromAnySingleSymbol() {
-               State s0 = new State(lowestAvailableId);
+        State s0 = new State(lowestAvailableId);
         lowestAvailableId++;
         State s1 = new State(lowestAvailableId);
         lowestAvailableId++;

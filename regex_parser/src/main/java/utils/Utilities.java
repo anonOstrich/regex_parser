@@ -54,9 +54,9 @@ public class Utilities {
     
     public static OwnSet<Character> defaultBasicOperations(){
         OwnSet<Character> result = new OwnSet();
-        Character[] supportedShorthands = {'*', '|', '&', '(', ')', '!'};
-        for (int i = 0; i < supportedShorthands.length; i++) {
-            result.add(supportedShorthands[i]);
+        Character[] supportedOperations = {'*', '|', '&', '(', ')', '!'};
+        for (int i = 0; i < supportedOperations.length; i++) {
+            result.add(supportedOperations[i]);
         }
         return result;
     }

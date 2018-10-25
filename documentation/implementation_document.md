@@ -8,7 +8,7 @@ General structure
 
 ### Preprocessing regular expression string
 
-Replaces all shorthands that help writing more complex regular expressions so that only '|', '*', '&' and '!' remain. The NFAGenerator needs to construct a fewer number of different NFA this way. Consists of three phases: replacing the shorthands, removing some of the unncesessary negations, and adding the concatenation symbol '&' wherever different parts are meant to be concatenated. 
+Replaces all shorthands that help writing more complex regular expressions so that only '|', '*', '&' and '!' remain. The NFAGenerator needs to construct a fewer number of different NFA this way. Consists of three phases: replacing the shorthands, removing some of the unncesessary negations, and adding the concatenation symbol '&' wherever different parts are meant to be concatenated. Worst case time complexity is probably O(n), but some shorthands will result in significantly longer strings than others. For example, "(a-z)[0, 999]" will form 1000 different concatenations separated by union; each element of these concatenations is a union of 26 symbols. 
 
 #### Replacing shorthands
 
@@ -24,10 +24,12 @@ The affected part must appear once or more. The string "(ab)+" would be replaced
 
 
 ##### -
-Any of the characters 'in between' will do. Both characters surrounding this symbol must belong to the same category of the following three: small letters, capitalized letters, digits. The replacements is done by union, so it's possible to construct a large replacement if the two symbols are far apart. The string "a-g" would be replaced by "(g|f|e|d|c|b|a)"
+Any of the characters 'in between' will do. Both characters surrounding this symbol must belong to the same category of the following three: small letters, capitalized letters, digits. The replacements is done by union, so it's possible to construct a large replacement if the two symbols are far apart. The string "a-g" would be replaced by "(g|f|e|d|c|b|a)".
 
 
-##### [ 
+##### [min, max]
+The affected part may be repeated at least min times and at most max times. Min or max may be left empty, in which case min is interpreted as zero and max is infinity (may repeat however many times). If max is present, the replacement occurs in this manner: "a[2,4]" -> "(aaaa|aaa|aa)"; if minimum is absent or zero, the empty string is allowed as well: "a[,2]" -> "(aa|a|#)". If max is absent, the Kleene star may be used and the construction is very easy: "a[10,]" -> "(aaaaaaaaaaa*)". 
+
 
 
 #### Removing unnecessary negations
@@ -45,16 +47,48 @@ Clearly O(n) time complexity.
 
 ### Constructing a nondeterministic finite automaton
 
+After the pattern string has been preprocessed, an NFA recognizing that language must be constructed. If NFAGenerator uses caching (default option) and the preprocessed pattern string has been used as a blueprint for an NFA before, the automaton stored in the cache is returned without further consideration. Otherwise NFAGenerator initializes the tools for constructing an NFA: it resets the id attribute to zero (to give a different ID for every state that is part of the automaton), and creates a stack of characters and a stack of NFA.
+
+The construction algorithm constructs increasingly complex NFA by using two stacks: an operational stack (stores characters symbolizing operations, e.g. '&') and an automaton stack (storing NFA). The algorithm scans the pattern string character by character and manipulates the contents of the stacks in a manner that depends on the symbol. If it belongs to the supported alphabet of the program, a simple NFA that corresponds to that symbol is constructed. If the symbol is a normal alphabet symbol, e.g. 'Y' or '4', this means an NFA that has a starting state and finishing state and only one transition that can be traversed with the symbol in question. If the symbol is '#' or '.' (empty symbol or any single symbol, respectively) an NFA that can move from starting state to the accepting state with empty symbol / any single symbol is created; these are their own methods, since states store this information slightly differently. In addition, if the read symbol is '/', that symbol is disregarded and the next symbol is used to create an NFA as if it were a normal alphabet symbol. For example, if the next two symbols are '/&', an NFA is created that can only change from starting state to accepting state by reading the symbol '&'.
+
+If any of these NFA is created, it is pushed to the NFA stack. A very different sequence of events occures if the algorithm reads an operational symbol: '&', '|', '*', '(', ')', or '!'. Once an operational symbol is read, the operations indicated by the operation symbols on top of the stack are evaluated as long as they have higher priority than the symbol that was read. For example, '&' has higher priority than '|' because 'a&b|c&c' is meant as '(a&b)|(c&c)'. Once all the operations with higher priority have been evaluated, the current symbol is pushed to the operation stack.
+
+Evaluation depends on the operation. In the case of '&', '|' or '*' [Thompson's algorithm](https://en.wikipedia.org/wiki/Thompson%27s_construction) is applied in a straightforward manner. First the correct number of operands are popped from the automaton stack, and by using their starting states, accepting states and a few new states and transitions indicated by Thompson's algorithm, a new NFA is constructed. This slightly more complex NFA is then pushed to the automaton stack.
+
+Symbol '(' has the lowest priority and is not considered until ')' is encountered. Then the operations in the operation stack are evaluated until '(' is encountered and discarded. Now the contents between these parentheses has been evaluated and the corresponding NFA is at the top of the automaton stack. 
+
+Negation, symbolized with '!', is a special case that has the potential to exponentially increase time and space requirements. The evaluation is explained in detail in the next subsection.
+
+Once all the symbols of the pattern string have been read, the operations left in the operation stack are evaluated in order. Once it is empty, the automaton stack contains only one NFA, which corresponds to the whole pattern string (if the regular expression pattern is correctly constructed). This is then stored in cache and returned.
+
+
 ### Constructing a negation deterministic finite automaton (when needed)
+
+Sometimes it is easy to replace a regular expression with negation. If there is only one negation that negates the rest of the expression, the regular expression can be matched with a test string, and if the negation is deemed to match when the rest of the expression does not match. However, always working strategies are not as easy, and I found no other solution for my needs than to convert the nondeterministic finite automaton into a deterministic one and then swapping accepting and non-accepting states with one another.
+
 
 #### Caching and NFA that have been negated before
 
+When possible, construction of negation automata should be avoided, so the resulting automata are cached. Each NFA has information about whether they are also DFA. If they are, the negation process is very fast, since accepting states become non-accepting and vice versa.
+
+
 #### Powerset algorithm
+
+Fairly standard [powerset construction algorithm](https://en.wikipedia.org/wiki/Powerset_construction) for creating a deterministic finite automaton that recognizes exactly the same language as some nondetermistic finite automaton. 
+
+
 
 #### Negating the regular expression
 
+Why not just first construct, then swap states as is done with DFA? Uniformity, faster performance.... Let's test and probably implement. Would be dumb to have two ways of doing the same thing when one will do. 
+
+CHANGE AND WRITE EXPLANATION
+
+
 ### Simulating the automaton on test input
 
+Once an NFA has been generated from a regular expression, we can use it to discover if the regular expression matches with different strings. 
+WRITING IN PROCESS
 
 
 Space complexity of data structures
@@ -116,3 +150,5 @@ Sources
 -------
 * [https://swtch.com/~rsc/regexp/regexp1.html](https://swtch.com/~rsc/regexp/regexp1.html)
 * [https://en.wikipedia.org/wiki/Nondeterministic_finite_automaton#Implementation](https://en.wikipedia.org/wiki/Nondeterministic_finite_automaton#Implementation)
+* [https://en.wikipedia.org/wiki/Thompson%27s_construction](https://en.wikipedia.org/wiki/Thompson%27s_construction)
+* [https://en.wikipedia.org/wiki/Powerset_construction](https://en.wikipedia.org/wiki/Powerset_construction)
