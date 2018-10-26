@@ -6,7 +6,7 @@ Running the program
 
 
 ### .jar
-Clone the project or download just the [JAR FILE]. Run the program with the command "java -jar TIEDOSTONIMI". The program should start in the text terminal.
+Clone the project or download just the [JAR FILE]. Run the program with the command "java -jar regex_parser.jar". The program should start in the text terminal.
 
 
 ### in an IDE

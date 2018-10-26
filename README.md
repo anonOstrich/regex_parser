@@ -29,7 +29,7 @@ Required:
 * Maven, if you want the build the project yourself
 
 ### Run the program
-Copy the github repository. Inside it run 'java -jar Regex_parser.jar' to open the program in terminal. 
+Copy the github repository. Inside it run 'java -jar regex_parser.jar' to open the program in terminal. 
 
 ### Modify and build the program
 Copy the github repository. When you want to build the project, run 'mvn clean install' in the terminal. The .jar files and documentation will be created in the target folder. 
