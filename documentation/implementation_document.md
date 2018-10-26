@@ -107,7 +107,7 @@ The construction of a DFA can take significantly longer than that of NFA: howeve
 
 With the preceding description every simulation of the same test string can take significantly longer with an NFA than DFA - with enough match cheking, the initial requirements to generate a DFA might be offsetted by the speedy simulation process. However, when an NFA calculates the set of states that can be reached from another set of states by a given symbol, this corresponds to discovering a transition between two states in a DFA that could be formed by Thompson's algorithm. Many such implicit fragments of the deterministic automaton may be encountered, and my program attempts to store them to speed up the simulation of similar events in the future. 
 
-// more explanation
+The NFA instances have a HashMap cache whose keys are sets of states, and values HashMaps. These value maps use characters as keys and sets of states as values. When simulating the workings of the automaton with some input string, the method first checks if the cache contains the current set of states as a key, and the current symbol as the key in the value map. If this is the case, the NFA  has calculated the state that it should end up in, and it can be immediately retrieved from the value map. Otherwise the method must resort to discovering all the possible states from the current states with transitions that match the current symbol. In that case the end result, after being extended with empty transitions, is stored in the cache. There might be room for better performance here: currently the sets used as keys in the cache are copies, since the original sets usually undergo changes, which makes for really poor keys. Copying takes its time, especially with large automata. 
 
 
 
@@ -120,6 +120,7 @@ Space complexity of data structures
 ### Linked List
 
 ### HashTable
+
 
 Time complexity of data structures
 ----------------------------------
