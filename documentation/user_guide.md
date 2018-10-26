@@ -26,10 +26,10 @@ The alphabet is fairly restricted, since negation creates transitions for all th
 
 ### operations
 
-`&, |, *, !, ()`
+`'&', '|', '*', '!', '('')'`
 
 ### shorthands
-`[], -, +, ?`
+`'['']', '-', '+', '?'`
 
 
 
@@ -74,7 +74,7 @@ IMPORTANT! Both the first and second character must be from the same collection,
 * `!` - negation/complements. Will match any strings that do NOT match the negated regular expression. Pattern `!a` will match all strings except `a`, and pattern `!(aa|b)` will match all strings excpect `aa` or `b`. 
 * `#` - empty string. Pattern `a|#` will match `a` or the empty strnig.
 * `.` - any single character will be accepted in this position. `a.a` matches, among others, `aya`, `a(a`, `a9a`. This is especially useful to use regular expressions to search for an occurrence of a pattern in a longer text: if we want to find out whether a text contains an exclamation ending with ` a dog!`, we could match the whole text with the regular expression `.* a dog/!.*`
-* `/` - escape character.  The symbol following this character is treated as part of the alphabet. So `/&` creates a regular expression that recognises only the string `&`. Notice that this escapes only the following character! You cannot escape a longer character sequence with one / even if it directly precedes parentheses. So `/(aba)` would not be a valid pattern for a regular expression, since it contains one closing parenthesis and zero opening parentheses. To achieve the wanted effect the pattern should be `/(aba/)`. If you don't need negation in the regular expression, you can include any symbol in the alphabet by escaping it first. `/€` might work. To avoid any chance of error I suggest remaining within the symbols listed in this section, however. 
+* `/` - escape character.  The symbol following this character is treated as part of the alphabet. So `/&` creates a regular expression that recognises only the string `&`. Notice that this escapes only the following character! You cannot escape a longer character sequence with one / even if it directly precedes parentheses. So `/(aba)` would not be a valid pattern for a regular expression, since it contains one closing parenthesis and zero opening parentheses. To achieve the wanted effect the pattern should be `/(aba/)`. If you don't need negation in the regular expression, you can include any symbol in the alphabet by escaping it first. `/€` might work. To avoid any chance of error I suggest remaining within the symbols listed in this section, however. Notice: pattern processor does not adequately test if a character is escaped if there are multiple escape characters directly before it. If you wish to escape /, try (//)  parentheses might help. 
 
 Different uses of the program
 =============================

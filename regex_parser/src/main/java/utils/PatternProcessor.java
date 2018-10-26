@@ -1,37 +1,50 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package utils;
 
 import utils.structures.OwnSet;
 import utils.structures.OwnStack;
-import utils.structures.OwnMap; 
+import utils.structures.OwnMap;
+
 /**
- * Class containing methods for preprocessing patterns for regular expressions.
  *
+ * Contains methods for unpacking shorthands and preparing a pattern string for
+ * NFAGenerator to more easily construct an automaton based on.
  *
- * @author jesper
  */
 public class PatternProcessor {
 
     /**
      *
-     * Set of all allowed input characters that are not operations, shorthands
-     * or #.
+     * Characters that are objects of operators and shorthands.
      *
      */
-    private OwnSet<Character> alphabet;
+    private final OwnSet<Character> alphabet;
 
-    private OwnSet<Character> shorthandSymbols;
-    
-    private OwnMap<String, String> cache;
+    /**
+     *
+     * Symbols for shorthand operations
+     *
+     * <p>
+     * Shorthands are human-friendly ways to write some commonly used
+     * combinations of basic operations. The NFAGenerator does not understand
+     * them.</p>
+     *
+     */
+    private final OwnSet<Character> shorthandSymbols;
 
+    /**
+     * Stores information about all the strings that have been processed, so if
+     * a string is processed multiple times, the performance increases after the
+     * first processing.
+     */
+    private final OwnMap<String, String> cache;
+
+    /**
+     * Initializes the supported symbols and cache
+     */
     public PatternProcessor() {
         this.alphabet = Utilities.defaultAlphabet();
         this.shorthandSymbols = Utilities.defaultShorthands();
-        cache = new OwnMap(); 
+        cache = new OwnMap();
     }
 
     /**
@@ -40,10 +53,10 @@ public class PatternProcessor {
      *
      * <p>
      * If the pattern is empty, the empty symbol ('#') is returned. Otherwise
-     * the shorthand symbols are replace with a longer string that only contains
-     * the basic operations. Then concatenation symbols are explicitly inserted
-     * to where that operation takes place. The modified parameter string is
-     * then returned.
+     * the shorthand symbols are replaced with a longer string that contains
+     * only the basic operations. Then concatenation symbols are explicitly
+     * inserted to where that operation takes place. The modified string is then
+     * returned.
      * </p>
      *
      *
@@ -52,11 +65,11 @@ public class PatternProcessor {
      * construct an NFA
      */
     public String elongateRegularExpression(String pattern) {
-        String original = pattern; 
-        if(cache.containsKey(pattern)){
+        String original = pattern;
+        if (cache.containsKey(pattern)) {
             return cache.get(pattern);
         }
-        
+
         if (pattern.isEmpty()) {
             pattern = "#";
             return pattern;
@@ -84,12 +97,13 @@ public class PatternProcessor {
             char currentSymbol = sb.charAt(i);
 
             if (currentSymbol == '/') {
-                //we'll skip the next symbol
+                //the next symbol must not be processed
                 i++;
-                continue; 
+                continue;
             }
 
             if (shorthandSymbols.contains(currentSymbol)) {
+
                 String affectedPart = determineAffectedPart(sb.toString(), i - 1);
 
                 if (currentSymbol == '+') {
@@ -104,9 +118,11 @@ public class PatternProcessor {
                 if (currentSymbol == '[') {
                     i = replaceRepetitions(sb, i, affectedPart);
                 }
-                
-                if(sb.charAt(i) == '/'){
-                    i++; 
+
+                // i might have changed during the processing; easiest to 
+                // check again
+                if (sb.charAt(i) == '/') {
+                    i++;
                 }
 
             }
@@ -123,7 +139,7 @@ public class PatternProcessor {
      *
      *
      * @param sb Contains the string that is being simplified
-     * @param i index that tells what character of the sb is considered
+     * @param i index that tells where the shorthand symbol is
      * @return index that points to the next character in the sb after the
      * inserted unions and closing parenthesis
      */
@@ -132,7 +148,7 @@ public class PatternProcessor {
         char last = sb.charAt(i + 1);
         sb.delete(i - 1, i + 2);
         i--;
-        //this could be done by setting all these to be transition symbols in a single NFA...
+
         sb.insert(i, "()");
         i++;
         for (int j = (int) first; j <= (int) last; j++) {
@@ -148,10 +164,10 @@ public class PatternProcessor {
      *
      *
      * @param sb Contains the string that is being simplified
-     * @param i index that tells what character of the sb is considered
+     * @param i index that tells the position of the question mark
      * @affectedPart The part of sb that ? operates on
      * @return index that points to the next character in the sb after the
-     * inserted unions and closing parenthesis
+     * inserted union and closing parenthesis
      */
     private int replaceQuestionmark(OwnStringBuilder sb, int i, String affectedPart) {
         sb.deleteCharAt(i);
@@ -163,16 +179,16 @@ public class PatternProcessor {
 
     /**
      *
-     * Replaces [,] with all the numbers of repetitions that is specified with
+     * Replaces [,] with all the numbers of repetitions that are specified with
      * minimum and maximum
      *
      * <p>
      * If both min and max are the same, only that number of repetitions is
      * inserted. If both are otherwise specified, the different allowed numbers
-     * are separated with union and the created string is parenthesized .
+     * are separated with union and the created string is parenthesized.
      * </p>
      * <p>
-     * If min is missing, min is interpreted to be 0. In that case empty string
+     * If min is missing, it is interpreted to be 0. In that case empty string
      * will also match this part of the string. If max is missing, there is an
      * infinite number of possibilities. This is solved by repeating the
      * affected part min times, and then concatenating to its right side the
@@ -180,14 +196,15 @@ public class PatternProcessor {
      * </p>
      * <p>
      * Don't give values such that min > max or otherwise differing from the
-     * format - there is very little preparation for invalid inputs.
+     * format - unless you are prepared for errors / malfunctioning regexes!
      * </p>
      *
      * @param sb Contains the string that is being simplified
-     * @param i index that tells what character of the sb is considered
-     * @affectedPart The part of sb that ? operates on
+     * @param i index that tells where the [ in question is
+     * @affectedPart The part of sb that this shorthand repeats
      * @return index that points to the next character in the sb after the
      * inserted unions and closing parenthesis
+     *
      */
     private int replaceRepetitions(OwnStringBuilder sb, int i, String affectedPart) {
 
@@ -252,15 +269,14 @@ public class PatternProcessor {
      * Replaces + with the affected part and Kleene star
      *
      * @param sb Contains the string that is being simplified
-     * @param i index that tells what character of the sb is considered
-     * @affectedPart The part of sb that ? operates on
-     * @return index that points to the next character in the sb after the
-     * inserted unions and closing parenthesis
+     * @param i index that tells where + is
+     * @affectedPart The part of sb that + operates on
+     * @return index that points to the next character in the sb after
+     * processing
      */
     private int replacePlus(OwnStringBuilder sb, int i, String affectedPart) {
         sb.deleteCharAt(i);
         sb.insert(i - affectedPart.length(), "(");
-        //i++;
         sb.insert(i + 1, affectedPart + "*)");
         return i;
     }
@@ -268,12 +284,19 @@ public class PatternProcessor {
     /**
      *
      * Returns the substring that is affected by shorthand, last character of
-     * whic is at index idx.
+     * which is at index idx.
      *
      * <p>
-     * If the symbol at the specified index is not closing bracket, only that
-     * character is returned (should be from the alphabet in well-formed regular
-     * expression). However, if the character at the index is closing bracket,
+     * If the symbol at the index is preceded by an escape character, the method
+     * needs to determine if it is meant to escape the next character, or if 
+     * it itself has been escaped. To do this, the program determines how many 
+     * escape characters directly precede the symbol at the idx. If their number
+     * is odd, the last escapes the character at idx; in this case the affected
+     * part consists of the character at idx and the one preceding escape character.
+     * </p>
+     * <p>
+     * Otherwise, if the symbol at the specified index is not closing bracket, only that
+     * character is returned. However, if the character at the index is closing bracket,
      * the affected part is extended to the left until the matching opening
      * bracket is encountered. The contents of the brackets, and the brackets
      * themselves, are then returned.
@@ -294,7 +317,16 @@ public class PatternProcessor {
     public String determineAffectedPart(String pattern, int idx) {
 
         if (idx > 0 && pattern.charAt(idx - 1) == '/') {
-            return "" + pattern.charAt(idx - 1) + pattern.charAt(idx);
+            
+            int numberOfPrecedingEscapes = 1;
+            int i = 2;
+            while (idx - i >= 0 && pattern.charAt(idx - i) == '/') {
+                numberOfPrecedingEscapes++;
+                i++;
+            }
+            if (numberOfPrecedingEscapes % 2 == 1) {
+                return "" + pattern.charAt(idx - 1) + pattern.charAt(idx);
+            }
         }
 
         if (pattern.charAt(idx) != ')') {
@@ -354,7 +386,7 @@ public class PatternProcessor {
             }
 
             if ((alphabet.contains(c1) || c1 == '.') && (alphabet.contains(c2) || c2 == '.')
-                    || (alphabet.contains(c1) ||c1 == '.') && c2 == '('
+                    || (alphabet.contains(c1) || c1 == '.') && c2 == '('
                     || c1 == '*' && (alphabet.contains(c2) || c2 == '.')
                     || c1 == '*' && c2 == '('
                     || c1 == ')' && c2 == '('
@@ -362,7 +394,7 @@ public class PatternProcessor {
                     || c1 == ')' && c2 == '!'
                     || c1 == '*' && c2 == '!'
                     || (alphabet.contains(c1) || c1 == '.') && c2 == '!'
-                    || c2 == '/' && (c1 != '(' && c1 != '|' )) {
+                    || c2 == '/' && (c1 != '(' && c1 != '|')) {
 
                 sb.insert(i + 1, "&");
                 i++;
@@ -381,7 +413,7 @@ public class PatternProcessor {
      * symbols are replaced with empty string.
      *
      * @param pattern
-     * @return same pattern, with every following two ! symbols removed
+     * @return same pattern, with every two neighboring ! symbols removed
      */
     public String removeUnnecessaryNegations(String pattern) {
         String result = "";
@@ -412,7 +444,6 @@ public class PatternProcessor {
     }
 
     /**
-     *
      *
      * @return Alphabet in use
      */

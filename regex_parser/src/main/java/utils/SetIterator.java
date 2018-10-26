@@ -22,6 +22,9 @@ public class SetIterator<T> implements Iterator{
      * The element that the iterator will return next.
      */
     private PairNode<T, T> current;
+    
+    
+    private int currentIdx; 
 
     /**
      * 
@@ -40,14 +43,16 @@ public class SetIterator<T> implements Iterator{
      * element to return, there is no hit to performance. On the other hand, 
      * if there is a possibility that all the values of the set are not inspected, 
      * it is wasted effort to go through all the elements of the table in 
-     * the constructor... 
+     * the constructor...  C
      * </p>
-     * <p>CONSIDER CHANGING IMPLEMENTATION</p>
+     * <p>Changing implementation would boost performance.</p>
      * 
      * @param table Array containing all the elements of a set.
      */
     public SetIterator(OwnLinkedList<T, T>[] table) {
+        currentIdx = 0; 
         elements = new OwnLinkedList();
+        
 
         for (int i = 0; i < table.length; i++) {
             if (table[i] == null) {

@@ -6,7 +6,6 @@ import java.util.NoSuchElementException;
  * Own implementation of stack. Based on the idea of a linked list, which gives
  * time complexity O(1) for all operations.
  *
- * @author jesper
  */
 public class OwnStack<T> {
 
@@ -15,7 +14,9 @@ public class OwnStack<T> {
      */
     private Node<T> top;
 
-    
+    /**
+     * Initializes the stack
+     */
     public OwnStack() {
         top = null; 
     }

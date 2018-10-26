@@ -3,7 +3,6 @@ package utils.structures;
 /**
  *  Represents a single node in OwnStack
  * 
- * 
  */
 public class Node<T> {
     /**

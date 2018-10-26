@@ -208,18 +208,7 @@ public class StateTest {
         State s2 = new State(5);      
         assertTrue(s1.hashCode() != s2.hashCode());
     }
-    
-    @Test
-    public void toStringReturnsExpectedResultWhenToTransitions(){
-        State s1 = new State(1);
-        assertEquals("Id: 1\n", s1.toString());
-    }
-    
-    @Test
-    public void toStringReturnsExpectedResultsWhenMultipleTransitions(){
-        State s = new State(1, createTransitionExample());
-        assertEquals("Id: 1\nSymbols and what states are reachable from them:\n1 --> []\n0 --> [2]\n# --> [4, 3]\n", s.toString());
-    }
+
     
 
 }

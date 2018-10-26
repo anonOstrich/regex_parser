@@ -52,6 +52,10 @@ public class Utilities {
         return shorthands;
     }
     
+    /**
+     * 
+     * @return Set of supported operations that NFAGenerator can handle
+     */
     public static OwnSet<Character> defaultBasicOperations(){
         OwnSet<Character> result = new OwnSet();
         Character[] supportedOperations = {'*', '|', '&', '(', ')', '!'};

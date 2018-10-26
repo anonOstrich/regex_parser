@@ -20,17 +20,34 @@ public class State {
      * All the information about what states are accessible from this one.
      *
      * <p>
-     * Key is some symbol of an alphabet or #. The value of the key is the set
-     * of states that are reachable with the key symbol transition in some
-     * nondeterministic finite automaton. In total, the map contains information
-     * about all symbols that may lead to next states in an NFA, and also the
+     * Key is some symbol of an alphabet. The value of the key is the set
+     * of states that are reachable with the key symbol transition.
+     * In total, the map contains information
+     * about all symbols that may lead to next states, and also the
      * specific states that a given symbol can lead to.
      * </p>
      */
     private OwnMap<Character, OwnSet<State>> transitions;
 
+    /**
+     * 
+     * States that can be reached without reading symbols
+     * 
+     */
     private OwnSet<State> emptyTransitions;
 
+    /**
+     * 
+     * States that can be reached with any single symbol
+     * 
+     * <p>
+     * Saves effort to store as own variable
+     * when dealing with '.', the any single character symbol. 
+     * Otherwise a transition for every single possible character would
+     * have to be inserted/included.
+     * </p>
+     * 
+     */
     private OwnSet<State> anySymbolTransitions;
 
     /**
@@ -59,7 +76,6 @@ public class State {
     }
 
     /**
-     *
      *
      * @return Transition info for all the symbols that might lead to next
      * states
@@ -105,8 +121,8 @@ public class State {
      *
      * Adds the given state to the existing set of states for the given symbol.
      *
-     * @param symbol
-     * @param next
+     * @param symbol Which symbol's set of states is expanded
+     * @param next State to be added
      */
     public void addNextStateForSymbol(Character symbol, State next) {
         if (!transitions.containsKey(symbol)) {
@@ -132,8 +148,8 @@ public class State {
      * Adds the states in the given set to the existing set of states for the
      * given symbol.
      *
-     * @param symbol
-     * @param next_states
+     * @param symbol Symbol whose set of states is expanded.
+     * @param next_states Added states
      */
     public void addNextStatesForSymbol(Character symbol, OwnSet<State> next_states) {
         if (!transitions.containsKey(symbol)) {
@@ -147,7 +163,7 @@ public class State {
     /**
      *
      * @param symbol
-     * @return Set of states that are reachable from this state with the symbol
+     * @return Set of states that are reachable from this state with the given symbol
      */
     public OwnSet<State> getNextStatesForSymbol(Character symbol) {
         OwnSet<State> result = transitions.get(symbol);
@@ -158,32 +174,62 @@ public class State {
         return result;
     }
     
+    /**
+     * 
+     * @param set Set of states that replace current ones. 
+     * 
+     */
     public void replaceStatesReachableWithoutSymbols(OwnSet<State> set){
         this.emptyTransitions = set; 
     }
 
+    /**
+     * 
+     * @param set Set of states to be added to the current ones
+     */
     public void addStatesReachableWithoutSymbols(OwnSet<State> set){
         this.emptyTransitions.addAll(set);
     }
     
+    /**
+     * 
+     * @param s State to be added to the states reachable without reading symbols
+     */
     public void addStatesReachableWithoutSymbols(State s){
         OwnSet<State> set = new OwnSet();
         set.add(s);
         addStatesReachableWithoutSymbols(set);
     }
     
+    /**
+     * 
+     * @return Set of states that can be reached without reading symbols
+     */
     public OwnSet<State> getNextStatesWithEmptyTransitions() {
         return this.emptyTransitions; 
     }
 
+    
+    /**
+     * 
+     * @param set Set of states to replace the current ones
+     */
     public void replaceStatesReachableWithAnyCharacter(OwnSet<State> set){
         this.anySymbolTransitions = set; 
     }
     
+    /**
+     * 
+     * @param set Set of states to be added to the current ones
+     */
     public void addStatesReachableWithAnyCharacter(OwnSet<State> set) {
         this.anySymbolTransitions.addAll(set);
     }
     
+    /**
+     * 
+     * @param s State to be added to the current ones.
+     */
     public void addStatesReachableWithAnyCharacter(State s){
         OwnSet<State> set = new OwnSet(); 
         set.add(s);
@@ -192,6 +238,10 @@ public class State {
     
     
 
+    /**
+     * 
+     * @return Set of states that are reachable with any single character.
+     */
     public OwnSet<State> getNextStatesWithAnyCharacter() {
         return anySymbolTransitions;
     }
@@ -236,41 +286,6 @@ public class State {
     @Override
     public int hashCode() {
         return ((Integer) id).hashCode();
-    }
-
-    /**
-     *
-     *  OUTDATED after 12.10. Not all transitions are in the same map anymore.
-     * 
-     * @return String representation that shows the state's id, and on their own
-     * lines symbols and the states that the symbol can result in.
-     */
-    @Override
-    public String toString() {
-        String result = "";
-        result += "Id: " + getId() + "\n";
-        if (transitions.isEmpty()) {
-            return result;
-        }
-        result += "Symbols and what states are reachable from them:\n";
-
-        for (Character symbol : transitions.keySet()) {
-
-            OwnSet<State> reachable_states = transitions.get(symbol);
-
-            String reachable_info = "["; 
-            int i = 0;
-            for (State s : reachable_states) {
-                reachable_info += s.getId(); 
-                reachable_info += ", ";
-                i++;
-            }
-            reachable_info += "]";
-            reachable_info = reachable_info.replace(", ]", "]");
-
-            result += symbol + " --> " + reachable_info + "\n";
-        }
-        return result;
     }
 
 }

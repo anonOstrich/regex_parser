@@ -26,7 +26,6 @@ public class NFAGenerator {
 
     /**
      * Tells whether cache is used to potentially speed up generation.
-     *
      */
     private boolean cacheEnabled;
 
@@ -46,8 +45,7 @@ public class NFAGenerator {
      */
     private int lowestAvailableId;
     /**
-     * Utility class for preprocessing input patterns to such a form that they
-     * only contain operations, alphabet symbols, and #.
+     * Utility class for preprocessing input patterns
      */
     private PatternProcessor patternProcessor;
 
@@ -59,8 +57,6 @@ public class NFAGenerator {
 
     /**
      * Sets cache on by as the default.
-     *
-     *
      */
     public NFAGenerator() {
         this(true);
@@ -86,17 +82,29 @@ public class NFAGenerator {
 
     /**
      *
-     * @param pattern
-     * @return
+     * Constructs an automaton from a regular expression expressed as string
+     * 
+     * <p>First preprocesses the pattern to contain only a few operations and
+     * alphabet symbols. Then the string is scanned once. Each alphabet symbol
+     * puts a simple NFA onto the automaton stack, and each operational symbol 
+     * puts an operation symbol to the operation stack. The contents of the
+     * operation stack are evaluated in the order of their priority and recency.</p>
+     * 
+     * <p>Each operation unites or otherwise modifies simpler automata in the
+     * automaton stack into more complex ones, and places them back on the top of the stack.
+     * After the whole string has been scanned, the rest of the operations
+     * in the operation stack are evaluated. Only the automaton equal to the
+     * whole regular expression lies in the automaton stack afterwards.</p>
+     * 
+     * @param pattern Pattern that guides the construction of the automaton.
+     * @return NFA that recognizes the correct language.
      */
     public NFA generateNFA(String pattern) {
-        //add explicit concatenation symbols and see if the pattern has been encountered before
         pattern = patternProcessor.elongateRegularExpression(pattern);   
         if (cacheEnabled && cache.containsKey(pattern)) {
             return cache.get(pattern);
         }
 
-        //initialization of tools
         lowestAvailableId = 0;
         OwnStack<Character> operationStack = new OwnStack();
         OwnStack<NFA> NFAStack = new OwnStack();
@@ -134,12 +142,9 @@ public class NFAGenerator {
 
         }
 
-        //evaluate remaining operations
         while (!operationStack.isEmpty()) {
             evaluate(operationStack, NFAStack);
         }
-
-        // returning result
         NFA result = NFAStack.pop();
         if (cacheEnabled) {
             cache.put(pattern, result);
@@ -191,7 +196,7 @@ public class NFAGenerator {
     }
 
     /**
-     * Evaluates everything in the operationstack before opening parenthesis.
+     * Evaluates everything in the operation stack before opening parenthesis.
      * The NFA created from the last operation will be on top of the automaton
      * stack at the end.
      *
@@ -273,7 +278,6 @@ public class NFAGenerator {
      * @param result
      */
     private void evaluateConcatenation(OwnStack<NFA> automatonStack, NFA result) {
-        // first pop -> was added second to the stack!
         NFA second = automatonStack.pop();
         NFA first = automatonStack.pop();
 
@@ -339,6 +343,12 @@ public class NFAGenerator {
         return result;
     }
     
+    
+    /**
+     * Creates a simple NFA that recognizes only empty input
+     * 
+     * @return Simple NFA
+     */
     private NFA generateNFAFromEmptySymbol(){
         State s0 = new State(lowestAvailableId);
         lowestAvailableId++;
@@ -351,6 +361,11 @@ public class NFAGenerator {
         return result;
     }
 
+    /**
+     * Creates a simple NFA that recognizes any single character
+     * 
+     * @return Simple NFA
+     */
     private NFA generateNFAFromAnySingleSymbol() {
         State s0 = new State(lowestAvailableId);
         lowestAvailableId++;
@@ -386,6 +401,11 @@ public class NFAGenerator {
         return alphabet;
     }
 
+    /**
+     * Change the alphabet
+     * 
+     * @param alphabet 
+     */
     public void setAlphabet(OwnSet<Character> alphabet) {
         this.alphabet = alphabet;
     }

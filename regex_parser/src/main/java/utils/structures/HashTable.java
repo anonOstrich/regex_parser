@@ -15,11 +15,11 @@ public abstract class HashTable<K, V> {
      * Table that stores key-value pairs at the index that is determined by 
      * the hash code of the key. 
      * 
-     * Collisions may occur, since different keys can have the same hash code. 
+     * <p>Collisions may occur, since different keys can have the same hash code. 
      * In such a case both values will be stored in a doubly linked list that is 
-     * stored in the table. 
+     * stored in the table.</p>
      * 
-     * For simplicity even a single node is stored in a list. 
+     * <p>For simplicity even a single node is stored in a list.</p>
      * 
      */
     protected OwnLinkedList<K, V>[] table;
@@ -27,16 +27,16 @@ public abstract class HashTable<K, V> {
     /**
      * The size of the table. 
      * 
-     * Determines the scope of different possible index values that keys may 
-     * receive. 
+     * <p>Determines the scope of different possible index values that keys may 
+     * receive.</p>
      */
     protected int capacity;
     
     /**
      * The total number of all the elements stored in the table. 
      * 
-     * Will be at most 70% of capacity to keep the expected length of
-     * collision lists short enough. 
+     * <p>Will be at most 70% of capacity to keep the expected length of
+     * collision lists short enough.</p>
      */
     protected int numOfElements;
 
@@ -50,8 +50,8 @@ public abstract class HashTable<K, V> {
     /**
      * Constructor for setting an initial capacity. 
      * 
-     * If it is known that a great number of elements will be stored, 
-     * the table can be constructed to be large from the beginning. 
+     * <p>If it is known that a great number of elements will be stored, 
+     * the table can be constructed to be large from the beginning.</p>
      * 
      * @param initialCapacity 
      */
@@ -179,7 +179,7 @@ public abstract class HashTable<K, V> {
     public int scaledHashCode(K key) {
         int absoluteHashCode = key.hashCode();
         int modulus = absoluteHashCode % capacity;
-        // since modulus might be negative (quite unlike in mathematics...)
+        // since modulus might be negative (unlike in mathematics...)
         modulus = (modulus + capacity) % capacity;
         return modulus;
     }
@@ -326,8 +326,7 @@ public abstract class HashTable<K, V> {
         return true;
     }
 
-    // to speed up, we will never look at beyond the first 150 cells
-    // still fairly slow, so perhapss sets should not be used as keys...
+
     @Override
     public int hashCode() {
         int max = capacity;

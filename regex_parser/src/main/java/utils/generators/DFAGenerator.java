@@ -14,9 +14,9 @@ import utils.Utilities;
  *
  */
 public class DFAGenerator {
-    
+
     /**
-     * Any possible symbols that might be encountered in 
+     * Any possible symbols that might be encountered in
      */
     private OwnSet<Character> allPossibleSymbols;
 
@@ -51,7 +51,7 @@ public class DFAGenerator {
         if (cacheEnabled) {
             cache = new OwnMap();
         }
-        allPossibleSymbols = Utilities.defaultAlphabet(); 
+        allPossibleSymbols = Utilities.defaultAlphabet();
         allPossibleSymbols.addAll(Utilities.defaultShorthands());
         allPossibleSymbols.addAll(Utilities.defaultBasicOperations());
         allPossibleSymbols.add('/');
@@ -62,7 +62,8 @@ public class DFAGenerator {
      * Generates a DFA that recognizes the complement language of the input NFA.
      *
      * <p>
-     * If the answer is already in the cache, it is returned from there.
+     * If the answer is already in the cache, it is returned from there. If the 
+     * input NFA is DFA, it is simply inverted.
      * Otherwise the method begins constructing a new DFA. The states of this
      * DFA each represent one subset of the states of the parameter NFA; these
      * states are referred to as subset states in the method. There are two maps
@@ -86,12 +87,10 @@ public class DFAGenerator {
      * </p>
      *
      * @param nfa Automaton that is to be negated.
-     * @param alphabet Allowed symbols in state transitions (excluding #).
      * @return Deterministic (also non-deterministic) finite automaton that
      * recognizes the complement language of the parameter nfa.
      */
     public NFA generateComplementDFA(NFA nfa) {
-        //messy and overly long, to be cleaned up at some point... 
 
         if (cacheEnabled && cache.containsKey(nfa)) {
             return cache.get(nfa);
@@ -134,17 +133,15 @@ public class DFAGenerator {
         OwnSet<State> investigatedSubsetStates = new OwnSet();
 
         while (!subsetStatesToBeInvestigated.isEmpty()) {
-            // could replace with random/first/etc method in OwnSet
-            State currentSubsetState = subsetStatesToBeInvestigated.iterator().next();
+            State currentSubsetState = subsetStatesToBeInvestigated.any();
             investigatedSubsetStates.add(currentSubsetState);
             subsetStatesToBeInvestigated.remove(currentSubsetState);
             OwnSet<State> NFAStates = setsOfStatesBySubsetStates.get(currentSubsetState);
 
             for (Character symbol : allPossibleSymbols) {
-                
+
                 OwnSet<State> reachableFromAny = new OwnSet();
-                
-                
+
                 for (State NFAState : NFAStates) {
                     OwnSet<State> reachableFromState = NFAState.getNextStatesForSymbol(symbol);
                     dfa.addEpsilonTransitionsOfStates(reachableFromState);
@@ -164,17 +161,16 @@ public class DFAGenerator {
                 }
                 currentSubsetState.addNextStateForSymbol(symbol, nextSubsetState);
 
-                //boolean acceptingState = true;
+                boolean acceptingState = true;
                 for (State s : reachableFromAny) {
                     if (nfa.getAcceptingStates().contains(s)) {
-                       // acceptingState = false;
-                       dfa.getAcceptingStates().add(nextSubsetState);
+                        acceptingState = false;
                         break;
                     }
                 }
-                //if (acceptingState) {
-               //     dfa.getAcceptingStates().add(nextSubsetState);
-                //}
+                if (acceptingState) {
+                    dfa.getAcceptingStates().add(nextSubsetState);
+                }
                 if (!investigatedSubsetStates.contains(nextSubsetState)) {
                     subsetStatesToBeInvestigated.add(nextSubsetState);
                 }
@@ -184,21 +180,31 @@ public class DFAGenerator {
         if (cacheEnabled) {
             cache.put(nfa, dfa);
         }
-        
+
         dfa.setIsDFA(true);
         return dfa;
     }
 
+    /** 
+     * 
+     * Begins caching
+     * 
+     */
     public void enableCaching() {
         cacheEnabled = true;
-        if(cache == null){
-            cache = new OwnMap(); 
+        if (cache == null) {
+            cache = new OwnMap();
         }
-        
+
     }
 
+    /** 
+     * 
+     * Ends caching
+     * 
+     */
     public void disableCaching() {
-        cacheEnabled = false; 
+        cacheEnabled = false;
     }
 
 }

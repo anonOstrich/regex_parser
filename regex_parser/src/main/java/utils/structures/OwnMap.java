@@ -3,9 +3,6 @@ package utils.structures;
 /**
  * A map implementation based on HashTable.
  *
- * <p>
- * Largely based on the HashTable with a few additions exclusive to maps.
- * </p>
  *
  * @param <K> Type for stored keys.
  * @param <V> Type for stored values.
@@ -100,11 +97,21 @@ public class OwnMap<K, V> extends HashTable<K, V> {
         return this.keySet;
     }
 
-    public void setKeySet(OwnSet<K> st){
+    
+    /**
+     * Only needed with copy
+     * 
+     * @param st 
+     */
+    private void setKeySet(OwnSet<K> st){
         this.keySet = st; 
     }
   
     
+    /**
+     * 
+     * @return a map with identical contents but different address
+     */
     public OwnMap<K, V> copy() {
         OwnMap<K,V> result = new OwnMap(capacity);
         result.setNumOfElements(numOfElements);

@@ -51,4 +51,3 @@ Links
 * [Week 4](documentation/weekly_reports/week4.md)
 * [Week 5](documentation/weekly_reports/week5.md)
 * [Week 6](documentation/weekly_reports/week6.md)
-* [Week 7](documentation/weekly_reporst/week7.md)

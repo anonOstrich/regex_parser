@@ -117,9 +117,15 @@ Space complexity of data structures
 
 ### Stack 
 
+If we only count the stack, it always has the same number of pointers. In using stack there need to be n nodes that contain the contents of the stack, however, so the space complexity is O(n).
+
 ### Linked List
 
+Very similarly O(n)
+
 ### HashTable
+
+The size of the array is proportional to the number of elements that HashTable contains. Every index of that table contains a Linked List whose length is only as long as needed to store all its contents. The size complexity is O(n). 
 
 
 Time complexity of data structures
@@ -168,6 +174,8 @@ Suggestions for improvement
 * In itself the parser is not very useful. Maybe it would be wise to construct a class that uses the parser to find all instances in a text and return their indexes, or something similar. 
 * There is clearly room for performance improvements, although I don't have anything easy and impressive in mind... A good first step would be to study existing regex parsers in detail. 
 * Let the user choose any file they want to search for matches
+
+
 Sources
 -------
 * [https://swtch.com/~rsc/regexp/regexp1.html](https://swtch.com/~rsc/regexp/regexp1.html)

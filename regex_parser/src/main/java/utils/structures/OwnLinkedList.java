@@ -1,19 +1,14 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package utils.structures;
 
 /**
- * Doubly linked, to be used as collision list in hash map.
- *
+ * Doubly linked list, to be used as collision list in hash map.
  */
 public class OwnLinkedList<K, V> {
 
     /**
      * Whether multiple keys are prevented. The program should not attempt
-     * adding the same key twice, so in theory this is unnecessary. If this is
+     * adding the same key twice in many places, so in theory this is
+     * unnecessary. If this is
      * false, insertion takes O(1) instead of O(n).
      */
     private boolean preventMultipleKeys;
@@ -23,6 +18,9 @@ public class OwnLinkedList<K, V> {
      */
     private PairNode<K, V> first;
 
+    /**
+     * The number of elements in the list
+     */
     private int size;
 
     /**
@@ -164,7 +162,8 @@ public class OwnLinkedList<K, V> {
     }
 
     /**
-     *
+     * Allows control of multiple key guarding
+     * 
      * @param allow
      */
     public void setPreventMultipleKeys(boolean allow) {
@@ -179,6 +178,10 @@ public class OwnLinkedList<K, V> {
         return first;
     }
 
+    /**
+     * 
+     * @return Number of elements in the list
+     */
     public int size() {
         return size;
     }

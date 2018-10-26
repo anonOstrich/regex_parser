@@ -45,12 +45,6 @@ public class TextUITest {
         System.setOut(originalOut);
     }
 
-    @Test
-    public void printInstructionsPrintsCorrectInstructions() {
-        uiWithInput("");
-        ui.printInstructions();
-        assertEquals("See README.md or documentation for info on supported operations and symbols)\n", outContent.toString());
-    }
 
     @Test
     public void chooseOperationDisplaysInstructionsAgainIfInputNotInteger() {
@@ -123,14 +117,14 @@ public class TextUITest {
     @Test
     public void matchExpressionAndStringsTellsRightlyThatExpressionDoesNotMatch() {
         matchExpressionAndStrings("aaa", "bbb");
-        assertTrue(outContent.toString().contains("Regular expression 'aaa' does not match string 'bbb'"));
+        assertTrue(outContent.toString().contains("Regular expression 'aaa' DOES NOT MATCH string 'bbb'"));
 
     }
 
     @Test
     public void matchExpressionAndStringsTellsRightlyThatExpressionMatches() {
         matchExpressionAndStrings("a|b", "a");
-        assertTrue(outContent.toString().contains("Regular expression 'a|b' matches string 'a'"));
+        assertTrue(outContent.toString().contains("Regular expression 'a|b' MATCHES string 'a'"));
     }
 
     @Test
@@ -138,7 +132,7 @@ public class TextUITest {
         matchExpressionAndStrings("(S|s)?pring(les)?", "Spring", "spring", "Springles", "springles", "pring", "pringles");
         int idx = 0;
         for (int count = 0; count < 6; count++) {
-            idx = outContent.toString().indexOf("Regular expression '(S|s)?pring(les)?' matches string '", idx);
+            idx = outContent.toString().indexOf("Regular expression '(S|s)?pring(les)?' MATCHES string '", idx);
             if (idx == -1) {
                 assertFalse(true);
                 return;
@@ -146,7 +140,7 @@ public class TextUITest {
             idx += 10;
         }
 
-        assertTrue(outContent.toString().indexOf("Regular expression '(S|s)?pring(les)?' matches string '", idx) == -1);
+        assertTrue(outContent.toString().indexOf("Regular expression '(S|s)?pring(les)?' MATCHES string '", idx) == -1);
     }
 
     @Test
@@ -154,8 +148,8 @@ public class TextUITest {
         uiWithInput("!(karjala)\nkarjalla\n\n\ny\n(a-c)[2,5]\nabbaca\n\n\nn\n4\n");
         ui.matchExpressionsAndStrings();
         assertTrue(outContent.toString().contains(
-                "Regular expression '!(karjala)' matches string 'karjalla'")
-                && outContent.toString().contains("Regular expression '(a-c)[2,5]' does not match string 'abbaca'"));
+                "Regular expression '!(karjala)' MATCHES string 'karjalla'")
+                && outContent.toString().contains("Regular expression '(a-c)[2,5]' DOES NOT MATCH string 'abbaca'"));
     }
 
     @Test

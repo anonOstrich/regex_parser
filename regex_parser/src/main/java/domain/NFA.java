@@ -14,7 +14,7 @@ import utils.structures.OwnMap;
  * </p>
  * <p>
  * Since all deterministic finite automata can be thought of as restricted NFA,
- * the class also represents DFA. Whether it is also a DFA is indicated in the
+ * the class also represents DFA. Whether it is also (known to be) a DFA is indicated in the
  * isDFA attribute
  * </p>
  *
@@ -46,8 +46,7 @@ public class NFA {
     /**
      *
      * The set of states that is used to determine whether the automaton accepts
-     * or rejects an input string. If any of the possible states at the end of
-     * processing belongs to acceptingStates, the NFA accepts the input.
+     * or rejects an input string.
      *
      */
     private OwnSet<State> acceptingStates;
@@ -55,7 +54,7 @@ public class NFA {
     /**
      * Special attribute that is false by default and only needed with some
      * regexes that contain negation. If true, accepting states actually
-     * indicates all the states that are NOT accepting: every other state is
+     * indicate all the states that are NOT accepting: every other state is
      * accepting, in such a case.
      */
     private boolean inverted;
@@ -108,7 +107,7 @@ public class NFA {
 
     /**
      *
-     * Changes the starting state the given state.
+     * Changes the starting state to the given state.
      *
      * @param state New starting state
      */
@@ -118,29 +117,38 @@ public class NFA {
 
     /**
      *
-     *
      * @return State at which NFA begins.
      */
     public State getStartingState() {
         return this.startingState;
     }
     
+    /**
+     * Begin caching simulation results
+     */
     public void enableCaching(){
         this.cacheEnabled = true; 
     }
     
+    /**
+     * Stop caching simulation results
+     */
     public void disableCaching(){
         this.cacheEnabled = false; 
     
     }
     
+    /** 
+     * 
+     * @return Cache containing transition information between sets of states
+     */
     public OwnMap<OwnSet<State>, OwnMap<Character, OwnSet<State>>> getCache(){
         return this.cache; 
     }
 
     /**
      *
-     * Changes the accepting states to the given set.
+     * Changes the accepting states to the given set
      *
      * @param states Set of new accepting states.
      */
@@ -168,32 +176,28 @@ public class NFA {
      * the set of currents states to include only the starting state of the NFA.
      * </p>
      * <p>
-     * For every character, the method first adds to the current states all the
-     * states that can be reached with empty symbol from current states. Then
+     * For every character the method checks if the next set of states has already
+     * been calculated from the current set with the current symbol. If not, 
      * the method queries each current state for the set of states that can be
      * accessed with the input symbol. These sets of states from each current
      * state are combined to form the set of all the states that the automaton
-     * can be in after it has processed the next symbol character. Then the
+     * can be in after it has processed the next symbol character. This 
+     * set is expanded with all the states that are reachable from its states
+     * with only empty transitions. Then the
      * current states are replaced with the next states, and the next symbol of
      * the test string is processed similarly until they end.
      * </p>
      * <p>
-     * After exhausting all the characters, the method adds to the set of
-     * current states all the states that are reachable from them with empty
-     * symbols - these are also possible states at the end of the processing.
-     * </p>
-     * <p>
      * If at any point the set of current states is empty, it is certain that
      * the automaton cannot finish in an accepted state. Hence the method
-     * immediately returns false.
+     * immediately returns a boolean that depends on whether the automaton has been
+     * inverted.
      * </p>
      *
      * @param test Input string which is to be processed. If the string is
-     * empty, it is replaced with character '#', which represents epsilon (empty
-     * symbol).
+     * empty, it is replaced with character '#', which represents the empty symbol.
      *
-     * @return True if any of the final states is in the set of accepting
-     * states. Otherwise false.
+     * @return Whether any of the possible final states is an accepting one. 
      */
     public boolean accepts(String test) {
         OwnSet<State> currentStates = new OwnSet();
@@ -268,14 +272,14 @@ public class NFA {
      * Forms a new empty set. By going through the given states, the method then
      * adds to this set of new states all the states that are reachable with one
      * epsilon transition and that are not in the visitedStates set. This
-     * decreases some extra work and prevents infitinte loops in cases where two
-     * states have an epsilon transition from and to each other.
+     * decreases some extra work and prevents infinite loops in cases where two
+     * states have an epsilon transition to and from each other.
      * </p>
      * <p>
      * If new states are found, the method calls itself recursively with the set
      * of new states and the same set of visited states. This continues for as
-     * long as new states are discovered. Each call tries to discover longer
-     * sequences of empty transitions.
+     * long as new states are discovered. Each call expands the chain of 
+     * empty transitions by one.
      * </p>
      *
      * @param states Set of states that caller wants to expand.
@@ -309,13 +313,17 @@ public class NFA {
     }
 
     /**
-     *
+     * 
      * @return Whether the NFA is certain to be DFA
      */
     public boolean isDFA() {
         return isDFA;
     }
     
+    /**
+     * 
+     * @return Whether caching of the implicit DFA is in use
+     */
     public boolean usesCaching(){
         return this.cacheEnabled; 
     }
@@ -329,19 +337,25 @@ public class NFA {
         this.inverted = !this.inverted;
     }
 
+    /**
+     * 
+     * @return True if inverted, false otherwise
+     */
     public boolean isInverted() {
         return this.inverted;
     }
 
     /**
-     * Depending on the inverted bit, correctly returns whether the given set of
+     * Determines whether the possible final state is accepting
+     * 
+     * <p>Depending on the inverted bit, correctly returns whether the given set of
      * states contains an accepting state. By default inverted is false, so
      * accepting states indicates actual accepting states; method returns true
      * only if that set contains any state of the input state. Vice versa when
-     * inverted is true.
+     * inverted is true.</p>
      *
-     * @param states
-     * @return
+     * @param states Set of possible final states
+     * @return Does processing accept the input string
      */
     public boolean containsAcceptingState(OwnSet<State> states) {
         for (State s : states) {

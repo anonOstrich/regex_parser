@@ -123,7 +123,6 @@ public class PairNode<K, V> {
         if ((this.getKey() != null && comp.getKey() == null) || (this.getValue() != null && comp.getValue() == null)) {
             return false;
         }
-        //ugly bandaid, but since the program never sets key as null the tests won't break without checking for it
         if(this.getValue() == null && comp.getValue() == null && this.getKey().equals(comp.getKey())){
             return true; 
         }
